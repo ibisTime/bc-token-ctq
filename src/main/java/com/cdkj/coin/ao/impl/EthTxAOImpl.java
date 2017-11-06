@@ -63,16 +63,16 @@ public class EthTxAOImpl implements IEthTxAO {
         Date endDate = null;
 
         if (req.getBlockCreateDatetimeStart() != null) {
-             startDate = DateUtil.strToDate(req.getBlockCreateDatetimeStart(),DateUtil.DATA_TIME_PATTERN_1);
+            startDate = DateUtil.strToDate(req.getBlockCreateDatetimeStart(), DateUtil.DATA_TIME_PATTERN_1);
         }
 
         if (req.getBlockCreateDatetimeEnd() != null) {
-            endDate = DateUtil.strToDate(req.getBlockCreateDatetimeEnd(),DateUtil.DATA_TIME_PATTERN_1);
+            endDate = DateUtil.strToDate(req.getBlockCreateDatetimeEnd(), DateUtil.DATA_TIME_PATTERN_1);
         }
 
         if (startDate != null && endDate != null) {
             if (startDate.compareTo(endDate) > 0) {
-                throw new  BizException(BizErrorCode.DEFAULT_ERROR_CODE.getErrorCode(),"开始时间需 <= 结束时间");
+                throw new BizException(BizErrorCode.DEFAULT_ERROR_CODE.getErrorCode(), "开始时间需 <= 结束时间");
             }
 
         }
@@ -80,7 +80,7 @@ public class EthTxAOImpl implements IEthTxAO {
         condation.setBlockCreateDatetimeStart(startDate);
         condation.setBlockCreateDatetimeEnd(endDate);
 
-        return this.ethTransactionBO.getPaginable(Integer.valueOf(req.getStart()),Integer.valueOf(req.getLimit()),condation);
+        return this.ethTransactionBO.getPaginable(Integer.valueOf(req.getStart()), Integer.valueOf(req.getLimit()), condation);
     }
 
     @Override
@@ -128,19 +128,17 @@ public class EthTxAOImpl implements IEthTxAO {
                     String toAddress = tx.getTo();
                     String fromAddress = tx.getFrom();
 
-                    if (StringUtils.isNotBlank(toAddress)) {
+                    // 查询改地址是否在我们系统中存在
+                    // to 或者 from 为我们的地址就要进行同步
+                    long toCount = ethAddressBO.addressCount(toAddress);
+                    long fromCount = ethAddressBO.addressCount(fromAddress);
 
-                        // 查询改地址是否在我们系统中存在
-                        // to 或者 from 为我们的地址就要进行同步
-                        long toCount = ethAddressBO.addressCount(toAddress);
-                        long fromCount = ethAddressBO.addressCount(fromAddress);
-
-                        if (toCount > 0 || fromCount > 0) {
-                            // 需要同步
-                            transactionList.add(this.ethTransactionBO.convertTx(tx, block.getTimestamp()));
-                        }
-
+                    if (toCount > 0 || fromCount > 0) {
+                        // 需要同步
+                        transactionList.add(this.ethTransactionBO.convertTx(tx, block.getTimestamp()));
                     }
+
+
                 }
                 // 存储
                 this.saveToDB(transactionList, blockNumber);
