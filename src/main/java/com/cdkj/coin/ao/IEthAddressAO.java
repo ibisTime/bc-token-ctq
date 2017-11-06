@@ -29,7 +29,7 @@ public interface IEthAddressAO {
     //
     public List<EthAddress> queryEthAddressListByAddress(String address);
 
-    //根据状态列表 分页查
+    //根据类型 分页查
     public Paginable<EthAddress> queryEthAddressPageByStatusList(List<String> typeList, int start, int limit);
 
 

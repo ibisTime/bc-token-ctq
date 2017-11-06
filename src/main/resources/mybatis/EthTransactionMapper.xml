@@ -44,7 +44,7 @@
 	</sql>
 
 	<update id="updateTxStatus" parameterType="com.cdkj.coin.domain.EthTransaction">
-		UPDATE  tcoin_eth_transaction SET `status` = '1' where `hash` in
+		UPDATE  tctq_eth_transaction SET `status` = '1' where `hash` in
 		<foreach collection="list" item="tx" open="(" separator="," close=")">
 			#{tx.hash}
 		</foreach>
@@ -56,7 +56,7 @@
 		<include refid="ethTx"/>
 
 		FROM
-		tcoin_eth_transaction t
+		tctq_eth_transaction t
 		<include refid="where_condition" />
 		<trim prefix="ORDER BY ">
 			<if test="order != null and order != '' ">
@@ -67,14 +67,14 @@
 
 	<select id="select_ethTransaction_count" parameterType="ethTransaction"
 		resultType="java.lang.Long">
-		SELECT count(1) FROM tcoin_eth_transaction t
+		SELECT count(1) FROM tctq_eth_transaction t
 		<include refid="where_condition" />
 	</select>
 
 
 	<insert id="insertEthTransaction" parameterType="com.cdkj.coin.domain.EthTransaction">
 		INSERT INTO
-		`tcoin_eth_transaction`(`hash`, nonce, block_hash, block_number,transaction_index,`from`,`to`,`value`,gas_price,gas,
+		`tctq_eth_transaction`(`hash`, nonce, block_hash, block_number,transaction_index,`from`,`to`,`value`,gas_price,gas,
 							  block_create_datetime,sync_datetime,`status`)
 		VALUES(
 			#{hash} ,#{nonce} ,#{blockHash} ,#{blockNumber} ,#{transactionIndex} ,
@@ -87,7 +87,7 @@
 	<insert id="insertTxList" parameterType="List">
 
 		INSERT INTO
-			`tcoin_eth_transaction`(`hash`, nonce, block_hash, block_number,transaction_index,`from`,`to`,`value`,gas_price,gas,
+			`tctq_eth_transaction`(`hash`, nonce, block_hash, block_number,transaction_index,`from`,`to`,`value`,gas_price,gas,
 									block_create_datetime,sync_datetime,`status`)
 		VALUES
 

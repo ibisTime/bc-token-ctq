@@ -26,18 +26,7 @@ public class EthAddressBOImpl extends PaginableBOImpl<EthAddress> implements
     @Autowired
     private IEthAddressDAO ethAddressDAO;
 
-    @Override
-    public int saveEthAddress(EEthAddressType type, String userId,
-            String address, String password) {
-        int count = 0;
-        Date now = new Date();
-        EthAddress data = new EthAddress();
-        data.setType(type.getCode());
-        data.setAddress(address);
-        data.setCreateDatetime(now);
-        count = ethAddressDAO.insert(data);
-        return count;
-    }
+
 
     @Override
     public List<EthAddress> queryEthAddressList(EthAddress condition) {

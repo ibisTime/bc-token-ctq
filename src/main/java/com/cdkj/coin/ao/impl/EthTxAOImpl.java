@@ -151,7 +151,7 @@ public class EthTxAOImpl implements IEthTxAO {
 
             logger.error("扫描以太坊区块同步流水发送异常，原因：" + e1.getMessage());
         }
-        //
+
     }
 
     @Transactional
@@ -176,7 +176,7 @@ public class EthTxAOImpl implements IEthTxAO {
 
     }
 
-    //时间调度任务
+    //时间调度任务,定期扫描——未推送的——交易
     public void pushTx() {
 
         EthTransaction con = new EthTransaction();
@@ -189,6 +189,8 @@ public class EthTxAOImpl implements IEthTxAO {
 
     }
 
+    //确认推送
+    @Override
     public Object confirmPush(List<String> hashList) {
 
         if (hashList == null || hashList.size() <= 0) {
@@ -196,7 +198,6 @@ public class EthTxAOImpl implements IEthTxAO {
         }
 
         this.ethTransactionBO.changeTxStatusToPushed(hashList);
-
         return new Object();
 
     }

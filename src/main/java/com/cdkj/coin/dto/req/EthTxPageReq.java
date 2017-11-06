@@ -21,11 +21,13 @@ public class EthTxPageReq {
     @NotBlank
     private String status;
 
+    private String from;
+    private String to;
+
     private String blockCreateDatetimeStart;
     private String blockCreateDatetimeEnd;
 
-    private String from;
-    private String to;
+
 
     public String getStatus() {
         return status;

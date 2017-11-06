@@ -39,7 +39,7 @@
 		,t.address
 		,t.create_datetime
 		FROM
-		tcoin_eth_address t
+		tctq_eth_address t
 		<include refid="where_condition" />
 		<trim prefix="ORDER BY ">
 			<if test="order != null and order != '' ">
@@ -50,13 +50,13 @@
 
 	<select id="selectTotalCount" parameterType="ethAddress"
 		resultType="java.lang.Long">
-		SELECT count(1) FROM tcoin_eth_address t
+		SELECT count(1) FROM tctq_eth_address t
 		<include refid="where_condition" />
 	</select>
 
 	<insert id="insert_ethAddress" parameterType="com.cdkj.coin.domain.EthAddress">
 		INSERT INTO
-		tcoin_eth_address(
+		tctq_eth_address(
 		code,
 		type,
 		address,
@@ -71,10 +71,7 @@
 	</insert>
 
 	<select id="getAddressCount" resultType="java.lang.Integer">
-		SELECT count(1) FROM tcoin_eth_address WHERE address = #{address}
+		SELECT count(1) FROM tctq_eth_address WHERE address = #{address}
 	</select>
-
-
-
 
 </mapper>

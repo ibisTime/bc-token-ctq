@@ -19,14 +19,11 @@ public interface IEthAddressBO extends IPaginableBO<EthAddress> {
     //上传地址
     public UploadEthAddressRes uploadAddress(UploadEthAddressReq req);
 
-    //
-    public int saveEthAddress(EEthAddressType type, String userId,
-            String address, String password);
 
     //
     public List<EthAddress> queryEthAddressList(EthAddress condition);
 
-    //
+    //地址 + 类型
     public int queryEthAddressCount(EthAddress condition);
 
 }
