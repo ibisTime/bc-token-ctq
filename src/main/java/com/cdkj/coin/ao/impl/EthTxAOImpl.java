@@ -86,14 +86,20 @@ public class EthTxAOImpl implements IEthTxAO {
     @Override
     public void doEthTransactionSync() {
 
+        boolean isDebug = true;
+        //
         try {
             //
             while (true) {
 
                 Long blockNumber = sysConfigBO
                         .getLongValue(SysConstants.CUR_BLOCK_NUMBER);
-                System.out.println("*********同步循环开始，扫描区块" + blockNumber
-                        + "*******");
+                if (isDebug == true) {
+
+                    System.out.println("*********同步循环开始，扫描区块" + blockNumber
+                            + "*******");
+
+                }
 
                 //
                 EthBlock ethBlockResp = web3j.ethGetBlockByNumber(
@@ -111,8 +117,11 @@ public class EthTxAOImpl implements IEthTxAO {
 
                 if (block == null) {
 
-                    System.out.println("*********同步循环结束,区块号"
-                            + (blockNumber - 1) + "为最后一个区块*******");
+                    if (isDebug == true) {
+
+                        System.out.println("*********同步循环结束,区块号"
+                                + (blockNumber - 1) + "为最后一个区块*******");
+                    }
                     break;
                 }
 
@@ -153,15 +162,11 @@ public class EthTxAOImpl implements IEthTxAO {
     }
 
     @Transactional
-    private void saveToDB(List<EthTransaction> transactionList, Long blockNumber) {
-
+    public void saveToDB(List<EthTransaction> transactionList, Long blockNumber) {
         //
         if (transactionList.isEmpty() == false) {
 
-            //需要落地交易
-            for (EthTransaction tx : transactionList) {
-                int count = this.ethTransactionBO.saveEthTransaction(tx);
-            }
+            this.ethTransactionBO.insertTxList(transactionList);
 
         }
 

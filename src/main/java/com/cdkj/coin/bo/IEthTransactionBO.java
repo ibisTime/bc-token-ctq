@@ -14,17 +14,17 @@ public interface IEthTransactionBO extends IPaginableBO<EthTransaction> {
     //对象转换
     public EthTransaction convertTx(EthBlock.TransactionObject tx,BigInteger timestamp) ;
 
-    //分页
+    //分页查询交易
     public List<EthTransaction> queryEthTxPage(EthTransaction condition, int start, int limit);
 
-    //改变 交易状态 为以推送
+    //改变交易状态 为以推送
     public void changeTxStatusToPushed(List<String>  txHashList);
 
+    //批量插入交易
     public void insertTxList(List<EthTransaction> txList);
 
     public int saveEthTransaction(EthTransaction tx);
 
-    public void saveEthTransactionList(List<EthTransaction> txList);
 
     public List<EthTransaction> queryEthTransactionList(EthTransaction condition);
 

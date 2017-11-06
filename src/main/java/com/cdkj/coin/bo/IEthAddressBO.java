@@ -19,7 +19,6 @@ public interface IEthAddressBO extends IPaginableBO<EthAddress> {
     //上传地址
     public UploadEthAddressRes uploadAddress(UploadEthAddressReq req);
 
-
     //
     public List<EthAddress> queryEthAddressList(EthAddress condition);
 

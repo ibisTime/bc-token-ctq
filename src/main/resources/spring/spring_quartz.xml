@@ -46,7 +46,7 @@
 	<bean id="ethPushSyncTrigger"
 		  class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="pushTx" />
-		<property name="cronExpression" value="*/40 * * * * ?" />
+		<property name="cronExpression" value="0 */1 * * * ?" />
 	</bean>
 
 	<bean id="pushTx"

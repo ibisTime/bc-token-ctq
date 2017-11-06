@@ -12,8 +12,6 @@
 
 	
 	<!-- 分页BO层注入paginableDao -->
-	
-	
 	<bean id="sysDictBO" class="com.cdkj.coin.bo.impl.SYSDictBOImpl">
 		<property name="paginableDAO" ref="sysDictDAOImpl"/>
 	</bean>	
