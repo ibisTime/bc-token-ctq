@@ -11,6 +11,7 @@ package com.cdkj.coin.bo.impl;
 import java.util.Date;
 import java.util.List;
 
+import com.cdkj.coin.dao.DictMapper;
 import com.cdkj.coin.exception.BizErrorCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -32,6 +33,9 @@ public class SYSDictBOImpl extends PaginableBOImpl<SYSDict> implements
         ISYSDictBO {
     @Autowired
     private ISYSDictDAO sysDictDAO;
+
+//    @Autowired
+//    private DictMapper dictMapper;
 
     @Override
     public void removeSYSDict(Long id) {

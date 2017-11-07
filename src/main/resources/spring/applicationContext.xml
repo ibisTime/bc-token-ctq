@@ -69,10 +69,6 @@
 		<property name="minEvictableIdleTimeMillis" value="600000" />
 	</bean>
 
-
-
-
-	
 	<bean id="writeSqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate"
 		scope="prototype">
 		<constructor-arg name="sqlSessionFactory" ref="sqlSessionFactoryMaster" />
@@ -82,7 +78,20 @@
 		scope="prototype">
 		<constructor-arg name="sqlSessionFactory" ref="sqlSessionFactorySlave" />
 	</bean>
-	
+
+	<!-- 新写法——测试 -->
+	<!--<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">-->
+		<!--<property name="dataSource" ref="dataSource" />-->
+		<!--<property name="configLocation" value="classpath:mybatis/mybatis.xml"/>-->
+		<!--<property name="mapperLocations" value="classpath:mybatis/*Mapper.xml"/>-->
+	<!--</bean>-->
+
+	<!--<bean id="mapperScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">-->
+		<!--<property name="basePackage" value="com.cdkj.coin.dao"/>-->
+		<!--<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />-->
+	<!--</bean>-->
+
+
 	<!-- 另一个事务管理器, Jdbc单数据源事务 -->
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="dataSource" />

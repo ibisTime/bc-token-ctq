@@ -23,8 +23,8 @@ public interface IEthTransactionBO extends IPaginableBO<EthTransaction> {
     //批量插入交易
     public void insertTxList(List<EthTransaction> txList);
 
-    public int saveEthTransaction(EthTransaction tx);
 
+    public int saveEthTransaction(EthTransaction tx);
 
     public List<EthTransaction> queryEthTransactionList(EthTransaction condition);
 

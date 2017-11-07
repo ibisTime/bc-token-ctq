@@ -25,6 +25,14 @@ public class EthAddressDAOImpl extends AMybatisTemplate implements IEthAddressDA
 		return super.selectTotalCount(NAMESPACE.concat("selectTotalCount"),condition);
 	}
 
+	@Override
+	public Long selectTotalCountByAddress(String address) {
+
+		EthAddress condation = new EthAddress();
+		condation.setAddress(address);
+		return super.selectTotalCount(NAMESPACE.concat("selectTotalCountByAddress"),condation);
+
+	}
 
 	//
 	@Override

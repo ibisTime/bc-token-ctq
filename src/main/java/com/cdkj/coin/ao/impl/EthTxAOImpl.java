@@ -6,6 +6,7 @@ import com.cdkj.coin.bo.IEthTransactionBO;
 import com.cdkj.coin.bo.ISYSConfigBO;
 import com.cdkj.coin.bo.base.Paginable;
 import com.cdkj.coin.common.DateUtil;
+import com.cdkj.coin.common.JsonUtil;
 import com.cdkj.coin.common.SysConstants;
 import com.cdkj.coin.domain.EthTransaction;
 import com.cdkj.coin.domain.SYSConfig;
@@ -15,6 +16,7 @@ import com.cdkj.coin.enums.ESystemCode;
 import com.cdkj.coin.eth.Web3JClient;
 import com.cdkj.coin.exception.BizErrorCode;
 import com.cdkj.coin.exception.BizException;
+import com.cdkj.coin.http.PostSimulater;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 
 /**
  * Created by tianlei on 2017/十一月/02.
@@ -187,9 +190,31 @@ public class EthTxAOImpl implements IEthTxAO {
         List<EthTransaction> txs = this.ethTransactionBO.queryEthTxPage(con, 0, 30);
         if (txs.size() > 0) {
 
+            //发送网络请求
+//          http://47.52.77.214:4002/xn-coin/eth/tx/notice
             //推送出去
+            this.doBizCallback(txs);
+
         }
 
+    }
+
+
+    public void doBizCallback( List<EthTransaction> txList) {
+        try {
+
+            String pushJsonStr =  JsonUtil.Object2Json(txList);
+
+            String url =  "http://192.168.31.240:4002/xn-coin/eth/tx/notice";
+//            String url = "http://47.52.77.214:4002/xn-coin/eth/tx/notice";
+
+            Properties formProperties = new Properties();
+            formProperties.put("ethTxlist", pushJsonStr);
+            PostSimulater.requestPostForm(url,
+                    formProperties);
+        } catch (Exception e) {
+            throw new BizException("xn000000", "回调业务biz异常");
+        }
     }
 
     //确认推送

@@ -73,5 +73,8 @@
 	<select id="getAddressCount" resultType="java.lang.Integer">
 		SELECT count(1) FROM tctq_eth_address WHERE address = #{address}
 	</select>
+	<select id="selectTotalCountByAddress" resultType="java.lang.Long">
+		SELECT count(1) FROM `tctq_eth_address` WHERE `address`=#{address}
+	</select>
 
 </mapper>

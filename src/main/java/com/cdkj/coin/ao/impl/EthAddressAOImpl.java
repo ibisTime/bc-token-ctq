@@ -70,8 +70,11 @@ public class EthAddressAOImpl implements IEthAddressAO {
         queryCountCondation.setAddress(req.getAddress());
         queryCountCondation.setType(req.getType());
        int alreadyCount = this.ethAddressBO.queryEthAddressCount(queryCountCondation);
+
+       //已经存在 也告知成功告知地址添加成功
        if (alreadyCount > 0) {
-           throw  new  BizException(BizErrorCode.DEFAULT_ERROR_CODE.getErrorCode(),"地址 + 类型，已经存在");
+           return  new UploadEthAddressRes();
+//           throw  new  BizException(BizErrorCode.DEFAULT_ERROR_CODE.getErrorCode(),"地址 + 类型，已经存在");
        }
 
         UploadEthAddressRes res = this.ethAddressBO.uploadAddress(req);

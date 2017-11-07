@@ -5,6 +5,8 @@ import java.util.List;
 import com.cdkj.coin.core.OrderNoGenerater;
 import com.cdkj.coin.dto.req.UploadEthAddressReq;
 import com.cdkj.coin.dto.res.UploadEthAddressRes;
+import com.cdkj.coin.exception.BizErrorCode;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -35,8 +37,9 @@ public class EthAddressBOImpl extends PaginableBOImpl<EthAddress> implements
         address.setCode(OrderNoGenerater.generateM("AD"));
 
         int count =  this.ethAddressDAO.insert(address);
-        if (count == 0) {
-            throw new BizException("12","失败");
+        if (count <= 0) {
+
+            throw new BizException(BizErrorCode.DEFAULT_ERROR_CODE.getErrorCode(),"失败");
         }
 
         return new UploadEthAddressRes();
@@ -45,10 +48,11 @@ public class EthAddressBOImpl extends PaginableBOImpl<EthAddress> implements
     @Override
     public long addressCount(String address) {
 
-        //
-        EthAddress selectedAddress = new EthAddress();
-        selectedAddress.setAddress(address);
-        return  this.ethAddressDAO.selectTotalCount(selectedAddress);
+        if (address == null || address.length() <= 0) {
+            return 0;
+        }
+
+        return  this.ethAddressDAO.selectTotalCountByAddress(address);
 
     }
 

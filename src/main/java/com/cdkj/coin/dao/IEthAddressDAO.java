@@ -11,7 +11,10 @@ public interface IEthAddressDAO extends IBaseDAO<EthAddress> {
 	String NAMESPACE = IEthAddressDAO.class.getName().concat(".");
 
 	@Override
-	Long selectTotalCount(EthAddress condition);
+	public Long selectTotalCount(EthAddress condition);
+
+	public Long selectTotalCountByAddress(String address);
+
 
 
 
