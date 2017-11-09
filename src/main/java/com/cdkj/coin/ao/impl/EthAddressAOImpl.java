@@ -10,6 +10,7 @@ package com.cdkj.coin.ao.impl;
 
 import java.io.IOException;
 import java.math.BigInteger;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,7 +75,6 @@ public class EthAddressAOImpl implements IEthAddressAO {
        //已经存在 也告知成功告知地址添加成功
        if (alreadyCount > 0) {
            return  new UploadEthAddressRes();
-//           throw  new  BizException(BizErrorCode.DEFAULT_ERROR_CODE.getErrorCode(),"地址 + 类型，已经存在");
        }
 
         UploadEthAddressRes res = this.ethAddressBO.uploadAddress(req);
@@ -104,119 +104,7 @@ public class EthAddressAOImpl implements IEthAddressAO {
     }
 
 
-    @Override
-    public void doEthTransactionSync() {
 
-        try {
-            //
-            while (true) {
-
-                Long blockNumber = sysConfigBO
-                        .getLongValue(SysConstants.CUR_BLOCK_NUMBER);
-
-                System.out.println("*********同步循环开始，扫描区块" + blockNumber
-                        + "*******");
-
-                //
-                EthBlock ethBlockResp = web3j.ethGetBlockByNumber(
-                        new DefaultBlockParameterNumber(blockNumber), true).send();
-                if (ethBlockResp.getError() != null) {
-                    logger.error("扫描以太坊区块同步流水发送异常，原因："
-                            + ethBlockResp.getError());
-                }
-
-                //
-                EthBlock.Block block = ethBlockResp.getResult();
-
-                // 如果取到区块信息
-/**/
-                List<EthTransaction> transactionList = new ArrayList<>();
-
-                if (block == null) {
-
-                    System.out.println("*********同步循环结束,区块号"
-                            + (blockNumber - 1) + "为最后一个区块*******");
-                    break;
-                }
-
-                if (block.getTransactions().size() <= 0) {
-
-                    this.saveToDB(transactionList, blockNumber);
-                    continue;
-                }
-
-                for (EthBlock.TransactionResult txObj : block.getTransactions()) {
-
-                    EthBlock.TransactionObject tx = (EthBlock.TransactionObject) txObj;
-                    String toAddress = tx.getTo();
-                    String fromAddress = tx.getFrom();
-
-                    if (StringUtils.isNotBlank(toAddress)) {
-
-
-                        // 查询改地址是否在我们系统中存在
-                        // to 或者 from 为我们的地址就要进行同步
-                        long toCount = ethAddressBO.addressCount(toAddress);
-                        long fromCount = ethAddressBO.addressCount(fromAddress);
-
-                        if (toCount > 0 || fromCount > 0) {
-                            // 需要同步
-                            transactionList.add(this.ethTransactionBO.convertTx(tx, block.getTimestamp()));
-                        }
-
-                    }
-
-                    // 存储
-                    this.saveToDB(transactionList, blockNumber);
-
-                }
-
-            }
-
-        } catch (IOException e1) {
-
-            logger.error("扫描以太坊区块同步流水发送异常，原因：" + e1.getMessage());
-        }
-        //
-    }
-
-    @Transactional
-    private void saveToDB(List<EthTransaction> transactionList, Long blockNumber) {
-
-        //
-        if (transactionList.isEmpty() == false) {
-
-            //需要落地交易
-            for (EthTransaction tx : transactionList) {
-                int count = this.ethTransactionBO.saveEthTransaction(tx);
-            }
-
-        }
-
-        //修改 区块遍历 信息
-        SYSConfig config = sysConfigBO.getSYSConfig(
-                SysConstants.CUR_BLOCK_NUMBER);
-        //
-        sysConfigBO.refreshSYSConfig(config.getId(),
-                String.valueOf(blockNumber + 1), "code", "当前扫描至哪个区块");
-
-    }
-
-    //时间调度
-    public void pushTx() {
-
-        EthTransaction con = new EthTransaction();
-        con.setStatus(EPushStatus.UN_PUSH.getCode());
-        List<EthTransaction> txs = this.ethTransactionBO.queryEthTransactionList(con);
-        if (txs.size() > 0) {
-
-            //连接另外的 biz
-//            BizConnecter.getBizData("002000", JsonUtil.object2Json(req),
-//                    Object.class);
-            //推送出去
-        }
-
-    }
 
 }
 

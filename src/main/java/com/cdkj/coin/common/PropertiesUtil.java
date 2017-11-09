@@ -27,6 +27,9 @@ public class PropertiesUtil {
     }
 
     public static final class Config {
+
+        public static String PUSH_ADDRESS_URL = props.getProperty("PUSH_ADDRESS_URL");
+
         public static String USER_URL = props.getProperty("USER_URL");
 
         public static String ACCOUNT_URL = props.getProperty("ACCOUNT_URL");

@@ -15,7 +15,8 @@
 		<result column="gas" property="gas" />
 		<result column="block_create_datetime" property="blockCreateDatetime" />
 		<result column="sync_datetime" property="syncDatetime" />
-		<result column="status" property="status" />
+		<result column="gas_used" property="gasUsed" />
+
 	</resultMap>
 
 	<sql id="where_condition">
@@ -40,7 +41,7 @@
 
 	<sql id="ethTx">
 		`hash`,`nonce`,`block_hash`,`block_number`,`transaction_index`,`from`,`to`,`value`,`gas_price`,`gas`,
-		`block_create_datetime`,`sync_datetime`,`status`
+		`block_create_datetime`,`sync_datetime`,`status`,`gas_used`
 	</sql>
 
 	<update id="updateTxStatus" parameterType="com.cdkj.coin.domain.EthTransaction">
@@ -75,12 +76,12 @@
 	<insert id="insertEthTransaction" parameterType="com.cdkj.coin.domain.EthTransaction">
 		INSERT INTO
 		`tctq_eth_transaction`(`hash`, nonce, block_hash, block_number,transaction_index,`from`,`to`,`value`,gas_price,gas,
-							  block_create_datetime,sync_datetime,`status`)
+							  block_create_datetime,sync_datetime,`status`,`gas_used`)
 		VALUES(
 			#{hash} ,#{nonce} ,#{blockHash} ,#{blockNumber} ,#{transactionIndex} ,
 			#{from}
 			,#{to},#{value},#{gasPrice},#{gas},#{blockCreateDatetime},now(),
-			#{status}
+			#{status},#{gasUsed}
 		)
 	</insert>
 
@@ -88,7 +89,7 @@
 
 		INSERT INTO
 			`tctq_eth_transaction`(`hash`, nonce, block_hash, block_number,transaction_index,`from`,`to`,`value`,gas_price,gas,
-									block_create_datetime,sync_datetime,`status`)
+									block_create_datetime,sync_datetime,`status`,gas_used)
 		VALUES
 
 		  <foreach collection="list" item="tx" separator=",">
@@ -96,7 +97,7 @@
 			  #{tx.hash} ,#{tx.nonce} ,#{tx.blockHash} ,#{tx.blockNumber} ,
 			  #{tx.transactionIndex} ,#{tx.from}
 			  ,#{tx.to},#{tx.value},#{tx.gasPrice},#{tx.gas},#{tx.blockCreateDatetime},now(),
-			  #{tx.status}
+			  #{tx.status},#{tx.gasUsed}
 			  )
 		  </foreach>
 

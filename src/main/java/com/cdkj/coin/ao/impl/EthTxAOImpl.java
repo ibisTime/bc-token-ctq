@@ -7,6 +7,7 @@ import com.cdkj.coin.bo.ISYSConfigBO;
 import com.cdkj.coin.bo.base.Paginable;
 import com.cdkj.coin.common.DateUtil;
 import com.cdkj.coin.common.JsonUtil;
+import com.cdkj.coin.common.PropertiesUtil;
 import com.cdkj.coin.common.SysConstants;
 import com.cdkj.coin.domain.EthTransaction;
 import com.cdkj.coin.domain.SYSConfig;
@@ -25,12 +26,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterNumber;
 import org.web3j.protocol.core.methods.response.EthBlock;
+import org.web3j.protocol.core.methods.response.EthGetTransactionReceipt;
+import org.web3j.protocol.core.methods.response.TransactionReceipt;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Properties;
+import java.math.BigInteger;
+import java.util.*;
 
 /**
  * Created by tianlei on 2017/十一月/02.
@@ -140,6 +141,10 @@ public class EthTxAOImpl implements IEthTxAO {
                     String toAddress = tx.getTo();
                     String fromAddress = tx.getFrom();
 
+                    if (StringUtils.isBlank(toAddress) || StringUtils.isBlank(fromAddress)) {
+                        continue;
+                    }
+
                     // 查询改地址是否在我们系统中存在
                     // to 或者 from 为我们的地址就要进行同步
                     long toCount = ethAddressBO.addressCount(toAddress);
@@ -147,7 +152,19 @@ public class EthTxAOImpl implements IEthTxAO {
 
                     if (toCount > 0 || fromCount > 0) {
                         // 需要同步
-                        transactionList.add(this.ethTransactionBO.convertTx(tx, block.getTimestamp()));
+
+                        //获取交易收据
+                        Optional<TransactionReceipt> transactionReceipt = web3j.ethGetTransactionReceipt(tx.getHash()).send().getTransactionReceipt();
+
+                        if (transactionReceipt.isPresent()) {
+
+                            TransactionReceipt transactionReceipt1 = transactionReceipt.get();
+                            BigInteger gasUsed = transactionReceipt1.getGasUsed();
+                            transactionList.add(this.ethTransactionBO.convertTx(tx, gasUsed, block.getTimestamp()));
+
+                        }
+
+
                     }
 
 
@@ -187,35 +204,24 @@ public class EthTxAOImpl implements IEthTxAO {
 
         EthTransaction con = new EthTransaction();
         con.setStatus(EPushStatus.UN_PUSH.getCode());
-        List<EthTransaction> txs = this.ethTransactionBO.queryEthTxPage(con, 0, 30);
-        if (txs.size() > 0) {
-
-            //发送网络请求
-//          http://47.52.77.214:4002/xn-coin/eth/tx/notice
+        List<EthTransaction> txList = this.ethTransactionBO.queryEthTxPage(con, 0, 30);
+        if (txList.size() > 0) {
             //推送出去
-            this.doBizCallback(txs);
+            try {
 
+                String pushJsonStr = JsonUtil.Object2Json(txList);
+                String url = PropertiesUtil.Config.PUSH_ADDRESS_URL;
+                Properties formProperties = new Properties();
+                formProperties.put("ethTxlist", pushJsonStr);
+                PostSimulater.requestPostForm(url,
+                        formProperties);
+            } catch (Exception e) {
+                throw new BizException("xn000000", "回调业务biz异常");
+            }
         }
 
     }
 
-
-    public void doBizCallback( List<EthTransaction> txList) {
-        try {
-
-            String pushJsonStr =  JsonUtil.Object2Json(txList);
-
-            String url =  "http://192.168.31.240:4002/xn-coin/eth/tx/notice";
-//            String url = "http://47.52.77.214:4002/xn-coin/eth/tx/notice";
-
-            Properties formProperties = new Properties();
-            formProperties.put("ethTxlist", pushJsonStr);
-            PostSimulater.requestPostForm(url,
-                    formProperties);
-        } catch (Exception e) {
-            throw new BizException("xn000000", "回调业务biz异常");
-        }
-    }
 
     //确认推送
     @Override

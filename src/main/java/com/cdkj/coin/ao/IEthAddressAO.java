@@ -21,8 +21,6 @@ import java.util.List;
  * @history:
  */
 public interface IEthAddressAO {
-    // 定时器调用：每隔**同步账户流水
-    public void doEthTransactionSync();
 
     public UploadEthAddressRes uploadAddress(UploadEthAddressReq req);
 

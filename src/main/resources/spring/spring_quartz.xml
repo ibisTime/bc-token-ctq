@@ -19,8 +19,8 @@
 	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 		<property name="triggers">
 			<list>
-				<ref bean="ethTransactionSyncTrigger" />
-				<ref bean="ethPushSyncTrigger"/>
+				<!--<ref bean="ethTransactionSyncTrigger" />-->
+				<!--<ref bean="ethPushSyncTrigger"/>-->
 			</list>
 		</property>
 		<property name="autoStartup" value="true" />

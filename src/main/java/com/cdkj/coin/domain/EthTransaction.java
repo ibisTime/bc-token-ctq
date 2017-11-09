@@ -42,8 +42,19 @@ public class EthTransaction extends ABaseDO {
 	// gas价格
 	private String gasPrice;
 
-	// 消耗gas
+	// gasLimit
 	private BigInteger gas;
+
+	//消耗gas
+	private BigInteger gasUsed;
+
+	public BigInteger getGasUsed() {
+		return gasUsed;
+	}
+
+	public void setGasUsed(BigInteger gasUsed) {
+		this.gasUsed = gasUsed;
+	}
 
 	//区块生成时间
 	private Date blockCreateDatetime;

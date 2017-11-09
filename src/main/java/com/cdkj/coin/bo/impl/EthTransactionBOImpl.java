@@ -27,7 +27,7 @@ public class EthTransactionBOImpl extends PaginableBOImpl<EthTransaction>
     private IEthTransactionDAO ethTransactionDAO;
 
     @Override
-    public EthTransaction convertTx(EthBlock.TransactionObject tx, BigInteger timestamp) {
+    public EthTransaction convertTx(EthBlock.TransactionObject tx,BigInteger gasUsed ,BigInteger timestamp) {
 
         if (tx == null || timestamp == null) return null;
 
@@ -49,6 +49,8 @@ public class EthTransactionBOImpl extends PaginableBOImpl<EthTransaction>
         //
         transaction.setStatus(EPushStatus.UN_PUSH.getCode());
         transaction.setBlockCreateDatetime(new Date(timestamp.longValue() * 1000));
+        //
+        transaction.setGasUsed(gasUsed);
 
         return transaction;
     }

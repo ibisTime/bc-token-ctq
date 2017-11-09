@@ -3,6 +3,7 @@ package com.cdkj.coin.bo;
 import java.math.BigInteger;
 import java.text.ParseException;
 import java.util.List;
+import java.util.function.BinaryOperator;
 
 import org.web3j.protocol.core.methods.response.EthBlock;
 
@@ -12,7 +13,7 @@ import com.cdkj.coin.domain.EthTransaction;
 public interface IEthTransactionBO extends IPaginableBO<EthTransaction> {
 
     //对象转换
-    public EthTransaction convertTx(EthBlock.TransactionObject tx,BigInteger timestamp) ;
+    public EthTransaction convertTx(EthBlock.TransactionObject tx, BigInteger gasUsed, BigInteger timestamp) ;
 
     //分页查询交易
     public List<EthTransaction> queryEthTxPage(EthTransaction condition, int start, int limit);

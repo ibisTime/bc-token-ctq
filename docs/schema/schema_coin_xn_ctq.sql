@@ -8,10 +8,10 @@ CREATE TABLE IF NOT EXISTS `tctq_eth_address` (
   `type` VARCHAR(3) NOT NULL,
   `create_datetime` DATETIME NOT NULL,
   PRIMARY KEY (`code`),
-  INDEX `address_index` (`address` ASC))
+  INDEX `address_index` (`address`))
   ENGINE = InnoDB  DEFAULT CHARSET=utf8;
 
-#
+#交易表
 CREATE TABLE IF NOT EXISTS `tctq_eth_transaction` (
   `hash` CHAR(66) NOT NULL COMMENT '交易哈希',
   `nonce` BIGINT(20) NOT NULL COMMENT '交易次数',
@@ -24,13 +24,14 @@ CREATE TABLE IF NOT EXISTS `tctq_eth_transaction` (
   `block_create_datetime` DATETIME NOT NULL COMMENT '区块形成时间',
   `sync_datetime` DATETIME NOT NULL COMMENT '同步时间',
   `status` VARCHAR(4) NOT NULL COMMENT '状态 0-未推送 1-已推送',
-  `gas` BIGINT(20) NOT NULL COMMENT 'gas使用量',
+  `gas` BIGINT(20) NOT NULL COMMENT 'gaslimit',
+  `gas_used` BIGINT(10) NOT NULL COMMENT 'gas消耗',
   `block_number` VARCHAR(20) NOT NULL,
   PRIMARY KEY (`hash`),
-  INDEX `from_index` (`from` ASC),
-  INDEX `to_index` (`to` ASC, `status` ASC),
-  INDEX `status_index` (`status` ASC))
-  ENGINE = InnoDB DEFAULT CHARSET=utf8;
+  INDEX `from_index` (`from`),
+  INDEX `to_index` (`to`),
+  INDEX `status_index` (`status`)
+) ENGINE = InnoDB DEFAULT CHARSET=utf8;
 
 #
 CREATE TABLE `tsys_config` (
