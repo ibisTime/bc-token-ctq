@@ -8,12 +8,11 @@
  */
 package com.cdkj.coin.ao;
 
+import java.util.List;
+
 import com.cdkj.coin.bo.base.Paginable;
 import com.cdkj.coin.domain.EthAddress;
 import com.cdkj.coin.dto.req.UploadEthAddressReq;
-import com.cdkj.coin.dto.res.UploadEthAddressRes;
-
-import java.util.List;
 
 /**
  * @author: haiqingzheng 
@@ -22,13 +21,13 @@ import java.util.List;
  */
 public interface IEthAddressAO {
 
-    public UploadEthAddressRes uploadAddress(UploadEthAddressReq req);
+    public void uploadAddress(UploadEthAddressReq req);
 
     //
     public List<EthAddress> queryEthAddressListByAddress(String address);
 
-    //根据类型 分页查
-    public Paginable<EthAddress> queryEthAddressPageByStatusList(List<String> typeList, int start, int limit);
-
+    // 根据类型 分页查
+    public Paginable<EthAddress> queryEthAddressPageByStatusList(
+            List<String> typeList, int start, int limit);
 
 }

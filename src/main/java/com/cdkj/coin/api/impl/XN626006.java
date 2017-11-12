@@ -10,27 +10,28 @@ import com.cdkj.coin.exception.ParaException;
 import com.cdkj.coin.spring.SpringContextHolder;
 
 /**
+ * 详情查询地址
  * Created by tianlei on 2017/十一月/03.
  */
-public class XN616006 extends AProcessor {
+public class XN626006 extends AProcessor {
 
     private IEthAddressAO addressAO = SpringContextHolder
-            .getBean(IEthAddressAO.class);
+        .getBean(IEthAddressAO.class);
+
     private AddressDetailReq req;
-
-
-    @Override
-    public void doCheck(String inputparams) throws ParaException {
-
-        req = JsonUtil.json2Bean(inputparams,AddressDetailReq.class);
-        ObjValidater.validateReq(req);
-
-    }
 
     @Override
     public Object doBusiness() throws BizException {
 
-      return this.addressAO.queryEthAddressListByAddress(req.getAddress());
+        return this.addressAO.queryEthAddressListByAddress(req.getAddress());
+
+    }
+
+    @Override
+    public void doCheck(String inputparams) throws ParaException {
+
+        req = JsonUtil.json2Bean(inputparams, AddressDetailReq.class);
+        ObjValidater.validateReq(req);
 
     }
 }

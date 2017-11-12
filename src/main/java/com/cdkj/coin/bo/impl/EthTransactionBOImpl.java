@@ -1,13 +1,10 @@
 package com.cdkj.coin.bo.impl;
 
-
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.cdkj.coin.enums.EPushStatus;
-import com.cdkj.coin.exception.BizErrorCode;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -17,6 +14,8 @@ import com.cdkj.coin.bo.IEthTransactionBO;
 import com.cdkj.coin.bo.base.PaginableBOImpl;
 import com.cdkj.coin.dao.IEthTransactionDAO;
 import com.cdkj.coin.domain.EthTransaction;
+import com.cdkj.coin.enums.EPushStatus;
+import com.cdkj.coin.exception.BizErrorCode;
 import com.cdkj.coin.exception.BizException;
 
 @Component
@@ -27,9 +26,11 @@ public class EthTransactionBOImpl extends PaginableBOImpl<EthTransaction>
     private IEthTransactionDAO ethTransactionDAO;
 
     @Override
-    public EthTransaction convertTx(EthBlock.TransactionObject tx,BigInteger gasUsed ,BigInteger timestamp) {
+    public EthTransaction convertTx(EthBlock.TransactionObject tx,
+            BigInteger gasUsed, BigInteger timestamp) {
 
-        if (tx == null || timestamp == null) return null;
+        if (tx == null || timestamp == null)
+            return null;
 
         EthTransaction transaction = new EthTransaction();
         transaction.setHash(tx.getHash());
@@ -48,7 +49,8 @@ public class EthTransactionBOImpl extends PaginableBOImpl<EthTransaction>
 
         //
         transaction.setStatus(EPushStatus.UN_PUSH.getCode());
-        transaction.setBlockCreateDatetime(new Date(timestamp.longValue() * 1000));
+        transaction.setBlockCreateDatetime(new Date(
+            timestamp.longValue() * 1000));
         //
         transaction.setGasUsed(gasUsed);
 
@@ -62,14 +64,14 @@ public class EthTransactionBOImpl extends PaginableBOImpl<EthTransaction>
 
     }
 
-
     @Override
     public List<EthTransaction> queryEthTransactionList(EthTransaction condition) {
         return ethTransactionDAO.selectList(condition);
     }
 
     @Override
-    public List<EthTransaction> queryEthTxPage(EthTransaction condition, int start, int limit) {
+    public List<EthTransaction> queryEthTxPage(EthTransaction condition,
+            int start, int limit) {
 
         return ethTransactionDAO.selectList(condition, start, limit);
     }
@@ -78,14 +80,13 @@ public class EthTransactionBOImpl extends PaginableBOImpl<EthTransaction>
     @Override
     public void changeTxStatusToPushed(List<String> txHashList) {
 
-        List<EthTransaction> txList = new ArrayList();
+        List<EthTransaction> txList = new ArrayList<EthTransaction>();
 
-        txHashList.forEach(hash -> {
-
+        for (String hash : txHashList) {
             EthTransaction ethTransaction = new EthTransaction();
             ethTransaction.setHash(hash);
             txList.add(ethTransaction);
-        });
+        }
 
         this.ethTransactionDAO.updateTxStatus(txList);
 
@@ -104,7 +105,9 @@ public class EthTransactionBOImpl extends PaginableBOImpl<EthTransaction>
             condition.setHash(hash);
             data = ethTransactionDAO.select(condition);
             if (data == null) {
-                throw new BizException(BizErrorCode.DEFAULT_ERROR_CODE.getErrorCode(), "以太坊交易记录不存在");
+                throw new BizException(
+                    BizErrorCode.DEFAULT_ERROR_CODE.getErrorCode(),
+                    "以太坊交易记录不存在");
             }
         }
 

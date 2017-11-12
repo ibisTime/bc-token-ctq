@@ -1,5 +1,23 @@
 package com.cdkj.coin.ao.impl;
 
+import java.io.IOException;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import java.util.Properties;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.web3j.protocol.Web3j;
+import org.web3j.protocol.core.DefaultBlockParameterNumber;
+import org.web3j.protocol.core.methods.response.EthBlock;
+import org.web3j.protocol.core.methods.response.TransactionReceipt;
+
 import com.cdkj.coin.ao.IEthTxAO;
 import com.cdkj.coin.bo.IEthAddressBO;
 import com.cdkj.coin.bo.IEthTransactionBO;
@@ -13,25 +31,10 @@ import com.cdkj.coin.domain.EthTransaction;
 import com.cdkj.coin.domain.SYSConfig;
 import com.cdkj.coin.dto.req.EthTxPageReq;
 import com.cdkj.coin.enums.EPushStatus;
-import com.cdkj.coin.enums.ESystemCode;
 import com.cdkj.coin.eth.Web3JClient;
 import com.cdkj.coin.exception.BizErrorCode;
 import com.cdkj.coin.exception.BizException;
 import com.cdkj.coin.http.PostSimulater;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.web3j.protocol.Web3j;
-import org.web3j.protocol.core.DefaultBlockParameterNumber;
-import org.web3j.protocol.core.methods.response.EthBlock;
-import org.web3j.protocol.core.methods.response.EthGetTransactionReceipt;
-import org.web3j.protocol.core.methods.response.TransactionReceipt;
-
-import java.io.IOException;
-import java.math.BigInteger;
-import java.util.*;
 
 /**
  * Created by tianlei on 2017/十一月/02.
@@ -40,7 +43,7 @@ import java.util.*;
 public class EthTxAOImpl implements IEthTxAO {
 
     static final org.slf4j.Logger logger = LoggerFactory
-            .getLogger(EthAddressAOImpl.class);
+        .getLogger(EthAddressAOImpl.class);
 
     private static Web3j web3j = Web3JClient.getClient();
 
@@ -62,21 +65,25 @@ public class EthTxAOImpl implements IEthTxAO {
         condation.setTo(req.getTo());
         condation.setFrom(req.getFrom());
 
-        //时间
+        // 时间
         Date startDate = null;
         Date endDate = null;
 
         if (req.getBlockCreateDatetimeStart() != null) {
-            startDate = DateUtil.strToDate(req.getBlockCreateDatetimeStart(), DateUtil.DATA_TIME_PATTERN_1);
+            startDate = DateUtil.strToDate(req.getBlockCreateDatetimeStart(),
+                DateUtil.DATA_TIME_PATTERN_1);
         }
 
         if (req.getBlockCreateDatetimeEnd() != null) {
-            endDate = DateUtil.strToDate(req.getBlockCreateDatetimeEnd(), DateUtil.DATA_TIME_PATTERN_1);
+            endDate = DateUtil.strToDate(req.getBlockCreateDatetimeEnd(),
+                DateUtil.DATA_TIME_PATTERN_1);
         }
 
         if (startDate != null && endDate != null) {
             if (startDate.compareTo(endDate) > 0) {
-                throw new BizException(BizErrorCode.DEFAULT_ERROR_CODE.getErrorCode(), "开始时间需 <= 结束时间");
+                throw new BizException(
+                    BizErrorCode.DEFAULT_ERROR_CODE.getErrorCode(),
+                    "开始时间需 <= 结束时间");
             }
 
         }
@@ -84,7 +91,9 @@ public class EthTxAOImpl implements IEthTxAO {
         condation.setBlockCreateDatetimeStart(startDate);
         condation.setBlockCreateDatetimeEnd(endDate);
 
-        return this.ethTransactionBO.getPaginable(Integer.valueOf(req.getStart()), Integer.valueOf(req.getLimit()), condation);
+        return this.ethTransactionBO.getPaginable(
+            Integer.valueOf(req.getStart()), Integer.valueOf(req.getLimit()),
+            condation);
     }
 
     @Override
@@ -97,7 +106,7 @@ public class EthTxAOImpl implements IEthTxAO {
             while (true) {
 
                 Long blockNumber = sysConfigBO
-                        .getLongValue(SysConstants.CUR_BLOCK_NUMBER);
+                    .getLongValue(SysConstants.CUR_BLOCK_NUMBER);
                 if (isDebug == true) {
 
                     System.out.println("*********同步循环开始，扫描区块" + blockNumber
@@ -105,9 +114,9 @@ public class EthTxAOImpl implements IEthTxAO {
 
                 }
 
-                //获取当前区块
+                // 获取当前区块
                 EthBlock ethBlockResp = web3j.ethGetBlockByNumber(
-                        new DefaultBlockParameterNumber(blockNumber), true).send();
+                    new DefaultBlockParameterNumber(blockNumber), true).send();
                 if (ethBlockResp.getError() != null) {
                     logger.error("扫描以太坊区块同步流水发送异常，原因：获取区块-"
                             + ethBlockResp.getError());
@@ -116,17 +125,20 @@ public class EthTxAOImpl implements IEthTxAO {
                 //
                 EthBlock.Block currentBlock = ethBlockResp.getResult();
 
-                //获取当前区块链长度
-                BigInteger maxBlockNumber = web3j.ethBlockNumber().send().getBlockNumber();
+                // 获取当前区块链长度
+                BigInteger maxBlockNumber = web3j.ethBlockNumber().send()
+                    .getBlockNumber();
                 if (isDebug == true) {
 
                     System.out.println("*********最大区块号" + maxBlockNumber
                             + "*******");
                 }
 
-
-                //判断是否有足够的区块确认 暂定12
-                if (currentBlock == null || maxBlockNumber.subtract(BigInteger.valueOf(blockNumber)).compareTo(BigInteger.valueOf(12)) < 0) {
+                // 判断是否有足够的区块确认 暂定12
+                if (currentBlock == null
+                        || maxBlockNumber.subtract(
+                            BigInteger.valueOf(blockNumber)).compareTo(
+                            BigInteger.valueOf(12)) < 0) {
 
                     if (isDebug == true) {
 
@@ -138,19 +150,16 @@ public class EthTxAOImpl implements IEthTxAO {
 
                 // 如果取到区块信息
                 List<EthTransaction> transactionList = new ArrayList<>();
-                if (currentBlock.getTransactions().size() <= 0) {
 
-                    this.saveToDB(transactionList, blockNumber);
-                    continue;
-                }
-
-                for (EthBlock.TransactionResult txObj : currentBlock.getTransactions()) {
+                for (EthBlock.TransactionResult txObj : currentBlock
+                    .getTransactions()) {
 
                     EthBlock.TransactionObject tx = (EthBlock.TransactionObject) txObj;
                     String toAddress = tx.getTo();
                     String fromAddress = tx.getFrom();
 
-                    if (StringUtils.isBlank(toAddress) || StringUtils.isBlank(fromAddress)) {
+                    if (StringUtils.isBlank(toAddress)
+                            || StringUtils.isBlank(fromAddress)) {
                         continue;
                     }
 
@@ -161,21 +170,25 @@ public class EthTxAOImpl implements IEthTxAO {
 
                     if (toCount > 0 || fromCount > 0) {
                         // 需要同步
-                        //获取交易收据
-                        Optional<TransactionReceipt> transactionReceipt = web3j.ethGetTransactionReceipt(tx.getHash()).send().getTransactionReceipt();
+                        // 获取交易收据
+                        Optional<TransactionReceipt> transactionReceipt = web3j
+                            .ethGetTransactionReceipt(tx.getHash()).send()
+                            .getTransactionReceipt();
 
                         if (transactionReceipt.isPresent()) {
 
-                            TransactionReceipt transactionReceipt1 = transactionReceipt.get();
-                            BigInteger gasUsed = transactionReceipt1.getGasUsed();
-                            EthTransaction ethTransaction = this.ethTransactionBO.convertTx(tx, gasUsed, currentBlock.getTimestamp());
+                            TransactionReceipt transactionReceipt1 = transactionReceipt
+                                .get();
+                            BigInteger gasUsed = transactionReceipt1
+                                .getGasUsed();
+                            EthTransaction ethTransaction = this.ethTransactionBO
+                                .convertTx(tx, gasUsed,
+                                    currentBlock.getTimestamp());
                             transactionList.add(ethTransaction);
 
                         }
 
-
                     }
-
 
                 }
                 // 存储
@@ -199,31 +212,31 @@ public class EthTxAOImpl implements IEthTxAO {
 
         }
 
-        //修改_区块遍历信息
-        SYSConfig config = sysConfigBO.getSYSConfig(
-                SysConstants.CUR_BLOCK_NUMBER);
+        // 修改_区块遍历信息
+        SYSConfig config = sysConfigBO
+            .getSYSConfig(SysConstants.CUR_BLOCK_NUMBER);
         //
         sysConfigBO.refreshSYSConfig(config.getId(),
-                String.valueOf(blockNumber + 1), "code", "下次从哪个区块开始扫描");
+            String.valueOf(blockNumber + 1), "code", "下次从哪个区块开始扫描");
 
     }
 
-    //时间调度任务,定期扫描——未推送的——交易
+    // 时间调度任务,定期扫描——未推送的——交易
     public void pushTx() {
 
         EthTransaction con = new EthTransaction();
         con.setStatus(EPushStatus.UN_PUSH.getCode());
-        List<EthTransaction> txList = this.ethTransactionBO.queryEthTxPage(con, 0, 30);
+        List<EthTransaction> txList = this.ethTransactionBO.queryEthTxPage(con,
+            0, 30);
         if (txList.size() > 0) {
-            //推送出去
+            // 推送出去
             try {
 
                 String pushJsonStr = JsonUtil.Object2Json(txList);
                 String url = PropertiesUtil.Config.PUSH_ADDRESS_URL;
                 Properties formProperties = new Properties();
                 formProperties.put("ethTxlist", pushJsonStr);
-                PostSimulater.requestPostForm(url,
-                        formProperties);
+                PostSimulater.requestPostForm(url, formProperties);
             } catch (Exception e) {
                 throw new BizException("xn000000", "回调业务biz异常");
             }
@@ -231,13 +244,16 @@ public class EthTxAOImpl implements IEthTxAO {
 
     }
 
-
-    //确认推送
+    // 确认推送
     @Override
     public Object confirmPush(List<String> hashList) {
 
         if (hashList == null || hashList.size() <= 0) {
-            throw new BizException(BizErrorCode.PUSH_STATUS_UPDATE_FAILURE.getErrorCode(), "请传入正确的json数组" + BizErrorCode.PUSH_STATUS_UPDATE_FAILURE.getErrorCode());
+            throw new BizException(
+                BizErrorCode.PUSH_STATUS_UPDATE_FAILURE.getErrorCode(),
+                "请传入正确的json数组"
+                        + BizErrorCode.PUSH_STATUS_UPDATE_FAILURE
+                            .getErrorCode());
         }
 
         this.ethTransactionBO.changeTxStatusToPushed(hashList);
