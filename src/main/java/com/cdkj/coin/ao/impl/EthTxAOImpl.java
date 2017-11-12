@@ -105,37 +105,46 @@ public class EthTxAOImpl implements IEthTxAO {
 
                 }
 
-                //
+                //获取当前区块
                 EthBlock ethBlockResp = web3j.ethGetBlockByNumber(
                         new DefaultBlockParameterNumber(blockNumber), true).send();
                 if (ethBlockResp.getError() != null) {
-                    logger.error("扫描以太坊区块同步流水发送异常，原因："
+                    logger.error("扫描以太坊区块同步流水发送异常，原因：获取区块-"
                             + ethBlockResp.getError());
                 }
 
                 //
-                EthBlock.Block block = ethBlockResp.getResult();
+                EthBlock.Block currentBlock = ethBlockResp.getResult();
 
-                // 如果取到区块信息
-                List<EthTransaction> transactionList = new ArrayList<>();
+                //获取当前区块链长度
+                BigInteger maxBlockNumber = web3j.ethBlockNumber().send().getBlockNumber();
+                if (isDebug == true) {
 
-                if (block == null) {
+                    System.out.println("*********最大区块号" + maxBlockNumber
+                            + "*******");
+                }
+
+
+                //判断是否有足够的区块确认 暂定12
+                if (currentBlock == null || maxBlockNumber.subtract(BigInteger.valueOf(blockNumber)).compareTo(BigInteger.valueOf(12)) < 0) {
 
                     if (isDebug == true) {
 
                         System.out.println("*********同步循环结束,区块号"
-                                + (blockNumber - 1) + "为最后一个区块*******");
+                                + (blockNumber - 1) + "为最后一个可信任区块*******");
                     }
                     break;
                 }
 
-                if (block.getTransactions().size() <= 0) {
+                // 如果取到区块信息
+                List<EthTransaction> transactionList = new ArrayList<>();
+                if (currentBlock.getTransactions().size() <= 0) {
 
                     this.saveToDB(transactionList, blockNumber);
                     continue;
                 }
 
-                for (EthBlock.TransactionResult txObj : block.getTransactions()) {
+                for (EthBlock.TransactionResult txObj : currentBlock.getTransactions()) {
 
                     EthBlock.TransactionObject tx = (EthBlock.TransactionObject) txObj;
                     String toAddress = tx.getTo();
@@ -152,7 +161,6 @@ public class EthTxAOImpl implements IEthTxAO {
 
                     if (toCount > 0 || fromCount > 0) {
                         // 需要同步
-
                         //获取交易收据
                         Optional<TransactionReceipt> transactionReceipt = web3j.ethGetTransactionReceipt(tx.getHash()).send().getTransactionReceipt();
 
@@ -160,7 +168,8 @@ public class EthTxAOImpl implements IEthTxAO {
 
                             TransactionReceipt transactionReceipt1 = transactionReceipt.get();
                             BigInteger gasUsed = transactionReceipt1.getGasUsed();
-                            transactionList.add(this.ethTransactionBO.convertTx(tx, gasUsed, block.getTimestamp()));
+                            EthTransaction ethTransaction = this.ethTransactionBO.convertTx(tx, gasUsed, currentBlock.getTimestamp());
+                            transactionList.add(ethTransaction);
 
                         }
 
