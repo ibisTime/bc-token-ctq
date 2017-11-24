@@ -1,39 +1,57 @@
-CREATE DATABASE coin_xn_ctq_dev;
-use coin_xn_ctq_dev;
 
-#
-CREATE TABLE IF NOT EXISTS `tctq_eth_address` (
-  `code` VARCHAR(32) NOT NULL,
-  `address` CHAR(42) NOT NULL,
-  `type` VARCHAR(3) NOT NULL,
-  `create_datetime` DATETIME NOT NULL,
+--
+-- Table structure for table `tctq_eth_address`
+--
+
+DROP TABLE IF EXISTS `tctq_eth_address`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tctq_eth_address` (
+  `code` varchar(32) NOT NULL,
+  `address` char(42) NOT NULL,
+  `type` varchar(3) NOT NULL,
+  `create_datetime` datetime NOT NULL,
   PRIMARY KEY (`code`),
-  INDEX `address_index` (`address`))
-  ENGINE = InnoDB  DEFAULT CHARSET=utf8;
+  KEY `address_index` (`address`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
-#交易表
-CREATE TABLE IF NOT EXISTS `tctq_eth_transaction` (
-  `hash` CHAR(66) NOT NULL COMMENT '交易哈希',
-  `nonce` BIGINT(20) NOT NULL COMMENT '交易次数',
-  `block_hash` VARCHAR(66) NOT NULL COMMENT '区块哈希',
-  `transaction_index` BIGINT(20) NOT NULL,
-  `from` CHAR(42) NOT NULL COMMENT '转出地址',
-  `to` CHAR(42) NOT NULL COMMENT '转入地址' ,
-  `value` VARCHAR(30) NOT NULL COMMENT '交易额' ,
-  `gas_price` VARCHAR(20) NOT NULL COMMENT 'gas价格',
-  `block_create_datetime` DATETIME NOT NULL COMMENT '区块形成时间',
-  `sync_datetime` DATETIME NOT NULL COMMENT '同步时间',
-  `status` VARCHAR(4) NOT NULL COMMENT '状态 0-未推送 1-已推送',
-  `gas` BIGINT(20) NOT NULL COMMENT 'gaslimit',
-  `gas_used` BIGINT(10) NOT NULL COMMENT 'gas消耗',
-  `block_number` VARCHAR(20) NOT NULL,
+--
+-- Table structure for table `tctq_eth_transaction`
+--
+
+DROP TABLE IF EXISTS `tctq_eth_transaction`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tctq_eth_transaction` (
+  `hash` char(66) NOT NULL COMMENT '交易哈希',
+  `nonce` bigint(20) NOT NULL COMMENT '交易次数',
+  `block_hash` varchar(66) NOT NULL COMMENT '区块哈希',
+  `transaction_index` bigint(20) NOT NULL,
+  `from` char(42) NOT NULL COMMENT '转出地址',
+  `to` char(42) NOT NULL COMMENT '转入地址',
+  `value` varchar(30) NOT NULL COMMENT '交易额',
+  `gas_price` varchar(20) NOT NULL COMMENT 'gas价格',
+  `block_create_datetime` datetime NOT NULL COMMENT '区块形成时间',
+  `sync_datetime` datetime NOT NULL COMMENT '同步时间',
+  `status` varchar(4) NOT NULL COMMENT '状态 0-未推送 1-已推送',
+  `gas` bigint(20) NOT NULL COMMENT 'gas使用量',
+  `block_number` varchar(20) NOT NULL,
+  `gas_used` bigint(10) NOT NULL COMMENT 'gas消耗',
   PRIMARY KEY (`hash`),
-  INDEX `from_index` (`from`),
-  INDEX `to_index` (`to`),
-  INDEX `status_index` (`status`)
-) ENGINE = InnoDB DEFAULT CHARSET=utf8;
+  KEY `from_index` (`from`),
+  KEY `to_index` (`to`,`status`),
+  KEY `status_index` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
-#
+--
+-- Table structure for table `tsys_config`
+--
+
+DROP TABLE IF EXISTS `tsys_config`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tsys_config` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
   `type` varchar(32) DEFAULT NULL COMMENT '类型',
@@ -43,9 +61,16 @@ CREATE TABLE `tsys_config` (
   `update_datetime` datetime DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(255) DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
-#
+--
+-- Table structure for table `tsys_dict`
+--
+
+DROP TABLE IF EXISTS `tsys_dict`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tsys_dict` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号（自增长）',
   `type` char(1) DEFAULT NULL COMMENT '类型（第一层/第二层）',
@@ -56,4 +81,5 @@ CREATE TABLE `tsys_dict` (
   `update_datetime` datetime DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(255) DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
