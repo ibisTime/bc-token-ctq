@@ -40,7 +40,7 @@ CREATE TABLE `tctq_eth_transaction` (
   `gas_used` bigint(10) NOT NULL COMMENT 'gas消耗',
   PRIMARY KEY (`hash`),
   KEY `from_index` (`from`),
-  KEY `to_index` (`to`,`status`),
+  KEY `to_index` (`to`),
   KEY `status_index` (`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
