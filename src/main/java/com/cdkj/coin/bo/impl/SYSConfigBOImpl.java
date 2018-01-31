@@ -1,9 +1,8 @@
 package com.cdkj.coin.bo.impl;
 
+import java.math.BigInteger;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -63,7 +62,7 @@ public class SYSConfigBOImpl extends PaginableBOImpl<SYSConfig> implements
     public SYSConfig getSYSConfig(String key) {
 
         SYSConfig sysConfig = null;
-        if (StringUtils.isNotBlank(key) ) {
+        if (StringUtils.isNotBlank(key)) {
             SYSConfig condition = new SYSConfig();
             condition.setCkey(key);
             List<SYSConfig> sysConfigList = sysConfigDAO.selectList(condition);
@@ -116,6 +115,19 @@ public class SYSConfigBOImpl extends PaginableBOImpl<SYSConfig> implements
             result = Long.valueOf(config.getCvalue());
         } catch (Exception e) {
             logger.error("参数名为" + key + "的配置转换成Long类型发生错误, 原因："
+                    + e.getMessage());
+        }
+        return result;
+    }
+
+    @Override
+    public BigInteger getBigIntegerValue(String key) {
+        BigInteger result = BigInteger.ZERO;
+        SYSConfig config = getSYSConfig(key);
+        try {
+            result = new BigInteger(config.getCvalue());
+        } catch (Exception e) {
+            logger.error("参数名为" + key + "的配置转换成BigInteger类型发生错误, 原因："
                     + e.getMessage());
         }
         return result;

@@ -10,7 +10,6 @@ package com.cdkj.coin.http;
 
 import java.util.Properties;
 
-import com.cdkj.coin.common.PropertiesUtil;
 import com.cdkj.coin.core.RegexUtils;
 import com.cdkj.coin.exception.BizException;
 
@@ -21,12 +20,6 @@ import com.cdkj.coin.exception.BizException;
  */
 public class BizConnecter {
     public static final String YES = "0";
-
-    public static final String USER_URL = PropertiesUtil.Config.USER_URL;
-
-    public static final String ACCOUNT_URL = PropertiesUtil.Config.ACCOUNT_URL;
-
-    public static final String CERTI_URL = PropertiesUtil.Config.CERTI_URL;
 
     public static final String POST_URL = "...";
 
@@ -60,14 +53,6 @@ public class BizConnecter {
 
     private static String getPostUrl(String code) {
         String postUrl = POST_URL;
-        if (code.startsWith("805") || code.startsWith("806")
-                || code.startsWith("807") || code.startsWith("001")) {
-            postUrl = USER_URL;
-        } else if (code.startsWith("802") || code.startsWith("002")) {
-            postUrl = ACCOUNT_URL;
-        } else if (code.startsWith("798")) {
-            postUrl = CERTI_URL;
-        }
         return postUrl;
     }
 }

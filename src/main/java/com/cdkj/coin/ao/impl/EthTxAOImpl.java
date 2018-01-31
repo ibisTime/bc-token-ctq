@@ -31,7 +31,7 @@ import com.cdkj.coin.domain.EthTransaction;
 import com.cdkj.coin.domain.SYSConfig;
 import com.cdkj.coin.dto.req.EthTxPageReq;
 import com.cdkj.coin.enums.EPushStatus;
-import com.cdkj.coin.eth.Web3JClient;
+import com.cdkj.coin.ethereum.Web3JClient;
 import com.cdkj.coin.exception.BizErrorCode;
 import com.cdkj.coin.exception.BizException;
 import com.cdkj.coin.http.PostSimulater;
@@ -99,7 +99,7 @@ public class EthTxAOImpl implements IEthTxAO {
     @Override
     public void doEthTransactionSync() {
 
-        boolean isDebug = true;
+        boolean isDebug = false;
         //
         try {
             //
@@ -233,12 +233,12 @@ public class EthTxAOImpl implements IEthTxAO {
             try {
 
                 String pushJsonStr = JsonUtil.Object2Json(txList);
-                String url = PropertiesUtil.Config.PUSH_ADDRESS_URL;
+                String url = PropertiesUtil.Config.ETH_PUSH_ADDRESS_URL;
                 Properties formProperties = new Properties();
                 formProperties.put("ethTxlist", pushJsonStr);
                 PostSimulater.requestPostForm(url, formProperties);
             } catch (Exception e) {
-                throw new BizException("xn000000", "回调业务biz异常");
+                logger.error("回调业务biz异常，原因：" + e.getMessage());
             }
         }
 

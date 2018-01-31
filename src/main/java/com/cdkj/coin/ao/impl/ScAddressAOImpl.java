@@ -1,5 +1,5 @@
 /**
- * @Title EthAddressAOImpl.java
+ * @Title ScAddressAOImpl.java
  * @Package com.cdkj.coin.ao.impl
  * @Description
  * @author leo(haiqing)
@@ -16,13 +16,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.web3j.protocol.Web3j;
 
-import com.cdkj.coin.ao.IEthAddressAO;
-import com.cdkj.coin.bo.IEthAddressBO;
-import com.cdkj.coin.bo.IEthTransactionBO;
+import com.cdkj.coin.ao.IScAddressAO;
 import com.cdkj.coin.bo.ISYSConfigBO;
+import com.cdkj.coin.bo.IScAddressBO;
+import com.cdkj.coin.bo.IScTransactionBO;
 import com.cdkj.coin.bo.base.Paginable;
-import com.cdkj.coin.domain.EthAddress;
-import com.cdkj.coin.dto.req.UploadEthAddressReq;
+import com.cdkj.coin.domain.ScAddress;
+import com.cdkj.coin.dto.req.UploadScAddressReq;
 import com.cdkj.coin.ethereum.Web3JClient;
 import com.cdkj.coin.exception.BizErrorCode;
 import com.cdkj.coin.exception.BizException;
@@ -33,45 +33,44 @@ import com.cdkj.coin.exception.BizException;
  * @history:
  */
 @Service
-public class EthAddressAOImpl implements IEthAddressAO {
-    static final Logger logger = LoggerFactory
-        .getLogger(EthAddressAOImpl.class);
+public class ScAddressAOImpl implements IScAddressAO {
+    static final Logger logger = LoggerFactory.getLogger(ScAddressAOImpl.class);
 
     private static Web3j web3j = Web3JClient.getClient();
 
     @Autowired
-    private IEthAddressBO ethAddressBO;
+    private IScAddressBO scAddressBO;
 
     @Autowired
-    private IEthTransactionBO ethTransactionBO;
+    private IScTransactionBO scTransactionBO;
 
     @Autowired
     private ISYSConfigBO sysConfigBO;
 
     @Override
-    public void uploadAddress(UploadEthAddressReq req) {
+    public void uploadAddress(UploadScAddressReq req) {
 
         // 首先判断 地址 + 类型 是否已存在
-        int alreadyCount = this.ethAddressBO.queryEthAddressCount(
+        int alreadyCount = this.scAddressBO.queryScAddressCount(
             req.getAddress(), req.getType());
 
         // 已经存在 也告知成功告知地址添加成功
         if (alreadyCount <= 0) {
-            this.ethAddressBO.uploadAddress(req);
+            this.scAddressBO.uploadAddress(req);
         }
 
     }
 
     @Override
-    public List<EthAddress> queryEthAddressListByAddress(String address) {
+    public List<ScAddress> queryScAddressListByAddress(String address) {
 
-        EthAddress condition = new EthAddress();
+        ScAddress condition = new ScAddress();
         condition.setAddress(address);
-        return this.ethAddressBO.queryEthAddressList(condition);
+        return this.scAddressBO.queryScAddressList(condition);
     }
 
     @Override
-    public Paginable<EthAddress> queryEthAddressPageByStatusList(
+    public Paginable<ScAddress> queryScAddressPageByStatusList(
             List<String> typeList, int start, int limit) {
 
         if (typeList != null && typeList.isEmpty()) {
@@ -79,9 +78,9 @@ public class EthAddressAOImpl implements IEthAddressAO {
                 BizErrorCode.DEFAULT_ERROR_CODE.getErrorCode(), "size 需大于 0");
         }
         //
-        EthAddress condation = new EthAddress();
+        ScAddress condation = new ScAddress();
         condation.setTypeList(typeList);
-        return this.ethAddressBO.getPaginable(start, limit, condation);
+        return this.scAddressBO.getPaginable(start, limit, condation);
 
     }
 

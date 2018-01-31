@@ -28,17 +28,15 @@ public class PropertiesUtil {
 
     public static final class Config {
 
-        public static String PUSH_ADDRESS_URL = props.getProperty("PUSH_ADDRESS_URL");
-
-        public static String USER_URL = props.getProperty("USER_URL");
-
-        public static String ACCOUNT_URL = props.getProperty("ACCOUNT_URL");
-
-        public static String CERTI_URL = props.getProperty("CERTI_URL");
-
-        public static String PAY_BACK_URL = props.getProperty("PAY_BACK_URL");
+        public static String ETH_PUSH_ADDRESS_URL = props
+            .getProperty("ETH_PUSH_ADDRESS_URL");
 
         public static String ETH_URL = props.getProperty("ETH_URL");
+
+        public static String SC_PUSH_ADDRESS_URL = props
+            .getProperty("SC_PUSH_ADDRESS_URL");
+
+        public static String SC_URL = props.getProperty("SC_URL");
 
     }
 }

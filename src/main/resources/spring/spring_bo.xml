@@ -27,5 +27,13 @@
 	<bean id="ethAddressBO" class="com.cdkj.coin.bo.impl.EthAddressBOImpl">
 		<property name="paginableDAO" ref="ethAddressDAOImpl"/>
 	</bean>
+	
+	<bean id="scTransactionBO" class="com.cdkj.coin.bo.impl.ScTransactionBOImpl">
+		<property name="paginableDAO" ref="scTransactionDAOImpl"/>
+	</bean>
+
+	<bean id="scAddressBO" class="com.cdkj.coin.bo.impl.ScAddressBOImpl">
+		<property name="paginableDAO" ref="scAddressDAOImpl"/>
+	</bean>
 
 </beans>

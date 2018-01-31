@@ -8,7 +8,7 @@
  */
 package com.cdkj.coin.bo;
 
-import java.util.Map;
+import java.math.BigInteger;
 
 import com.cdkj.coin.bo.base.IPaginableBO;
 import com.cdkj.coin.domain.SYSConfig;
@@ -37,5 +37,7 @@ public interface ISYSConfigBO extends IPaginableBO<SYSConfig> {
     public Integer getIntegerValue(String key);
 
     public Long getLongValue(String key);
+
+    public BigInteger getBigIntegerValue(String key);
 
 }
