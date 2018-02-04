@@ -57,7 +57,7 @@ public class ScTxAOImpl implements IScTxAO {
     @Override
     public void doScTransactionSync() {
 
-        boolean isDebug = false;
+        boolean isDebug = true;
         //
         try {
             //
@@ -95,11 +95,16 @@ public class ScTxAOImpl implements IScTxAO {
 
                 // 钱包相关交易
                 List<Transaction> transactions = SiadClient.getTransactions(
-                    blockNumber, blockNumber);
+                    blockNumber.subtract(new BigInteger("1")), blockNumber);
                 if (CollectionUtils.isNotEmpty(transactions)) {
                     for (Transaction tx : transactions) {
                         // 过滤OSC（内部构造）交易
                         if (isOscTx(tx)) {
+                            continue;
+                        }
+                        // 是否已处理过该交易
+                        if (scTransactionBO.getScTransaction(tx
+                            .getTransactionid()) != null) {
                             continue;
                         }
                         if (tx.getInputs().size() == 1
