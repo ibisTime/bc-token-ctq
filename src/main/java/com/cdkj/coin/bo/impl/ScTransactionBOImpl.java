@@ -63,4 +63,17 @@ public class ScTransactionBOImpl extends PaginableBOImpl<ScTransaction>
         this.scTransactionDAO.updateTxStatus(txList);
 
     }
+
+    @Override
+    public boolean isScTransactionExist(String transactionid) {
+        boolean flag = false;
+        if (StringUtils.isNotBlank(transactionid)) {
+            ScTransaction condition = new ScTransaction();
+            condition.setTransactionid(transactionid);
+            if (scTransactionDAO.selectTotalCount(condition) > 0) {
+                flag = true;
+            }
+        }
+        return flag;
+    }
 }

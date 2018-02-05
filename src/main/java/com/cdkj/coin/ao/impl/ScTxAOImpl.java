@@ -103,8 +103,8 @@ public class ScTxAOImpl implements IScTxAO {
                             continue;
                         }
                         // 是否已处理过该交易
-                        if (scTransactionBO.getScTransaction(tx
-                            .getTransactionid()) != null) {
+                        if (scTransactionBO.isScTransactionExist(tx
+                            .getTransactionid())) {
                             continue;
                         }
                         if (tx.getInputs().size() == 1
