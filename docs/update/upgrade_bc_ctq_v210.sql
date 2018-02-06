@@ -1,10 +1,9 @@
 
 CREATE TABLE `tctq_btc_address` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `code` varchar(32) NOT NULL,
   `address` char(36) NOT NULL COMMENT '地址',
-  `type` varchar(4) NOT NULL,
   `create_datetime` datetime NOT NULL,
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`code`),
   KEY `address_index` (`address`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 

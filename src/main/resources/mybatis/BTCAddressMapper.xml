@@ -4,9 +4,8 @@
 
 <mapper namespace="com.cdkj.coin.dao.IBTCAddressDAO">
 
-    <resultMap id="btcAddress_DB_Result" type="com.cdkj.coin.domain.BTC.BTCAddress">
-        <id column="id" property="id"/>
-        <result column="type" property="type"/>
+    <resultMap id="btcAddress_DB_Result" type="btcAddress">
+        <result column="code" property="code"/>
         <result column="address" property="address"/>
         <result column="create_datetime" property="createDateTime"/>
     </resultMap>
@@ -14,11 +13,8 @@
     <sql id="where_condition">
         <trim prefix="WHERE" prefixOverrides="AND | OR">
 
-            <if test="id != null and id != '' ">
-                AND t.id = #{id}
-            </if>
-            <if test="type != null and type != '' ">
-                AND t.type = #{type}
+            <if test="code != null and code != '' ">
+                AND t.code = #{code}
             </if>
             <if test="address != null and address != '' ">
                 AND t.address = #{address}
@@ -27,9 +23,9 @@
         </trim>
     </sql>
 
-    <select id="select_btcAddress" parameterType="com.cdkj.coin.domain.BTC.BTCAddress" resultMap="btcAddress_DB_Result">
+    <select id="select_btcAddress" parameterType="btcAddress" resultMap="btcAddress_DB_Result">
         SELECT
-        t.id
+        t.code
         ,t.type
         ,t.address
         ,t.create_datetime
@@ -43,21 +39,21 @@
         </trim>
     </select>
 
-    <select id="selectTotalCount" parameterType="com.cdkj.coin.domain.BTC.BTCAddress"
+    <select id="selectTotalCount" parameterType="btcAddress"
             resultType="java.lang.Long">
         SELECT count(1) FROM tctq_btc_address t
         <include refid="where_condition"/>
     </select>
 
-    <insert id="insert_btcAddress" parameterType="com.cdkj.coin.domain.BTC.BTCAddress">
+    <insert id="insert_btcAddress" parameterType="btcAddress">
         INSERT INTO
             tctq_btc_address (
-                type,
+                code,
                 address,
                 create_datetime
             )
         VALUES (
-            #{type},
+            #{code},
             #{address},
             now()
         )

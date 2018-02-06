@@ -1,24 +1,19 @@
 package com.cdkj.coin.domain.BTC;
 
-import com.cdkj.coin.dao.base.ABaseDO;
-
 import java.util.Date;
+
+import com.cdkj.coin.dao.base.ABaseDO;
 
 public class BTCAddress extends ABaseDO {
 
-
     private static final long serialVersionUID = 1L;
 
-    private Integer id;
+    private String code;
 
-    /*地址*/
+    /* 地址 */
     private String address;
 
-    /*地址类型*/
-    private String type;
-
     private Date createDateTime;
-
 
     public String getAddress() {
         return address;
@@ -28,12 +23,12 @@ public class BTCAddress extends ABaseDO {
         this.address = address == null ? null : address.trim();
     }
 
-    public Integer getId() {
-        return id;
+    public String getCode() {
+        return code;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public Date getCreateDateTime() {
@@ -48,12 +43,4 @@ public class BTCAddress extends ABaseDO {
         return serialVersionUID;
     }
 
-    public String getType() {
-        return type;
-    }
-
-
-    public void setType(String type) {
-        this.type = type == null ? null : type.trim();
-    }
 }

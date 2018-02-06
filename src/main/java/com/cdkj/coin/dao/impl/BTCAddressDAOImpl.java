@@ -1,28 +1,30 @@
 package com.cdkj.coin.dao.impl;
 
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
 import com.cdkj.coin.dao.IBTCAddressDAO;
 import com.cdkj.coin.dao.base.support.AMybatisTemplate;
 import com.cdkj.coin.domain.BTC.BTCAddress;
-import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 //import com.cdkj.coin.domain.EthAddress;
 
 //import com.cdkj.coin.domain.EthAddress;
 
-@Repository("bTCAddressDAOImpl")
-public class BTCAddressDAOImpl extends AMybatisTemplate implements IBTCAddressDAO {
+@Repository("btcAddressDAOImpl")
+public class BTCAddressDAOImpl extends AMybatisTemplate implements
+        IBTCAddressDAO {
 
     @Override
     public int insert(BTCAddress data) {
         return super.insert(NAMESPACE.concat("insert_btcAddress"), data);
     }
 
-
     @Override
     public Long selectTotalCount(BTCAddress condition) {
-        return super.selectTotalCount(NAMESPACE.concat("selectTotalCount"), condition);
+        return super.selectTotalCount(NAMESPACE.concat("selectTotalCount"),
+            condition);
     }
 
     @Override
@@ -30,7 +32,8 @@ public class BTCAddressDAOImpl extends AMybatisTemplate implements IBTCAddressDA
 
         BTCAddress condation = new BTCAddress();
         condation.setAddress(address);
-        return super.selectTotalCount(NAMESPACE.concat("selectTotalCountByAddress"), condation);
+        return super.selectTotalCount(
+            NAMESPACE.concat("selectTotalCountByAddress"), condation);
 
     }
 
@@ -40,10 +43,10 @@ public class BTCAddressDAOImpl extends AMybatisTemplate implements IBTCAddressDA
         return super.delete(NAMESPACE.concat("delete_btcAddress"), data);
     }
 
-
     @Override
     public BTCAddress select(BTCAddress condition) {
-        return super.select(NAMESPACE.concat("select_btcAddress"), condition, BTCAddress.class);
+        return super.select(NAMESPACE.concat("select_btcAddress"), condition,
+            BTCAddress.class);
     }
 
     @Override
@@ -53,15 +56,16 @@ public class BTCAddressDAOImpl extends AMybatisTemplate implements IBTCAddressDA
 
     }
 
-
     @Override
     public List<BTCAddress> selectList(BTCAddress condition) {
-        return super.selectList(NAMESPACE.concat("select_btcAddress"), condition, BTCAddress.class);
+        return super.selectList(NAMESPACE.concat("select_btcAddress"),
+            condition, BTCAddress.class);
     }
 
-
     @Override
-    public List<BTCAddress> selectList(BTCAddress condition, int start, int count) {
-        return super.selectList(NAMESPACE.concat("select_btcAddress"), start, count, condition, BTCAddress.class);
+    public List<BTCAddress> selectList(BTCAddress condition, int start,
+            int count) {
+        return super.selectList(NAMESPACE.concat("select_btcAddress"), start,
+            count, condition, BTCAddress.class);
     }
 }

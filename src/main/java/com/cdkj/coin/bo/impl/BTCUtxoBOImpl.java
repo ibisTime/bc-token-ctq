@@ -1,18 +1,19 @@
 package com.cdkj.coin.bo.impl;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.cdkj.coin.bo.IBTCUtxoBO;
 import com.cdkj.coin.bo.base.Paginable;
 import com.cdkj.coin.bo.base.PaginableBOImpl;
 import com.cdkj.coin.dao.IBTCUtxoDAO;
-import com.cdkj.coin.domain.BTC.BTCAddress;
 import com.cdkj.coin.domain.BTC.BTCUTXO;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Component
-public class BTCUtxoBOImpl extends PaginableBOImpl<BTCUTXO> implements IBTCUtxoBO {
+public class BTCUtxoBOImpl extends PaginableBOImpl<BTCUTXO> implements
+        IBTCUtxoBO {
 
     @Autowired
     IBTCUtxoDAO btcUtxoDAO;
@@ -39,7 +40,7 @@ public class BTCUtxoBOImpl extends PaginableBOImpl<BTCUTXO> implements IBTCUtxoB
     @Override
     public List<BTCUTXO> selectUnPush() {
 
-        //这里 条件 写到sql里面去了
+        // 这里 条件 写到sql里面去了
         return this.btcUtxoDAO.selectList(null);
 
     }
@@ -78,7 +79,8 @@ public class BTCUtxoBOImpl extends PaginableBOImpl<BTCUTXO> implements IBTCUtxoB
      * @return
      */
     @Override
-    public Paginable<BTCUTXO> getPaginable(int start, int pageSize, BTCUTXO condition) {
+    public Paginable<BTCUTXO> getPaginable(int start, int pageSize,
+            BTCUTXO condition) {
         return null;
     }
 }

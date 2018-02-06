@@ -37,11 +37,11 @@
 	</bean>
 
 	<bean id="btcUtxoBO" class="com.cdkj.coin.bo.impl.BTCUtxoBOImpl">
-		<property name="paginableDAO" ref="bTCAddressDAOImpl"/>
+		<property name="paginableDAO" ref="btcAddressDAOImpl"/>
 	</bean>
 
 	<bean id="btcAddressBO" class="com.cdkj.coin.bo.impl.BTCAddressBOImpl">
-		<property name="paginableDAO" ref="bTCAddressDAOImpl"/>
+		<property name="paginableDAO" ref="btcAddressDAOImpl"/>
 	</bean>
 
 </beans>

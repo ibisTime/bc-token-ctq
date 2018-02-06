@@ -1,13 +1,15 @@
 package com.cdkj.coin.bo.impl;
 
-import com.cdkj.coin.bo.IBTCAddressBO;
-import com.cdkj.coin.bo.base.PaginableBOImpl;
-import com.cdkj.coin.dao.IBTCAddressDAO;
-import com.cdkj.coin.domain.BTC.BTCAddress;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
+import com.cdkj.coin.bo.IBTCAddressBO;
+import com.cdkj.coin.bo.base.PaginableBOImpl;
+import com.cdkj.coin.core.OrderNoGenerater;
+import com.cdkj.coin.dao.IBTCAddressDAO;
+import com.cdkj.coin.domain.BTC.BTCAddress;
 
 @Component
 public class BTCAddressBOImpl extends PaginableBOImpl<BTCAddress> implements
@@ -22,11 +24,11 @@ public class BTCAddressBOImpl extends PaginableBOImpl<BTCAddress> implements
     }
 
     @Override
-    public int uploadAddress(String address, String type) {
+    public int uploadAddress(String address) {
 
         BTCAddress btcAddress = new BTCAddress();
+        btcAddress.setCode(OrderNoGenerater.generateM("AD"));
         btcAddress.setAddress(address);
-        btcAddress.setType(type);
         int count = this.btcAddressDAO.insert(btcAddress);
         return count;
 
@@ -44,11 +46,10 @@ public class BTCAddressBOImpl extends PaginableBOImpl<BTCAddress> implements
     }
 
     @Override
-    public int queryAddressCount(String address, String type) {
+    public int queryAddressCount(String address) {
 
         BTCAddress condition = new BTCAddress();
         condition.setAddress(address);
-        condition.setType(type);
         return this.btcAddressDAO.selectTotalCount(condition).intValue();
 
     }

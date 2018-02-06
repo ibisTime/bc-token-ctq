@@ -12,8 +12,7 @@ import com.cdkj.coin.spring.SpringContextHolder;
 
 public class XN626081 extends AProcessor {
 
-    private IBTCTxAO btcTxAO = SpringContextHolder
-            .getBean(IBTCTxAO.class);
+    private IBTCTxAO btcTxAO = SpringContextHolder.getBean(IBTCTxAO.class);
 
     private XN626081Req req;
 
@@ -28,8 +27,8 @@ public class XN626081 extends AProcessor {
     @Override
     public Object doBusiness() throws BizException {
 
-         this.btcTxAO.confirmPush(req.getUtxoList());
-         return new BooleanRes(true);
+        this.btcTxAO.confirmPush(req.getUtxoList());
+        return new BooleanRes(true);
 
     }
 

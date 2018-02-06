@@ -5,7 +5,7 @@ import com.cdkj.coin.domain.BTC.BTCAddress;
 
 public interface IBTCAddressDAO extends IBaseDAO<BTCAddress> {
 
-    String NAMESPACE = IEthAddressDAO.class.getName().concat(".");
+    String NAMESPACE = IBTCAddressDAO.class.getName().concat(".");
 
     @Override
     public Long selectTotalCount(BTCAddress condition);
@@ -13,4 +13,3 @@ public interface IBTCAddressDAO extends IBaseDAO<BTCAddress> {
     public Long selectTotalCountByAddress(String address);
 
 }
-

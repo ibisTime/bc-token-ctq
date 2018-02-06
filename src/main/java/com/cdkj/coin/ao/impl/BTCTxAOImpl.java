@@ -1,35 +1,41 @@
 package com.cdkj.coin.ao.impl;
 
-import com.cdkj.coin.ao.IBTCTxAO;
-import com.cdkj.coin.bo.IBTCAddressBO;
-import com.cdkj.coin.bo.IBTCUtxoBO;
-import com.cdkj.coin.bo.ISYSConfigBO;
-import com.cdkj.coin.common.JsonUtil;
-import com.cdkj.coin.common.PropertiesUtil;
-import com.cdkj.coin.common.SysConstants;
-import com.cdkj.coin.domain.BTC.*;
-import com.cdkj.coin.domain.SYSConfig;
-import com.cdkj.coin.enums.EBTCUtxoStatus;
-import com.cdkj.coin.exception.BizErrorCode;
-import com.cdkj.coin.exception.BizException;
-import com.cdkj.coin.http.PostSimulater;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Properties;
+
 import okhttp3.OkHttpClient;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Properties;
+import com.cdkj.coin.ao.IBTCTxAO;
+import com.cdkj.coin.bo.IBTCUtxoBO;
+import com.cdkj.coin.bo.IBTCAddressBO;
+import com.cdkj.coin.bo.ISYSConfigBO;
+import com.cdkj.coin.common.JsonUtil;
+import com.cdkj.coin.common.PropertiesUtil;
+import com.cdkj.coin.common.SysConstants;
+import com.cdkj.coin.domain.SYSConfig;
+import com.cdkj.coin.domain.BTC.BTCOriginalTx;
+import com.cdkj.coin.domain.BTC.BTCScriptPubKey;
+import com.cdkj.coin.domain.BTC.BTCTXs;
+import com.cdkj.coin.domain.BTC.BTCUTXO;
+import com.cdkj.coin.domain.BTC.BTCVinUTXO;
+import com.cdkj.coin.domain.BTC.BTCVoutUTXO;
+import com.cdkj.coin.enums.EBTCUtxoStatus;
+import com.cdkj.coin.exception.BizErrorCode;
+import com.cdkj.coin.exception.BizException;
+import com.cdkj.coin.http.PostSimulater;
 
 @Service
 public class BTCTxAOImpl implements IBTCTxAO {
 
-    static final Logger logger = LoggerFactory
-            .getLogger(BTCTxAOImpl.class);
+    static final Logger logger = LoggerFactory.getLogger(BTCTxAOImpl.class);
 
     @Autowired
     BTCBlockDataService blockDataService;
@@ -43,14 +49,13 @@ public class BTCTxAOImpl implements IBTCTxAO {
     @Autowired
     private ISYSConfigBO sysConfigBO;
 
-
     public void doBtcTransactionSync() {
 
         //
-//        Long blockNumber = sysConfigBO
-//                .getLongValue(SysConstants.CUR_BTC_BLOCK_NUMBER);
+        // Long blockNumber = sysConfigBO
+        // .getLongValue(SysConstants.CUR_BTC_BLOCK_NUMBER);
 
-        //该区块有测试数据
+        // 该区块有测试数据
         Long blockNumber = Long.valueOf(1260212);
         List<BTCUTXO> ourInUTXOList = new ArrayList<>();
         List<BTCUTXO> ourOutUTXOList = new ArrayList<>();
@@ -60,7 +65,8 @@ public class BTCTxAOImpl implements IBTCTxAO {
         Integer pageNum = 0;
         while (true) {
 
-            BTCTXs btctXs = this.blockDataService.getBlockTxs(blockNumber, pageNum);
+            BTCTXs btctXs = this.blockDataService.getBlockTxs(blockNumber,
+                pageNum);
 
             if (btctXs == null) {
                 throw new BizException("xn000", "拉取数据失败");
@@ -71,16 +77,16 @@ public class BTCTxAOImpl implements IBTCTxAO {
                 break;
             }
 
-            //遍历交易
+            // 遍历交易
             for (BTCOriginalTx originalTx : btctXs.getTxs()) {
 
-                //todo 暂不处理coinbase
-                if (originalTx.getCoinBase() != null && originalTx.getCoinBase()) {
+                // todo 暂不处理coinbase
+                if (originalTx.getCoinBase() != null
+                        && originalTx.getCoinBase()) {
                     continue;
                 }
 
-
-                //遍历输入
+                // 遍历输入
                 for (BTCVinUTXO vinUTXO : originalTx.getVin()) {
 
                     String outAddress = vinUTXO.getAddr();
@@ -93,7 +99,7 @@ public class BTCTxAOImpl implements IBTCTxAO {
                         continue;
                     }
 
-                    //添加需要更新
+                    // 添加需要更新
                     BTCUTXO btcutxo = new BTCUTXO();
                     btcutxo.setTxid(vinUTXO.getTxid());
                     btcutxo.setVout(vinUTXO.getVout());
@@ -102,10 +108,11 @@ public class BTCTxAOImpl implements IBTCTxAO {
 
                 }
 
-                //遍历输出
+                // 遍历输出
                 for (BTCVoutUTXO voutUTXO : originalTx.getVout()) {
 
-                    List<String> addressList = voutUTXO.getScriptPubKey().getAddresses();
+                    List<String> addressList = voutUTXO.getScriptPubKey()
+                        .getAddresses();
                     if (addressList == null || addressList.size() == 0) {
                         continue;
                     }
@@ -113,21 +120,24 @@ public class BTCTxAOImpl implements IBTCTxAO {
                     String outToAddress = addressList.get(0);
                     long count = this.btcAddressBO.addressCount(outToAddress);
 
-//                    if (outToAddress.equals("n22qbkmhfip9Ks5ehxZqCT8CHR23FDw4ka") || outToAddress.equals("mktt7K5TH6aieW2xUV6fBjJyEbxPs6QjgG") || outToAddress.equals("myc1x6qKivfuxqcGovfMXhbmZWbBrx5TKz")) {
-//
-//                    }
+                    // if
+                    // (outToAddress.equals("n22qbkmhfip9Ks5ehxZqCT8CHR23FDw4ka")
+                    // ||
+                    // outToAddress.equals("mktt7K5TH6aieW2xUV6fBjJyEbxPs6QjgG")
+                    // ||
+                    // outToAddress.equals("myc1x6qKivfuxqcGovfMXhbmZWbBrx5TKz"))
+                    // {
+                    //
+                    // }
 
                     if (count <= 0) {
                         continue;
                     }
 
-                    BTCUTXO btcutxo = this.convertOut(
-                            voutUTXO,
-                            originalTx.getTxid(),
-                            originalTx.getBlockheight(),
-                            EBTCUtxoStatus.OUT_UN_PUSH.getCode());
+                    BTCUTXO btcutxo = this.convertOut(voutUTXO,
+                        originalTx.getTxid(), originalTx.getBlockheight(),
+                        EBTCUtxoStatus.OUT_UN_PUSH.getCode());
                     ourOutUTXOList.add(btcutxo);
-
 
                 }
 
@@ -142,32 +152,33 @@ public class BTCTxAOImpl implements IBTCTxAO {
     }
 
     @Transactional(rollbackFor = RuntimeException.class)
-    public void saveToDB(List<BTCUTXO> ourInUTXOList, List<BTCUTXO> ourOutUTXOList, Long blockNumber) {
+    public void saveToDB(List<BTCUTXO> ourInUTXOList,
+            List<BTCUTXO> ourOutUTXOList, Long blockNumber) {
 
-        //变更 输入状态,为已归集
+        // 变更 输入状态,为已归集
         for (BTCUTXO updateUTXO : ourInUTXOList) {
-            //变更状态为，已使用未推送
-            this.btcUtxoBO.update(updateUTXO.getTxid(), updateUTXO.getVout(), EBTCUtxoStatus.IN_UN_PUSH.getCode());
+            // 变更状态为，已使用未推送
+            this.btcUtxoBO.update(updateUTXO.getTxid(), updateUTXO.getVout(),
+                EBTCUtxoStatus.IN_UN_PUSH.getCode());
 
         }
 
-        //存储 utxo
+        // 存储 utxo
         if (ourOutUTXOList.size() > 0) {
             this.btcUtxoBO.insertUTXOList(ourOutUTXOList);
         }
 
         // 修改_区块遍历信息
         SYSConfig config = sysConfigBO
-                .getSYSConfig(SysConstants.CUR_BTC_BLOCK_NUMBER);
+            .getSYSConfig(SysConstants.CUR_BTC_BLOCK_NUMBER);
         //
         sysConfigBO.refreshSYSConfig(config.getId(),
-                String.valueOf(blockNumber + 1), "code", "下次从哪个区块开始扫描");
+            String.valueOf(blockNumber + 1), "code", "下次从哪个区块开始扫描");
 
     }
 
     // 时间调度任务,定期扫描——未推送的——交易
     public void pushTx() {
-
 
         List<BTCUTXO> btcutxoList = this.btcUtxoBO.selectUnPush();
         if (btcutxoList != null && btcutxoList.size() > 0) {
@@ -185,24 +196,24 @@ public class BTCTxAOImpl implements IBTCTxAO {
             }
         }
 
-
     }
 
-    //确认推送
+    // 确认推送
     @Override
     public synchronized void confirmPush(List<BTCUTXO> utxoList) {
 
         if (utxoList == null || utxoList.size() <= 0) {
             throw new BizException(
-                    BizErrorCode.PUSH_STATUS_UPDATE_FAILURE.getErrorCode(),
-                    "请传入正确的json数组"
-                            + BizErrorCode.PUSH_STATUS_UPDATE_FAILURE
+                BizErrorCode.PUSH_STATUS_UPDATE_FAILURE.getErrorCode(),
+                "请传入正确的json数组"
+                        + BizErrorCode.PUSH_STATUS_UPDATE_FAILURE
                             .getErrorCode());
         }
 
         for (BTCUTXO btcutxo : utxoList) {
 
-            BTCUTXO ourBtcUtxo = this.btcUtxoBO.select(btcutxo.getTxid(), btcutxo.getVout());
+            BTCUTXO ourBtcUtxo = this.btcUtxoBO.select(btcutxo.getTxid(),
+                btcutxo.getVout());
 
             String nextStatus = null;
             if (ourBtcUtxo.getStatus().equals(EBTCUtxoStatus.OUT_UN_PUSH)) {
@@ -216,21 +227,23 @@ public class BTCTxAOImpl implements IBTCTxAO {
             }
             if (nextStatus == null) {
 
-                logger.error("utxo 状态异常，无法对应，原因：" + "txid:" + ourBtcUtxo.getTxid() + "  " + "vout:" + ourBtcUtxo.getVout());
+                logger.error("utxo 状态异常，无法对应，原因：" + "txid:"
+                        + ourBtcUtxo.getTxid() + "  " + "vout:"
+                        + ourBtcUtxo.getVout());
 
             } else {
 
-                this.btcUtxoBO.update(ourBtcUtxo.getTxid(), ourBtcUtxo.getVout(), nextStatus);
+                this.btcUtxoBO.update(ourBtcUtxo.getTxid(),
+                    ourBtcUtxo.getVout(), nextStatus);
 
             }
 
         }
 
-
     }
 
-    private BTCUTXO convertOut(BTCVoutUTXO btcOut, String txid, Long blockHeight, String
-            status) {
+    private BTCUTXO convertOut(BTCVoutUTXO btcOut, String txid,
+            Long blockHeight, String status) {
 
         BTCScriptPubKey scriptPubKey = btcOut.getScriptPubKey();
 
@@ -244,7 +257,6 @@ public class BTCTxAOImpl implements IBTCTxAO {
         btcutxo.setBlockHeight(blockHeight);
         btcutxo.setStatus(status);
         return btcutxo;
-
 
     }
 

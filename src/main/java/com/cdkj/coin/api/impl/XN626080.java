@@ -13,7 +13,7 @@ import com.cdkj.coin.spring.SpringContextHolder;
 public class XN626080 extends AProcessor {
 
     private IBTCAddressAO addressAO = SpringContextHolder
-            .getBean(IBTCAddressAO.class);
+        .getBean(IBTCAddressAO.class);
 
     private UploadBTCAddressReq req;
 
