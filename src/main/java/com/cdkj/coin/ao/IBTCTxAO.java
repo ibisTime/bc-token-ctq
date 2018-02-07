@@ -1,6 +1,6 @@
 package com.cdkj.coin.ao;
 
-import com.cdkj.coin.domain.BTC.BtcUtxo;
+import com.cdkj.coin.domain.bitcoin.BtcUtxo;
 
 import java.util.List;
 

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import com.cdkj.coin.bo.IBtcUtxoBO;
 import com.cdkj.coin.bo.base.PaginableBOImpl;
 import com.cdkj.coin.dao.IBtcUtxoDAO;
-import com.cdkj.coin.domain.BTC.BtcUtxo;
+import com.cdkj.coin.domain.bitcoin.BtcUtxo;
 import com.cdkj.coin.enums.EBTCUtxoStatus;
 import com.cdkj.coin.exception.BizException;
 

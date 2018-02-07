@@ -2,7 +2,7 @@ package com.cdkj.coin.ao;
 
 import java.util.List;
 
-import com.cdkj.coin.domain.BTC.BTCAddress;
+import com.cdkj.coin.domain.bitcoin.BTCAddress;
 import com.cdkj.coin.dto.req.UploadBTCAddressReq;
 
 public interface IBTCAddressAO {

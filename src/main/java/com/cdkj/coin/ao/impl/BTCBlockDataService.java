@@ -12,8 +12,8 @@ import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.cdkj.coin.common.PropertiesUtil;
-import com.cdkj.coin.domain.BTC.BTCOriginalTx;
-import com.cdkj.coin.domain.BTC.BTCTXs;
+import com.cdkj.coin.domain.bitcoin.BTCOriginalTx;
+import com.cdkj.coin.domain.bitcoin.BTCTXs;
 import com.cdkj.coin.exception.BizException;
 
 @Service

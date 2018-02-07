@@ -1,7 +1,7 @@
 package com.cdkj.coin.dao;
 
 import com.cdkj.coin.dao.base.IBaseDAO;
-import com.cdkj.coin.domain.BTC.BtcUtxo;
+import com.cdkj.coin.domain.bitcoin.BtcUtxo;
 
 public interface IBtcUtxoDAO extends IBaseDAO<BtcUtxo> {
     String NAMESPACE = IBtcUtxoDAO.class.getName().concat(".");

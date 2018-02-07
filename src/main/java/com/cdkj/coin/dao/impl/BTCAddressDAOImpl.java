@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import com.cdkj.coin.dao.IBTCAddressDAO;
 import com.cdkj.coin.dao.base.support.AMybatisTemplate;
-import com.cdkj.coin.domain.BTC.BTCAddress;
+import com.cdkj.coin.domain.bitcoin.BTCAddress;
 
 //import com.cdkj.coin.domain.EthAddress;
 

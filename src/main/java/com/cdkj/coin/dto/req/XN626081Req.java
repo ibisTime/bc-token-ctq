@@ -1,8 +1,9 @@
 package com.cdkj.coin.dto.req;
 
-import com.cdkj.coin.domain.BTC.BtcUtxo;
+import com.cdkj.coin.domain.bitcoin.BtcUtxo;
 
 import javax.validation.constraints.NotNull;
+
 import java.util.List;
 
 public class XN626081Req {

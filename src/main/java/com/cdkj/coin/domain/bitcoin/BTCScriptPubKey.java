@@ -1,4 +1,4 @@
-package com.cdkj.coin.domain.BTC;
+package com.cdkj.coin.domain.bitcoin;
 
 import java.util.List;
 
