@@ -2,8 +2,8 @@ package com.cdkj.coin.bo;
 
 import java.util.List;
 
+import com.cdkj.coin.bitcoin.BtcUtxo;
 import com.cdkj.coin.bo.base.IPaginableBO;
-import com.cdkj.coin.domain.bitcoin.BtcUtxo;
 import com.cdkj.coin.enums.EBTCUtxoStatus;
 
 public interface IBtcUtxoBO extends IPaginableBO<BtcUtxo> {

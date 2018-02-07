@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.cdkj.coin.ao.IBTCAddressAO;
+import com.cdkj.coin.bitcoin.BTCAddress;
 import com.cdkj.coin.bo.IBTCAddressBO;
-import com.cdkj.coin.domain.bitcoin.BTCAddress;
 import com.cdkj.coin.dto.req.UploadBTCAddressReq;
 import com.cdkj.coin.exception.BizException;
 

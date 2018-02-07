@@ -1,6 +1,6 @@
 package com.cdkj.coin.dto.req;
 
-import com.cdkj.coin.domain.bitcoin.BtcUtxo;
+import com.cdkj.coin.bitcoin.BtcUtxo;
 
 import javax.validation.constraints.NotNull;
 

@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
+import com.cdkj.coin.bitcoin.BtcUtxo;
 import com.cdkj.coin.dao.IBtcUtxoDAO;
 import com.cdkj.coin.dao.base.support.AMybatisTemplate;
-import com.cdkj.coin.domain.bitcoin.BtcUtxo;
 
 @Repository("btcUtxoDAOImpl")
 public class BtcUtxoDAOImpl extends AMybatisTemplate implements IBtcUtxoDAO {

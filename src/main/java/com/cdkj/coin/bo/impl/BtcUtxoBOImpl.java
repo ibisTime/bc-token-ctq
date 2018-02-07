@@ -7,10 +7,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.cdkj.coin.bitcoin.BtcUtxo;
 import com.cdkj.coin.bo.IBtcUtxoBO;
 import com.cdkj.coin.bo.base.PaginableBOImpl;
 import com.cdkj.coin.dao.IBtcUtxoDAO;
-import com.cdkj.coin.domain.bitcoin.BtcUtxo;
 import com.cdkj.coin.enums.EBTCUtxoStatus;
 import com.cdkj.coin.exception.BizException;
 

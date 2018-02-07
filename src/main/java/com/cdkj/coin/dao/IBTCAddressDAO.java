@@ -1,7 +1,7 @@
 package com.cdkj.coin.dao;
 
+import com.cdkj.coin.bitcoin.BTCAddress;
 import com.cdkj.coin.dao.base.IBaseDAO;
-import com.cdkj.coin.domain.bitcoin.BTCAddress;
 
 public interface IBTCAddressDAO extends IBaseDAO<BTCAddress> {
 

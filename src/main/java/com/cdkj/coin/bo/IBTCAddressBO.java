@@ -2,8 +2,8 @@ package com.cdkj.coin.bo;
 
 import java.util.List;
 
+import com.cdkj.coin.bitcoin.BTCAddress;
 import com.cdkj.coin.bo.base.IPaginableBO;
-import com.cdkj.coin.domain.bitcoin.BTCAddress;
 
 public interface IBTCAddressBO extends IPaginableBO<BTCAddress> {
 

@@ -5,11 +5,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.cdkj.coin.bitcoin.BTCAddress;
 import com.cdkj.coin.bo.IBTCAddressBO;
 import com.cdkj.coin.bo.base.PaginableBOImpl;
 import com.cdkj.coin.core.OrderNoGenerater;
 import com.cdkj.coin.dao.IBTCAddressDAO;
-import com.cdkj.coin.domain.bitcoin.BTCAddress;
 
 @Component
 public class BTCAddressBOImpl extends PaginableBOImpl<BTCAddress> implements

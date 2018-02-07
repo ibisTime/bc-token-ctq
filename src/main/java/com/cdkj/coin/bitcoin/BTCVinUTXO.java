@@ -1,4 +1,4 @@
-package com.cdkj.coin.domain.bitcoin;
+package com.cdkj.coin.bitcoin;
 
 public class BTCVinUTXO {
 
