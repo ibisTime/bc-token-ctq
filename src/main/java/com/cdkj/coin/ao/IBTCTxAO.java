@@ -1,10 +1,10 @@
 package com.cdkj.coin.ao;
 
-import com.cdkj.coin.domain.BTC.BTCUTXO;
+import com.cdkj.coin.domain.BTC.BtcUtxo;
 
 import java.util.List;
 
 public interface IBTCTxAO {
 
-    void confirmPush(List<BTCUTXO> utxoList);
+    void confirmPush(List<BtcUtxo> utxoList);
 }

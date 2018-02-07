@@ -14,8 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.cdkj.coin.ao.IBTCTxAO;
-import com.cdkj.coin.bo.IBTCUtxoBO;
 import com.cdkj.coin.bo.IBTCAddressBO;
+import com.cdkj.coin.bo.IBtcUtxoBO;
 import com.cdkj.coin.bo.ISYSConfigBO;
 import com.cdkj.coin.common.JsonUtil;
 import com.cdkj.coin.common.PropertiesUtil;
@@ -24,9 +24,9 @@ import com.cdkj.coin.domain.SYSConfig;
 import com.cdkj.coin.domain.BTC.BTCOriginalTx;
 import com.cdkj.coin.domain.BTC.BTCScriptPubKey;
 import com.cdkj.coin.domain.BTC.BTCTXs;
-import com.cdkj.coin.domain.BTC.BTCUTXO;
 import com.cdkj.coin.domain.BTC.BTCVinUTXO;
 import com.cdkj.coin.domain.BTC.BTCVoutUTXO;
+import com.cdkj.coin.domain.BTC.BtcUtxo;
 import com.cdkj.coin.enums.EBTCUtxoStatus;
 import com.cdkj.coin.exception.BizErrorCode;
 import com.cdkj.coin.exception.BizException;
@@ -44,27 +44,26 @@ public class BTCTxAOImpl implements IBTCTxAO {
     IBTCAddressBO btcAddressBO;
 
     @Autowired
-    IBTCUtxoBO btcUtxoBO;
+    IBtcUtxoBO btcUtxoBO;
 
     @Autowired
     private ISYSConfigBO sysConfigBO;
 
     public void doBtcTransactionSync() {
 
-        //
         // Long blockNumber = sysConfigBO
         // .getLongValue(SysConstants.CUR_BTC_BLOCK_NUMBER);
 
         // 该区块有测试数据
         Long blockNumber = Long.valueOf(1260212);
-        List<BTCUTXO> ourInUTXOList = new ArrayList<>();
-        List<BTCUTXO> ourOutUTXOList = new ArrayList<>();
+        List<BtcUtxo> ourInUTXOList = new ArrayList<>();
+        List<BtcUtxo> ourOutUTXOList = new ArrayList<>();
 
         OkHttpClient okHttpClient = new OkHttpClient();
         // 查询的分页
         Integer pageNum = 0;
         while (true) {
-
+            System.out.println("******BTC开始扫描区块******");
             BTCTXs btctXs = this.blockDataService.getBlockTxs(blockNumber,
                 pageNum);
 
@@ -93,6 +92,17 @@ public class BTCTxAOImpl implements IBTCTxAO {
                     if (outAddress == null || outAddress.length() == 0) {
                         continue;
                     }
+                    // 如果此条INPUT已经已经处理过，无需重复处理
+                    if (btcUtxoBO.isBtcUtxoExist(vinUTXO.getTxid(),
+                        vinUTXO.getVout())) {
+                        BtcUtxo btcUtxo = btcUtxoBO.getBtcUtxo(
+                            vinUTXO.getTxid(), vinUTXO.getVout());
+                        if (EBTCUtxoStatus.IN_UN_PUSH.getCode().equals(btcUtxo)
+                                || EBTCUtxoStatus.IN_PUSHED.getCode().equals(
+                                    btcUtxo)) {
+                            continue;
+                        }
+                    }
 
                     long count = this.btcAddressBO.addressCount(outAddress);
                     if (count <= 0) {
@@ -100,7 +110,7 @@ public class BTCTxAOImpl implements IBTCTxAO {
                     }
 
                     // 添加需要更新
-                    BTCUTXO btcutxo = new BTCUTXO();
+                    BtcUtxo btcutxo = new BtcUtxo();
                     btcutxo.setTxid(vinUTXO.getTxid());
                     btcutxo.setVout(vinUTXO.getVout());
                     btcutxo.setStatus(EBTCUtxoStatus.IN_UN_PUSH.getCode());
@@ -114,6 +124,10 @@ public class BTCTxAOImpl implements IBTCTxAO {
                     List<String> addressList = voutUTXO.getScriptPubKey()
                         .getAddresses();
                     if (addressList == null || addressList.size() == 0) {
+                        continue;
+                    }
+                    if (btcUtxoBO.isBtcUtxoExist(voutUTXO.getTxid(),
+                        voutUTXO.getVout())) {
                         continue;
                     }
 
@@ -134,7 +148,7 @@ public class BTCTxAOImpl implements IBTCTxAO {
                         continue;
                     }
 
-                    BTCUTXO btcutxo = this.convertOut(voutUTXO,
+                    BtcUtxo btcutxo = this.convertOut(voutUTXO,
                         originalTx.getTxid(), originalTx.getBlockheight(),
                         EBTCUtxoStatus.OUT_UN_PUSH.getCode());
                     ourOutUTXOList.add(btcutxo);
@@ -152,20 +166,19 @@ public class BTCTxAOImpl implements IBTCTxAO {
     }
 
     @Transactional(rollbackFor = RuntimeException.class)
-    public void saveToDB(List<BTCUTXO> ourInUTXOList,
-            List<BTCUTXO> ourOutUTXOList, Long blockNumber) {
+    public void saveToDB(List<BtcUtxo> ourInUTXOList,
+            List<BtcUtxo> ourOutUTXOList, Long blockNumber) {
 
         // 变更 输入状态,为已归集
-        for (BTCUTXO updateUTXO : ourInUTXOList) {
+        for (BtcUtxo updateUTXO : ourInUTXOList) {
             // 变更状态为，已使用未推送
-            this.btcUtxoBO.update(updateUTXO.getTxid(), updateUTXO.getVout(),
-                EBTCUtxoStatus.IN_UN_PUSH.getCode());
+            btcUtxoBO.refreshStatus(updateUTXO, EBTCUtxoStatus.IN_UN_PUSH);
 
         }
 
         // 存储 utxo
-        if (ourOutUTXOList.size() > 0) {
-            this.btcUtxoBO.insertUTXOList(ourOutUTXOList);
+        for (BtcUtxo insertUTXO : ourOutUTXOList) {
+            this.btcUtxoBO.saveBtcUtxo(insertUTXO);
         }
 
         // 修改_区块遍历信息
@@ -180,7 +193,7 @@ public class BTCTxAOImpl implements IBTCTxAO {
     // 时间调度任务,定期扫描——未推送的——交易
     public void pushTx() {
 
-        List<BTCUTXO> btcutxoList = this.btcUtxoBO.selectUnPush();
+        List<BtcUtxo> btcutxoList = this.btcUtxoBO.selectUnPush();
         if (btcutxoList != null && btcutxoList.size() > 0) {
             // 推送出去
             try {
@@ -200,7 +213,7 @@ public class BTCTxAOImpl implements IBTCTxAO {
 
     // 确认推送
     @Override
-    public synchronized void confirmPush(List<BTCUTXO> utxoList) {
+    public synchronized void confirmPush(List<BtcUtxo> utxoList) {
 
         if (utxoList == null || utxoList.size() <= 0) {
             throw new BizException(
@@ -210,19 +223,20 @@ public class BTCTxAOImpl implements IBTCTxAO {
                             .getErrorCode());
         }
 
-        for (BTCUTXO btcutxo : utxoList) {
+        for (BtcUtxo btcutxo : utxoList) {
 
-            BTCUTXO ourBtcUtxo = this.btcUtxoBO.select(btcutxo.getTxid(),
+            BtcUtxo ourBtcUtxo = this.btcUtxoBO.getBtcUtxo(btcutxo.getTxid(),
                 btcutxo.getVout());
 
-            String nextStatus = null;
-            if (ourBtcUtxo.getStatus().equals(EBTCUtxoStatus.OUT_UN_PUSH)) {
+            EBTCUtxoStatus nextStatus = null;
+            if (ourBtcUtxo.getStatus().equals(
+                EBTCUtxoStatus.OUT_UN_PUSH.getCode())) {
 
-                nextStatus = EBTCUtxoStatus.OUT_PUSHED.getCode();
+                nextStatus = EBTCUtxoStatus.OUT_PUSHED;
 
             } else if (ourBtcUtxo.getStatus().equals(EBTCUtxoStatus.IN_UN_PUSH)) {
 
-                nextStatus = EBTCUtxoStatus.IN_PUSHED.getCode();
+                nextStatus = EBTCUtxoStatus.IN_PUSHED;
 
             }
             if (nextStatus == null) {
@@ -233,8 +247,7 @@ public class BTCTxAOImpl implements IBTCTxAO {
 
             } else {
 
-                this.btcUtxoBO.update(ourBtcUtxo.getTxid(),
-                    ourBtcUtxo.getVout(), nextStatus);
+                this.btcUtxoBO.refreshStatus(ourBtcUtxo, nextStatus);
 
             }
 
@@ -242,12 +255,12 @@ public class BTCTxAOImpl implements IBTCTxAO {
 
     }
 
-    private BTCUTXO convertOut(BTCVoutUTXO btcOut, String txid,
+    private BtcUtxo convertOut(BTCVoutUTXO btcOut, String txid,
             Long blockHeight, String status) {
 
         BTCScriptPubKey scriptPubKey = btcOut.getScriptPubKey();
 
-        BTCUTXO btcutxo = new BTCUTXO();
+        BtcUtxo btcutxo = new BtcUtxo();
         btcutxo.setAddress(scriptPubKey.getAddresses().get(0));
         btcutxo.setCount(btcOut.getValue());
         btcutxo.setScriptPubKey(scriptPubKey.getHex());

@@ -21,6 +21,9 @@
 
 	<sql id="where_condition">
 		<trim prefix="WHERE" prefixOverrides="AND | OR">
+		    <if test="hash != null and hash != '' ">
+				AND t.hash = #{hash}
+			</if>
 			<if test="status != null and status != '' ">
 				AND t.status = #{status}
 			</if>

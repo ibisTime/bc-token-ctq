@@ -38,5 +38,10 @@ public class PropertiesUtil {
 
         public static String SC_URL = props.getProperty("SC_URL");
 
+        public static String BTC_PUSH_ADDRESS_URL = props
+            .getProperty("BTC_PUSH_ADDRESS_URL");
+
+        public static String BTC_URL = props.getProperty("BTC_URL");
+
     }
 }

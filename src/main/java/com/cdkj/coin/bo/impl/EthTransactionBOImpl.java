@@ -114,4 +114,17 @@ public class EthTransactionBOImpl extends PaginableBOImpl<EthTransaction>
         return data;
     }
 
+    @Override
+    public boolean isEthTransactionExist(String hash) {
+        boolean result = false;
+
+        EthTransaction condition = new EthTransaction();
+        condition.setHash(hash);
+        if (ethTransactionDAO.selectTotalCount(condition) > 0) {
+            result = true;
+        }
+
+        return result;
+    }
+
 }

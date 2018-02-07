@@ -1,23 +1,25 @@
 package com.cdkj.coin.ao.impl;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.cdkj.coin.domain.BTC.BTCOriginalTx;
-import com.cdkj.coin.domain.BTC.BTCTXs;
-import com.cdkj.coin.exception.BizException;
+import java.util.Map;
+
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.cdkj.coin.common.PropertiesUtil;
+import com.cdkj.coin.domain.BTC.BTCOriginalTx;
+import com.cdkj.coin.domain.BTC.BTCTXs;
+import com.cdkj.coin.exception.BizException;
 
 @Service
 public class BTCBlockDataService {
 
     private static OkHttpClient okHttpClient = new OkHttpClient();
-
 
     public BTCOriginalTx queryTxHash(String txid) {
 
@@ -28,7 +30,8 @@ public class BTCBlockDataService {
             if (jsonStr == null) {
                 return null;
             }
-            return com.alibaba.fastjson.JSON.parseObject(jsonStr, BTCOriginalTx.class);
+            return com.alibaba.fastjson.JSON.parseObject(jsonStr,
+                BTCOriginalTx.class);
 
         } catch (Exception e) {
 
@@ -37,7 +40,6 @@ public class BTCBlockDataService {
         }
 
     }
-
 
     /**
      * 返回
@@ -60,7 +62,8 @@ public class BTCBlockDataService {
     private String blockTxsUrl(Long blockHeight, Integer pageNum) {
 
         String blockHassh = this.blockHash(blockHeight);
-        return this.baseApiURL() + "/txs/?block=" + blockHassh + "&pageNum=" + pageNum;
+        return this.baseApiURL() + "/txs/?block=" + blockHassh + "&pageNum="
+                + pageNum;
 
     }
 
@@ -73,15 +76,11 @@ public class BTCBlockDataService {
 
     }
 
-
     private String get(String url) throws BizException {
 
         // 200 ok
         // 404 如果没有
-        Request req = new Request.Builder()
-                .get()
-                .url(url)
-                .build();
+        Request req = new Request.Builder().get().url(url).build();
         try {
 
             Call call = okHttpClient.newCall(req);
@@ -111,7 +110,7 @@ public class BTCBlockDataService {
 
     private String baseApiURL() {
 
-        return "https://testnet.blockexplorer.com/api";
+        return PropertiesUtil.Config.BTC_URL;
 
     }
 

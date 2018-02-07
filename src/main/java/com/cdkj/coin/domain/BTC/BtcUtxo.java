@@ -1,16 +1,21 @@
 package com.cdkj.coin.domain.BTC;
 
-import com.cdkj.coin.dao.base.ABaseDO;
-
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
+
+import com.cdkj.coin.dao.base.ABaseDO;
 
 /**
- * Created by tianlei on 2018/一月/22.
+ * @author: haiqingzheng 
+ * @since: 2018年2月6日 下午8:53:29 
+ * @history:
  */
-public class BTCUTXO extends ABaseDO {
+public class BtcUtxo extends ABaseDO {
 
-    private Integer id;
+    private static final long serialVersionUID = 3556545568582185031L;
+
+    private Long id;
 
     private BigDecimal count;
 
@@ -28,8 +33,15 @@ public class BTCUTXO extends ABaseDO {
 
     private String scriptPubKey;
 
-    public Integer getId() {
+    // 状态列表
+    private List<String> statusList;
+
+    public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public BigDecimal getCount() {
@@ -88,7 +100,6 @@ public class BTCUTXO extends ABaseDO {
         this.status = status;
     }
 
-
     public String getScriptPubKey() {
         return scriptPubKey;
     }
@@ -97,8 +108,12 @@ public class BTCUTXO extends ABaseDO {
         this.scriptPubKey = scriptPubKey;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public List<String> getStatusList() {
+        return statusList;
+    }
+
+    public void setStatusList(List<String> statusList) {
+        this.statusList = statusList;
     }
 
 }

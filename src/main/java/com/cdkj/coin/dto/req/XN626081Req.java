@@ -1,6 +1,6 @@
 package com.cdkj.coin.dto.req;
 
-import com.cdkj.coin.domain.BTC.BTCUTXO;
+import com.cdkj.coin.domain.BTC.BtcUtxo;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -8,13 +8,13 @@ import java.util.List;
 public class XN626081Req {
 
     @NotNull
-    List<BTCUTXO> utxoList;
+    List<BtcUtxo> utxoList;
 
-    public List<BTCUTXO> getUtxoList() {
+    public List<BtcUtxo> getUtxoList() {
         return utxoList;
     }
 
-    public void setUtxoList(List<BTCUTXO> utxoList) {
+    public void setUtxoList(List<BtcUtxo> utxoList) {
         this.utxoList = utxoList;
     }
 }

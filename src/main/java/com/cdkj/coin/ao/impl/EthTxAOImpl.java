@@ -169,7 +169,11 @@ public class EthTxAOImpl implements IEthTxAO {
                     long fromCount = ethAddressBO.addressCount(fromAddress);
 
                     if (toCount > 0 || fromCount > 0) {
-                        // 需要同步
+                        // 需要同步，判断是否已经处理过
+                        if (ethTransactionBO
+                            .isEthTransactionExist(tx.getHash())) {
+                            continue;
+                        }
                         // 获取交易收据
                         Optional<TransactionReceipt> transactionReceipt = web3j
                             .ethGetTransactionReceipt(tx.getHash()).send()
