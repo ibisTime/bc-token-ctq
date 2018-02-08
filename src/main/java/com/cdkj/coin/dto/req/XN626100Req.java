@@ -6,7 +6,7 @@ import javax.validation.constraints.NotNull;
 
 import java.util.List;
 
-public class XN626081Req {
+public class XN626100Req {
 
     @NotNull
     List<BtcUtxo> utxoList;
