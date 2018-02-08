@@ -106,7 +106,7 @@ public class EthTxAOImpl implements IEthTxAO {
             while (true) {
 
                 Long blockNumber = sysConfigBO
-                    .getLongValue(SysConstants.CUR_BLOCK_NUMBER);
+                    .getLongValue(SysConstants.CUR_ETH_BLOCK_NUMBER);
                 if (isDebug == true) {
 
                     System.out.println("*********同步循环开始，扫描区块" + blockNumber
@@ -135,10 +135,12 @@ public class EthTxAOImpl implements IEthTxAO {
                 }
 
                 // 判断是否有足够的区块确认 暂定12
+                BigInteger blockConfirm = sysConfigBO
+                    .getBigIntegerValue(SysConstants.BLOCK_CONFIRM_ETH);
                 if (currentBlock == null
                         || maxBlockNumber.subtract(
                             BigInteger.valueOf(blockNumber)).compareTo(
-                            BigInteger.valueOf(12)) < 0) {
+                            blockConfirm) < 0) {
 
                     if (isDebug == true) {
 
@@ -218,7 +220,7 @@ public class EthTxAOImpl implements IEthTxAO {
 
         // 修改_区块遍历信息
         SYSConfig config = sysConfigBO
-            .getSYSConfig(SysConstants.CUR_BLOCK_NUMBER);
+            .getSYSConfig(SysConstants.CUR_ETH_BLOCK_NUMBER);
         //
         sysConfigBO.refreshSYSConfig(config.getId(),
             String.valueOf(blockNumber + 1), "code", "下次从哪个区块开始扫描");

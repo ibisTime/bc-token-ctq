@@ -79,8 +79,10 @@ public class ScTxAOImpl implements IScTxAO {
                 }
 
                 // 判断是否有足够的区块确认 暂定12
-                if (maxBlockNumber.subtract(blockNumber).compareTo(
-                    BigInteger.valueOf(1)) < 0) {
+                BigInteger blockConfirm = sysConfigBO
+                    .getBigIntegerValue(SysConstants.BLOCK_CONFIRM_ETH);
+                if (maxBlockNumber.subtract(blockNumber)
+                    .compareTo(blockConfirm) < 0) {
 
                     if (isDebug == true) {
                         System.out.println("*********同步循环结束,区块号"
