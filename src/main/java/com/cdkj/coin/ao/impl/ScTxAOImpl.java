@@ -76,8 +76,8 @@ public class ScTxAOImpl implements IScTxAO {
                 // 获取当前区块链长度
                 BigInteger maxBlockNumber = SiadClient.getBlockHeight();
                 if (isDebug == true) {
-                    System.out.println("*********最大区块号" + maxBlockNumber
-                            + "*******");
+                    System.out
+                        .println("*********最大区块号" + maxBlockNumber + "*******");
                 }
 
                 // 判断是否有足够的区块确认 暂定12
@@ -98,11 +98,11 @@ public class ScTxAOImpl implements IScTxAO {
                 List<ScTransaction> transactionList = new ArrayList<>();
 
                 // 钱包相关交易
-                List<Transaction> transactions = SiadClient.getTransactions(
-                    new BigInteger("0"), blockNumber);
+                List<Transaction> transactions = SiadClient
+                    .getTransactions(new BigInteger("0"), blockNumber);
                 if (CollectionUtils.isNotEmpty(transactions)) {
-                    logger.info("&*&*&*&*共扫描到" + transactions.size()
-                            + "个交易&*&*&*&*");
+                    logger.info(
+                        "&*&*&*&*共扫描到" + transactions.size() + "个交易&*&*&*&*");
                     for (Transaction tx : transactions) {
                         logger.info("&*&*&*&*开始处理交易:" + tx.getTransactionid()
                                 + "&*&*&*&*");
@@ -111,8 +111,8 @@ public class ScTxAOImpl implements IScTxAO {
                             continue;
                         }
                         // 是否已处理过该交易
-                        if (scTransactionBO.isScTransactionExist(tx
-                            .getTransactionid())) {
+                        if (scTransactionBO
+                            .isScTransactionExist(tx.getTransactionid())) {
                             continue;
                         }
                         if (tx.getInputs().size() == 1
@@ -123,20 +123,20 @@ public class ScTxAOImpl implements IScTxAO {
 
                             // 查询改地址是否在我们系统中存在
                             // to 或者 from 为我们的地址就要进行同步
-                            long toCount = scAddressBO.addressCount(fromInfo
-                                .getRelatedaddress());
-                            long fromCount = scAddressBO.addressCount(toInfo
-                                .getRelatedaddress());
+                            long toCount = scAddressBO
+                                .addressCount(fromInfo.getRelatedaddress());
+                            long fromCount = scAddressBO
+                                .addressCount(toInfo.getRelatedaddress());
 
                             if (toCount > 0 || fromCount > 0) {
                                 // 需要同步
                                 // 存储
                                 ScTransaction scTx = new ScTransaction();
                                 scTx.setTransactionid(tx.getTransactionid());
-                                scTx.setConfirmationheight(tx
-                                    .getConfirmationheight());
-                                scTx.setConfirmationtimestamp(tx
-                                    .getConfirmationtimestamp());
+                                scTx.setConfirmationheight(
+                                    tx.getConfirmationheight());
+                                scTx.setConfirmationtimestamp(
+                                    tx.getConfirmationtimestamp());
                                 scTx.setFrom(fromInfo.getRelatedaddress());
                                 scTx.setTo(toInfo.getRelatedaddress());
                                 scTx.setValue(toInfo.getValue());
@@ -187,8 +187,8 @@ public class ScTxAOImpl implements IScTxAO {
             .getSYSConfig(SysConstants.CUR_SC_BLOCK_NUMBER);
         //
         sysConfigBO.refreshSYSConfig(config.getId(),
-            String.valueOf(blockNumber.add(new BigInteger("1"))), "code",
-            "下次从哪个区块开始扫描");
+            String.valueOf(blockNumber.add(new BigInteger("1"))),
+            config.getUpdater(), config.getRemark());
 
     }
 
@@ -197,8 +197,8 @@ public class ScTxAOImpl implements IScTxAO {
 
         ScTransaction con = new ScTransaction();
         con.setStatus(EPushStatus.UN_PUSH.getCode());
-        List<ScTransaction> txList = this.scTransactionBO.getPaginable(0, 30,
-            con).getList();
+        List<ScTransaction> txList = this.scTransactionBO
+            .getPaginable(0, 30, con).getList();
         if (CollectionUtils.isNotEmpty(txList)) {
             // 推送出去
             try {
@@ -221,9 +221,8 @@ public class ScTxAOImpl implements IScTxAO {
         if (hashList == null || hashList.size() <= 0) {
             throw new BizException(
                 BizErrorCode.PUSH_STATUS_UPDATE_FAILURE.getErrorCode(),
-                "请传入正确的json数组"
-                        + BizErrorCode.PUSH_STATUS_UPDATE_FAILURE
-                            .getErrorCode());
+                "请传入正确的json数组" + BizErrorCode.PUSH_STATUS_UPDATE_FAILURE
+                    .getErrorCode());
         }
 
         this.scTransactionBO.changeTxStatusToPushed(hashList);

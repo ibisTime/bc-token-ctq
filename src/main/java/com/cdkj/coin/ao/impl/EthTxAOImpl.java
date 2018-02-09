@@ -109,17 +109,19 @@ public class EthTxAOImpl implements IEthTxAO {
                     .getLongValue(SysConstants.CUR_ETH_BLOCK_NUMBER);
                 if (isDebug == true) {
 
-                    System.out.println("*********同步循环开始，扫描区块" + blockNumber
-                            + "*******");
+                    System.out.println(
+                        "*********同步循环开始，扫描区块" + blockNumber + "*******");
 
                 }
 
                 // 获取当前区块
-                EthBlock ethBlockResp = web3j.ethGetBlockByNumber(
-                    new DefaultBlockParameterNumber(blockNumber), true).send();
+                EthBlock ethBlockResp = web3j
+                    .ethGetBlockByNumber(
+                        new DefaultBlockParameterNumber(blockNumber), true)
+                    .send();
                 if (ethBlockResp.getError() != null) {
-                    logger.error("扫描以太坊区块同步流水发送异常，原因：获取区块-"
-                            + ethBlockResp.getError());
+                    logger.error(
+                        "扫描以太坊区块同步流水发送异常，原因：获取区块-" + ethBlockResp.getError());
                 }
 
                 //
@@ -130,17 +132,16 @@ public class EthTxAOImpl implements IEthTxAO {
                     .getBlockNumber();
                 if (isDebug == true) {
 
-                    System.out.println("*********最大区块号" + maxBlockNumber
-                            + "*******");
+                    System.out
+                        .println("*********最大区块号" + maxBlockNumber + "*******");
                 }
 
                 // 判断是否有足够的区块确认 暂定12
                 BigInteger blockConfirm = sysConfigBO
                     .getBigIntegerValue(SysConstants.BLOCK_CONFIRM_ETH);
-                if (currentBlock == null
-                        || maxBlockNumber.subtract(
-                            BigInteger.valueOf(blockNumber)).compareTo(
-                            blockConfirm) < 0) {
+                if (currentBlock == null || maxBlockNumber
+                    .subtract(BigInteger.valueOf(blockNumber))
+                    .compareTo(blockConfirm) < 0) {
 
                     if (isDebug == true) {
 
@@ -210,7 +211,8 @@ public class EthTxAOImpl implements IEthTxAO {
     }
 
     @Transactional
-    public void saveToDB(List<EthTransaction> transactionList, Long blockNumber) {
+    public void saveToDB(List<EthTransaction> transactionList,
+            Long blockNumber) {
         //
         if (transactionList.isEmpty() == false) {
 
@@ -223,7 +225,8 @@ public class EthTxAOImpl implements IEthTxAO {
             .getSYSConfig(SysConstants.CUR_ETH_BLOCK_NUMBER);
         //
         sysConfigBO.refreshSYSConfig(config.getId(),
-            String.valueOf(blockNumber + 1), "code", "下次从哪个区块开始扫描");
+            String.valueOf(blockNumber + 1), config.getUpdater(),
+            config.getRemark());
 
     }
 
@@ -257,9 +260,8 @@ public class EthTxAOImpl implements IEthTxAO {
         if (hashList == null || hashList.size() <= 0) {
             throw new BizException(
                 BizErrorCode.PUSH_STATUS_UPDATE_FAILURE.getErrorCode(),
-                "请传入正确的json数组"
-                        + BizErrorCode.PUSH_STATUS_UPDATE_FAILURE
-                            .getErrorCode());
+                "请传入正确的json数组" + BizErrorCode.PUSH_STATUS_UPDATE_FAILURE
+                    .getErrorCode());
         }
 
         this.ethTransactionBO.changeTxStatusToPushed(hashList);
