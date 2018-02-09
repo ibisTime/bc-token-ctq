@@ -52,13 +52,13 @@ public class SiadClient {
     public static List<Transaction> getTransactions(BigInteger startheight,
             BigInteger endheight) {
         List<Transaction> result = null;
-        String resStr = HttpUtil.doAccessHTTPGetJson(SC_URL
-                + "/wallet/transactions?startheight=" + startheight
-                + "&endheight=" + endheight);
-        System.out.println("startheight:" + startheight + " endheight="
-                + endheight + " resStr=" + resStr);
-        String txStr = JSONObject.parseObject(resStr).getString(
-            "confirmedtransactions");
+        String resStr = HttpUtil
+            .doAccessHTTPGetJson(SC_URL + "/wallet/transactions?startheight="
+                    + startheight + "&endheight=" + endheight);
+        // System.out.println("startheight:" + startheight + " endheight="
+        // + endheight + " resStr=" + resStr);
+        String txStr = JSONObject.parseObject(resStr)
+            .getString("confirmedtransactions");
 
         if (txStr != null) {
             Gson gson = new Gson();
@@ -72,8 +72,8 @@ public class SiadClient {
     // 获取当前区块高度
     public static boolean verifyAddress(String address) {
         boolean result = false;
-        String resStr = HttpUtil.doAccessHTTPGetJson(SC_URL
-                + "/wallet/verify/address/" + address);
+        String resStr = HttpUtil
+            .doAccessHTTPGetJson(SC_URL + "/wallet/verify/address/" + address);
         result = JSONObject.parseObject(resStr).getBoolean("valid");
         return result;
     }
