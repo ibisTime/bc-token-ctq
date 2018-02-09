@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.web3j.protocol.Web3j;
 
 import com.cdkj.coin.ao.IScTxAO;
 import com.cdkj.coin.bo.ISYSConfigBO;
@@ -23,7 +22,6 @@ import com.cdkj.coin.common.SysConstants;
 import com.cdkj.coin.domain.SYSConfig;
 import com.cdkj.coin.domain.ScTransaction;
 import com.cdkj.coin.enums.EPushStatus;
-import com.cdkj.coin.ethereum.Web3JClient;
 import com.cdkj.coin.exception.BizErrorCode;
 import com.cdkj.coin.exception.BizException;
 import com.cdkj.coin.http.PostSimulater;
@@ -43,8 +41,6 @@ public class ScTxAOImpl implements IScTxAO {
     static final org.slf4j.Logger logger = LoggerFactory
         .getLogger(ScAddressAOImpl.class);
 
-    private static Web3j web3j = Web3JClient.getClient();
-
     @Autowired
     private IScAddressBO scAddressBO;
 
@@ -58,6 +54,12 @@ public class ScTxAOImpl implements IScTxAO {
     public void doScTransactionSync() {
 
         boolean isDebug = true;
+
+        if (!SiadClient.isUnlock()) {
+            System.out.println("*********Siacoin钱包未打开*******");
+            return;
+        }
+
         //
         try {
             //
@@ -97,9 +99,13 @@ public class ScTxAOImpl implements IScTxAO {
 
                 // 钱包相关交易
                 List<Transaction> transactions = SiadClient.getTransactions(
-                    blockNumber.subtract(new BigInteger("1")), blockNumber);
+                    new BigInteger("0"), blockNumber);
                 if (CollectionUtils.isNotEmpty(transactions)) {
+                    logger.info("&*&*&*&*共扫描到" + transactions.size()
+                            + "个交易&*&*&*&*");
                     for (Transaction tx : transactions) {
+                        logger.info("&*&*&*&*开始处理交易:" + tx.getTransactionid()
+                                + "&*&*&*&*");
                         // 过滤OSC（内部构造）交易
                         if (isOscTx(tx)) {
                             continue;

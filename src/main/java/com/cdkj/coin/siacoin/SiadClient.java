@@ -27,7 +27,16 @@ public class SiadClient {
     public static final String SC_URL = PropertiesUtil.Config.SC_URL;
 
     public static void main(String[] args) {
-        System.out.println(getBlockHeight());
+        System.out.println(isUnlock());
+    }
+
+    public static boolean isUnlock() {
+        boolean result = false;
+        // 获取钱包信息
+        String resStr = HttpUtil.doAccessHTTPGetJson(SC_URL + "/wallet");
+        result = JSONObject.parseObject(resStr).getBooleanValue("unlocked")
+                && JSONObject.parseObject(resStr).getBooleanValue("encrypted");
+        return result;
     }
 
     // 获取当前区块高度
@@ -46,6 +55,8 @@ public class SiadClient {
         String resStr = HttpUtil.doAccessHTTPGetJson(SC_URL
                 + "/wallet/transactions?startheight=" + startheight
                 + "&endheight=" + endheight);
+        System.out.println("startheight:" + startheight + " endheight="
+                + endheight + " resStr=" + resStr);
         String txStr = JSONObject.parseObject(resStr).getString(
             "confirmedtransactions");
 
