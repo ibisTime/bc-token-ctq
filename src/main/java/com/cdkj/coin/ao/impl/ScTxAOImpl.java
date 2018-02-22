@@ -82,7 +82,7 @@ public class ScTxAOImpl implements IScTxAO {
 
                 // 判断是否有足够的区块确认 暂定12
                 BigInteger blockConfirm = sysConfigBO
-                    .getBigIntegerValue(SysConstants.BLOCK_CONFIRM_ETH);
+                    .getBigIntegerValue(SysConstants.BLOCK_CONFIRM_SC);
                 if (maxBlockNumber.subtract(blockNumber)
                     .compareTo(blockConfirm) < 0) {
 
