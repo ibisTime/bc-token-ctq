@@ -93,7 +93,7 @@
 		UPDATE tctq_btc_utxo
 		SET
 		status = #{status}
-		WHERE id = #{id}
+		WHERE txid = #{txid} AND vout = #{vout}
 	</update>
 
 

@@ -485,7 +485,7 @@
     <!--</build>-->
 
     <build>
-        <finalName>coin_xn_ctq</finalName>
+        <finalName>bc-ctq</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
