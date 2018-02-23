@@ -24,8 +24,7 @@
                 <ref bean="scTransactionSyncTrigger"/>
                 <ref bean="scPushSyncTrigger"/> --> 
                 <ref bean="btcPushSyncTrigger"/>
-                <ref bean="btcTransactionSyncTrigger"/>
-
+           		<ref bean="btcTransactionSyncTrigger"/>
             </list>
         </property>
         <property name="autoStartup" value="true"/>
@@ -100,7 +99,7 @@
     <bean id="btcTransactionSyncTrigger"
           class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail" ref="doBtcTransactionSync"/>
-        <!--<property name="cronExpression" value="0 */1 * * * ?" />-->
+        <!-- <property name="cronExpression" value="0 */1 * * * ?" /> -->
         <property name="cronExpression" value="*/20 * * * * ?"/>
     </bean>
 
