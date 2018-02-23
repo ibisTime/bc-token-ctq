@@ -55,7 +55,7 @@ public class BTCTxAOImpl implements IBTCTxAO {
         // .getLongValue(SysConstants.CUR_BTC_BLOCK_NUMBER);
 
         // 该区块有测试数据
-        Long blockNumber = Long.valueOf(1284498);
+        Long blockNumber = Long.valueOf(1284522);
         List<BtcUtxo> ourInUTXOList = new ArrayList<>();
         List<BtcUtxo> ourOutUTXOList = new ArrayList<>();
 
@@ -79,7 +79,6 @@ public class BTCTxAOImpl implements IBTCTxAO {
 
             // 遍历交易
             for (BTCOriginalTx originalTx : btctXs.getTxs()) {
-
                 // todo 暂不处理coinbase
                 if (originalTx.getCoinBase() != null
                         && originalTx.getCoinBase()) {

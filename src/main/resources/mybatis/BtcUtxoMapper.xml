@@ -21,7 +21,7 @@
 			<if test="txid != null and txid != '' ">
 				AND t.txid = #{txid}
 			</if>
-			<if test="vout != null and vout != '' or vout == 0">
+			<if test="vout != null">
 				AND t.vout = #{vout}
 			</if>
 			<if test="address != null and address != '' ">
