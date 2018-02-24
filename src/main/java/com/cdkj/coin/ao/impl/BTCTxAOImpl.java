@@ -51,19 +51,19 @@ public class BTCTxAOImpl implements IBTCTxAO {
 
         // logger.info("******BTC扫描区块开始******");
 
-        // Long blockNumber = sysConfigBO
-        // .getLongValue(SysConstants.CUR_BTC_BLOCK_NUMBER);
+        Long blockNumber = sysConfigBO
+            .getLongValue(SysConstants.CUR_BTC_BLOCK_NUMBER);
 
         // 该区块有测试数据
-        Long blockNumber = Long.valueOf(1284522);
+        // Long blockNumber = Long.valueOf(1284522);
         List<BtcUtxo> ourInUTXOList = new ArrayList<>();
         List<BtcUtxo> ourOutUTXOList = new ArrayList<>();
 
         // 查询的分页
         Integer pageNum = 0;
         while (true) {
-            logger.info("******扫描区块：" + blockNumber + " 第" + pageNum + "页："
-                    + "******");
+            // logger.info("******扫描区块：" + blockNumber + " 第" + pageNum + "页："
+            // + "******");
             BTCTXs btctXs = this.blockDataService.getBlockTxs(blockNumber,
                 pageNum);
 
@@ -73,7 +73,7 @@ public class BTCTxAOImpl implements IBTCTxAO {
 
             // 说明该区块已经遍历完了
             if (btctXs.getTxs().size() <= 0) {
-                logger.info("******扫描区块完成：" + blockNumber + "******");
+                // logger.info("******扫描区块完成：" + blockNumber + "******");
                 break;
             }
 
@@ -95,12 +95,12 @@ public class BTCTxAOImpl implements IBTCTxAO {
                     // 如果此条INPUT已经已经处理过，无需重复处理
                     if (btcUtxoBO.isBtcUtxoExist(vinUTXO.getTxid(),
                         vinUTXO.getVout())) {
-                        BtcUtxo btcUtxo = btcUtxoBO.getBtcUtxo(
-                            vinUTXO.getTxid(), vinUTXO.getVout());
-                        if (EBTCUtxoStatus.OUT_UN_PUSH.getCode().equals(
-                            btcUtxo.getStatus())
-                                || EBTCUtxoStatus.IN_PUSHED.getCode().equals(
-                                    btcUtxo.getStatus())) {
+                        BtcUtxo btcUtxo = btcUtxoBO
+                            .getBtcUtxo(vinUTXO.getTxid(), vinUTXO.getVout());
+                        if (EBTCUtxoStatus.OUT_UN_PUSH.getCode()
+                            .equals(btcUtxo.getStatus())
+                                || EBTCUtxoStatus.IN_PUSHED.getCode()
+                                    .equals(btcUtxo.getStatus())) {
                             continue;
                         }
                     }
@@ -164,7 +164,7 @@ public class BTCTxAOImpl implements IBTCTxAO {
 
         this.saveToDB(ourInUTXOList, ourOutUTXOList, blockNumber);
 
-        logger.info("******BTC扫描区块结束******");
+        // logger.info("******BTC扫描区块结束******");
 
     }
 
@@ -189,7 +189,8 @@ public class BTCTxAOImpl implements IBTCTxAO {
             .getSYSConfig(SysConstants.CUR_BTC_BLOCK_NUMBER);
         //
         sysConfigBO.refreshSYSConfig(config.getId(),
-            String.valueOf(blockNumber + 1), "code", "下次从哪个区块开始扫描");
+            String.valueOf(blockNumber + 1), config.getUpdater(),
+            config.getRemark());
 
     }
 
@@ -223,9 +224,8 @@ public class BTCTxAOImpl implements IBTCTxAO {
         if (utxoList == null || utxoList.size() <= 0) {
             throw new BizException(
                 BizErrorCode.PUSH_STATUS_UPDATE_FAILURE.getErrorCode(),
-                "请传入正确的json数组"
-                        + BizErrorCode.PUSH_STATUS_UPDATE_FAILURE
-                            .getErrorCode());
+                "请传入正确的json数组" + BizErrorCode.PUSH_STATUS_UPDATE_FAILURE
+                    .getErrorCode());
         }
 
         for (BtcUtxo btcutxo : utxoList) {
@@ -234,22 +234,22 @@ public class BTCTxAOImpl implements IBTCTxAO {
                 btcutxo.getVout());
 
             EBTCUtxoStatus nextStatus = null;
-            if (ourBtcUtxo.getStatus().equals(
-                EBTCUtxoStatus.OUT_UN_PUSH.getCode())) {
+            if (ourBtcUtxo.getStatus()
+                .equals(EBTCUtxoStatus.OUT_UN_PUSH.getCode())) {
 
                 nextStatus = EBTCUtxoStatus.OUT_PUSHED;
 
-            } else if (ourBtcUtxo.getStatus().equals(
-                EBTCUtxoStatus.IN_UN_PUSH.getCode())) {
+            } else if (ourBtcUtxo.getStatus()
+                .equals(EBTCUtxoStatus.IN_UN_PUSH.getCode())) {
 
                 nextStatus = EBTCUtxoStatus.IN_PUSHED;
 
             }
             if (nextStatus == null) {
 
-                logger.error("utxo 状态异常，无法对应，原因：" + "txid:"
-                        + ourBtcUtxo.getTxid() + "  " + "vout:"
-                        + ourBtcUtxo.getVout());
+                logger
+                    .error("utxo 状态异常，无法对应，原因：" + "txid:" + ourBtcUtxo.getTxid()
+                            + "  " + "vout:" + ourBtcUtxo.getVout());
 
             } else {
 
