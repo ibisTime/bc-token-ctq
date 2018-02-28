@@ -14,16 +14,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.web3j.protocol.Web3j;
 
 import com.cdkj.coin.ao.IEthAddressAO;
 import com.cdkj.coin.bo.IEthAddressBO;
-import com.cdkj.coin.bo.IEthTransactionBO;
-import com.cdkj.coin.bo.ISYSConfigBO;
 import com.cdkj.coin.bo.base.Paginable;
 import com.cdkj.coin.domain.EthAddress;
 import com.cdkj.coin.dto.req.UploadEthAddressReq;
-import com.cdkj.coin.ethereum.Web3JClient;
 import com.cdkj.coin.exception.BizErrorCode;
 import com.cdkj.coin.exception.BizException;
 
@@ -37,23 +33,15 @@ public class EthAddressAOImpl implements IEthAddressAO {
     static final Logger logger = LoggerFactory
         .getLogger(EthAddressAOImpl.class);
 
-    private static Web3j web3j = Web3JClient.getClient();
-
     @Autowired
     private IEthAddressBO ethAddressBO;
-
-    @Autowired
-    private IEthTransactionBO ethTransactionBO;
-
-    @Autowired
-    private ISYSConfigBO sysConfigBO;
 
     @Override
     public void uploadAddress(UploadEthAddressReq req) {
 
         // 首先判断 地址 + 类型 是否已存在
-        int alreadyCount = this.ethAddressBO.queryEthAddressCount(
-            req.getAddress(), req.getType());
+        int alreadyCount = this.ethAddressBO
+            .queryEthAddressCount(req.getAddress(), req.getType());
 
         // 已经存在 也告知成功告知地址添加成功
         if (alreadyCount <= 0) {

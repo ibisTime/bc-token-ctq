@@ -43,7 +43,7 @@ import com.cdkj.coin.http.PostSimulater;
 public class EthTxAOImpl implements IEthTxAO {
 
     static final org.slf4j.Logger logger = LoggerFactory
-        .getLogger(EthAddressAOImpl.class);
+        .getLogger(EthTxAOImpl.class);
 
     private static Web3j web3j = Web3JClient.getClient();
 
