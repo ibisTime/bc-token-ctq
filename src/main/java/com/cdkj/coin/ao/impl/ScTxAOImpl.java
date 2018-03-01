@@ -53,7 +53,7 @@ public class ScTxAOImpl implements IScTxAO {
     @Override
     public void doScTransactionSync() {
 
-        boolean isDebug = true;
+        boolean isDebug = false;
 
         if (!SiadClient.isUnlock()) {
             System.out.println("*********Siacoin钱包未打开*******");

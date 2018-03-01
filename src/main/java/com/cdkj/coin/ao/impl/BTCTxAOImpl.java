@@ -54,6 +54,12 @@ public class BTCTxAOImpl implements IBTCTxAO {
         Long blockNumber = sysConfigBO
             .getLongValue(SysConstants.CUR_BTC_BLOCK_NUMBER);
 
+        // 如果区块高度为达到带扫描的区块
+        Long lasterBlockNumber = blockDataService.getBlockCount();
+        if (lasterBlockNumber < blockNumber) {
+            return;
+        }
+
         // 该区块有测试数据
         // Long blockNumber = Long.valueOf(1284522);
         List<BtcUtxo> ourInUTXOList = new ArrayList<>();
