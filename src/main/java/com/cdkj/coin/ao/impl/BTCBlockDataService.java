@@ -76,8 +76,8 @@ public class BTCBlockDataService {
 
     }
 
-    private String get(String url) throws BizException {
-
+    private String get(String url) {
+        String result = null;
         // 200 ok
         // 404 如果没有
         Request req = new Request.Builder().get().url(url).build();
@@ -88,23 +88,16 @@ public class BTCBlockDataService {
 
             if (response.code() == 200) {
 
-                return response.body().string();
-
-            } else if (response.code() == 404) {
-
-                return null;
-
-            } else {
-
-                throw new BizException("xn000", "拉取数据失败");
+                result = response.body().string();
 
             }
 
         } catch (Exception e) {
 
-            throw new BizException("xn000", "拉取数据失败");
+            // throw new BizException("xn000", "拉取数据失败" + e.getMessage());
 
         }
+        return result;
 
     }
 

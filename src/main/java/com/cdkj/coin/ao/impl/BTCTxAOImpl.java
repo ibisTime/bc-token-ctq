@@ -49,7 +49,7 @@ public class BTCTxAOImpl implements IBTCTxAO {
 
     public void doBtcTransactionSync() {
 
-        // logger.info("******BTC扫描区块开始******");
+        logger.info("******BTC扫描区块开始******");
 
         Long blockNumber = sysConfigBO
             .getLongValue(SysConstants.CUR_BTC_BLOCK_NUMBER);
@@ -68,18 +68,28 @@ public class BTCTxAOImpl implements IBTCTxAO {
         // 查询的分页
         Integer pageNum = 0;
         while (true) {
-            // logger.info("******扫描区块：" + blockNumber + " 第" + pageNum + "页："
-            // + "******");
-            BTCTXs btctXs = this.blockDataService.getBlockTxs(blockNumber,
-                pageNum);
+            logger.info(
+                "******扫描区块：" + blockNumber + " 第" + pageNum + "页：" + "******");
+
+            BTCTXs btctXs = null;
+            try {
+                btctXs = this.blockDataService.getBlockTxs(blockNumber,
+                    pageNum);
+            } catch (Exception e) {
+                logger.info("******扫描区块：" + blockNumber + " 第" + pageNum + "页："
+                        + "发送异常，原因：" + e.getMessage() + "，重新扫描******");
+                continue;
+            }
 
             if (btctXs == null) {
-                throw new BizException("xn000", "拉取数据失败");
+                logger.info("******扫描区块：" + blockNumber + " 第" + pageNum + "页："
+                        + "发送异常，重新扫描******");
+                continue;
             }
 
             // 说明该区块已经遍历完了
             if (btctXs.getTxs().size() <= 0) {
-                // logger.info("******扫描区块完成：" + blockNumber + "******");
+                logger.info("******扫描区块完成：" + blockNumber + "******");
                 break;
             }
 
@@ -170,7 +180,7 @@ public class BTCTxAOImpl implements IBTCTxAO {
 
         this.saveToDB(ourInUTXOList, ourOutUTXOList, blockNumber);
 
-        // logger.info("******BTC扫描区块结束******");
+        logger.info("******BTC扫描区块结束******");
 
     }
 
