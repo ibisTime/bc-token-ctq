@@ -108,43 +108,46 @@ public class ScTxAOImpl implements IScTxAO {
                                 + "&*&*&*&*");
                         // 过滤OSC（内部构造）交易
                         if (isOscTx(tx)) {
+                            logger.info("&*&*&*&*交易:" + tx.getTransactionid()
+                                    + "为OSC（内部构造）交易，暂不处理&*&*&*&*");
                             continue;
                         }
-                        // 是否已处理过该交易
-                        if (scTransactionBO
-                            .isScTransactionExist(tx.getTransactionid())) {
+
+                        // 矿工费输出信息
+                        Output minerOutput = getMinerOutput(tx);
+                        if (minerOutput == null) {
+                            logger.info("&*&*&*&*交易:" + tx.getTransactionid()
+                                    + "找不到矿工费输出信息，暂不处理 &*&*&*&*");
                             continue;
                         }
-                        if (tx.getInputs().size() == 1
-                                && tx.getOutputs().size() == 2) {
-                            Input fromInfo = tx.getInputs().get(0);
-                            Output toInfo = tx.getOutputs().get(0);
-                            Output minerInfo = tx.getOutputs().get(1);
 
-                            // 查询改地址是否在我们系统中存在
-                            // to 或者 from 为我们的地址就要进行同步
-                            long toCount = scAddressBO
-                                .addressCount(fromInfo.getRelatedaddress());
-                            long fromCount = scAddressBO
-                                .addressCount(toInfo.getRelatedaddress());
-
-                            if (toCount > 0 || fromCount > 0) {
-                                // 需要同步
-                                // 存储
+                        // 若输入地址为钱包相关地址
+                        Input input = tx.getInputs().get(0);
+                        // 遍历所有Output记录，同步相关的交易记录
+                        for (Output output : tx.getOutputs()) {
+                            if (scAddressBO
+                                .addressCount(output.getRelatedaddress()) > 0
+                                    && "siacoin output"
+                                        .equals(output.getFundtype())
+                                    && !scTransactionBO.isScTransactionExist(
+                                        tx.getTransactionid(),
+                                        output.getId())) {
                                 ScTransaction scTx = new ScTransaction();
                                 scTx.setTransactionid(tx.getTransactionid());
+                                scTx.setOutputid(output.getId());
                                 scTx.setConfirmationheight(
                                     tx.getConfirmationheight());
                                 scTx.setConfirmationtimestamp(
                                     tx.getConfirmationtimestamp());
-                                scTx.setFrom(fromInfo.getRelatedaddress());
-                                scTx.setTo(toInfo.getRelatedaddress());
-                                scTx.setValue(toInfo.getValue());
-                                scTx.setMinerfee(minerInfo.getValue());
+                                scTx.setFrom(input.getRelatedaddress());
+                                scTx.setTo(output.getRelatedaddress());
+                                scTx.setValue(output.getValue());
+                                scTx.setMinerfee(minerOutput.getValue());
                                 scTx.setSyncDatetime(new Date());
                                 scTx.setStatus(EPushStatus.UN_PUSH.getCode());
                                 transactionList.add(scTx);
                             }
+
                         }
 
                     }
@@ -157,6 +160,20 @@ public class ScTxAOImpl implements IScTxAO {
             logger.error("扫描SC区块同步流水发送异常，原因：" + e.getMessage());
         }
 
+    }
+
+    private Output getMinerOutput(Transaction tx) {
+        Output minerOutput = null;
+        int outPutSize = tx.getOutputs().size();
+        // 找到挖矿的Output信息
+        for (int i = outPutSize - 1; i > 0; i--) {
+            Output output = tx.getOutputs().get(i);
+            if ("miner fee".equals(output.getFundtype())) {
+                minerOutput = output;
+                break;
+            }
+        }
+        return minerOutput;
     }
 
     private boolean isOscTx(Transaction transaction) {

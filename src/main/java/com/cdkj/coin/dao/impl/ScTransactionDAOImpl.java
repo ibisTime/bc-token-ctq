@@ -9,8 +9,8 @@ import com.cdkj.coin.dao.base.support.AMybatisTemplate;
 import com.cdkj.coin.domain.ScTransaction;
 
 @Repository("scTransactionDAOImpl")
-public class ScTransactionDAOImpl extends AMybatisTemplate implements
-        IScTransactionDAO {
+public class ScTransactionDAOImpl extends AMybatisTemplate
+        implements IScTransactionDAO {
 
     @Override
     public int insert(ScTransaction data) {
@@ -24,8 +24,8 @@ public class ScTransactionDAOImpl extends AMybatisTemplate implements
 
     @Override
     public ScTransaction select(ScTransaction condition) {
-        return super.select(NAMESPACE.concat("select_scTransaction"),
-            condition, ScTransaction.class);
+        return super.select(NAMESPACE.concat("select_scTransaction"), condition,
+            ScTransaction.class);
     }
 
     @Override
@@ -43,13 +43,13 @@ public class ScTransactionDAOImpl extends AMybatisTemplate implements
     @Override
     public List<ScTransaction> selectList(ScTransaction condition, int start,
             int count) {
-        return super.selectList(NAMESPACE.concat("select_scTransaction"),
-            start, count, condition, ScTransaction.class);
+        return super.selectList(NAMESPACE.concat("select_scTransaction"), start,
+            count, condition, ScTransaction.class);
     }
 
-    public void updateTxStatus(List<ScTransaction> txList) {
+    public void updateStatus(ScTransaction data) {
 
-        super.updateBatch(NAMESPACE.concat("updateTxStatus"), (List) txList);
+        super.update(NAMESPACE.concat("update_status"), data);
 
     }
 

@@ -18,6 +18,9 @@ public class ScTransaction extends ABaseDO {
     // 交易哈希
     private String transactionid;
 
+    // output哈希
+    private String outputid;
+
     // 确认区块高度
     private BigInteger confirmationheight;
 
@@ -48,6 +51,14 @@ public class ScTransaction extends ABaseDO {
 
     public void setTransactionid(String transactionid) {
         this.transactionid = transactionid;
+    }
+
+    public String getOutputid() {
+        return outputid;
+    }
+
+    public void setOutputid(String outputid) {
+        this.outputid = outputid;
     }
 
     public BigInteger getConfirmationheight() {

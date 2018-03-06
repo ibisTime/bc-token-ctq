@@ -27,7 +27,9 @@ public class SiadClient {
     public static final String SC_URL = PropertiesUtil.Config.SC_URL;
 
     public static void main(String[] args) {
-        System.out.println(isUnlock());
+        List<Transaction> transactions = getTransactions(new BigInteger("0"),
+            new BigInteger("144520"));
+        System.out.println(isUnlock() + "" + transactions.size());
     }
 
     public static boolean isUnlock() {

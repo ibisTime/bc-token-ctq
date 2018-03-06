@@ -1,6 +1,5 @@
 package com.cdkj.coin.bo.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -11,6 +10,7 @@ import com.cdkj.coin.bo.IScTransactionBO;
 import com.cdkj.coin.bo.base.PaginableBOImpl;
 import com.cdkj.coin.dao.IScTransactionDAO;
 import com.cdkj.coin.domain.ScTransaction;
+import com.cdkj.coin.enums.EPushStatus;
 import com.cdkj.coin.exception.BizException;
 
 @Component
@@ -35,11 +35,13 @@ public class ScTransactionBOImpl extends PaginableBOImpl<ScTransaction>
     }
 
     @Override
-    public ScTransaction getScTransaction(String transactionid) {
+    public ScTransaction getScTransaction(String transactionid,
+            String outputid) {
         ScTransaction data = null;
         if (StringUtils.isNotBlank(transactionid)) {
             ScTransaction condition = new ScTransaction();
             condition.setTransactionid(transactionid);
+            condition.setOutputid(outputid);
             data = scTransactionDAO.select(condition);
             if (data == null) {
                 throw new BizException("xn0000", "SC交易记录不存在");
@@ -52,24 +54,24 @@ public class ScTransactionBOImpl extends PaginableBOImpl<ScTransaction>
     @Override
     public void changeTxStatusToPushed(List<String> txHashList) {
 
-        List<ScTransaction> txList = new ArrayList<ScTransaction>();
-
         for (String hash : txHashList) {
             ScTransaction scTransaction = new ScTransaction();
-            scTransaction.setTransactionid(hash);
-            txList.add(scTransaction);
+            String[] hashArray = hash.split("\\|\\|");
+            scTransaction.setTransactionid(hashArray[0]);
+            scTransaction.setOutputid(hashArray[1]);
+            scTransaction.setStatus(EPushStatus.PUSHED.getCode());
+            this.scTransactionDAO.updateStatus(scTransaction);
         }
-
-        this.scTransactionDAO.updateTxStatus(txList);
 
     }
 
     @Override
-    public boolean isScTransactionExist(String transactionid) {
+    public boolean isScTransactionExist(String transactionid, String outputid) {
         boolean flag = false;
         if (StringUtils.isNotBlank(transactionid)) {
             ScTransaction condition = new ScTransaction();
             condition.setTransactionid(transactionid);
+            condition.setOutputid(outputid);
             if (scTransactionDAO.selectTotalCount(condition) > 0) {
                 flag = true;
             }

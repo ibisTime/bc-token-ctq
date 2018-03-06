@@ -11,9 +11,10 @@ public interface IScTransactionBO extends IPaginableBO<ScTransaction> {
 
     public List<ScTransaction> queryScTransactionList(ScTransaction condition);
 
-    public ScTransaction getScTransaction(String transactionid);
+    public ScTransaction getScTransaction(String transactionid,
+            String outputid);
 
-    public boolean isScTransactionExist(String transactionid);
+    public boolean isScTransactionExist(String transactionid, String outputid);
 
     // 改变交易状态 为以推送
     public void changeTxStatusToPushed(List<String> txHashList);
