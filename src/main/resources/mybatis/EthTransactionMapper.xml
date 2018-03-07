@@ -108,7 +108,7 @@
 		  <foreach collection="list" item="tx" separator=",">
 			  (
 			  #{tx.hash} ,#{tx.nonce} ,#{tx.blockHash} ,#{tx.blockNumber} ,
-			  #{tx.transactionIndex} ,#{tx.from} ,#{tx.to},#{tx.value}, #{input}, #{tokenFrom}, #{tokenTo}, #{tokenValue},
+			  #{tx.transactionIndex} ,#{tx.from} ,#{tx.to},#{tx.value}, #{tx.input}, #{tx.tokenFrom}, #{tx.tokenTo}, #{tx.tokenValue},
 			  #{tx.gasPrice},#{tx.gas},#{tx.blockCreateDatetime},now(),
 			  #{tx.status},#{tx.gasUsed}
 			  )

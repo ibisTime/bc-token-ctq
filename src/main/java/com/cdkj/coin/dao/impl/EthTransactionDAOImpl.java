@@ -58,5 +58,4 @@ public class EthTransactionDAOImpl extends AMybatisTemplate implements
         return super.selectList(NAMESPACE.concat("select_ethTransaction"),
             start, count, condition, EthTransaction.class);
     }
-
 }

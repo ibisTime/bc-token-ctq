@@ -44,6 +44,8 @@ public class EthTransactionBOImpl extends PaginableBOImpl<EthTransaction>
         transaction.setTo(tx.getTo());
 
         transaction.setValue(tx.getValue().toString());
+        transaction.setInput(tx.getInput());
+        parsingInput(transaction);// 解析input 并赋值
         transaction.setGasPrice(tx.getGasPrice().toString());
         transaction.setGas(tx.getGas());
 
@@ -55,6 +57,34 @@ public class EthTransactionBOImpl extends PaginableBOImpl<EthTransaction>
         transaction.setGasUsed(gasUsed);
 
         return transaction;
+    }
+
+    // Function: transfer(address _to, uint256 _value)
+    // MethodID: 0xa9059cbb
+    // [0]: 000000000000000000000000eb1580e360eb63cfb74731487268aa97109c5c1f
+    // [1]: 0000000000000000000000000000000000000000000000000000000000000064
+    private void parsingInput(EthTransaction tx) {
+        String input = tx.getInput();
+        if (StringUtils.isNotBlank(input) && input.length() >= 138) {
+            String tokenFrom = tx.getFrom();
+            String tokenTo = input.substring(34, 74);
+            String tokenValue = String.valueOf(Integer.parseInt(
+                input.substring(98), 16));
+            tx.setTokenFrom(tokenFrom);
+            tx.setTokenTo(tokenTo);
+            tx.setTokenValue(tokenValue);
+        }
+    }
+
+    public static void main(String[] args) {
+        String input = "0xa9059cbb000000000000000000000000919ac3ff41ccb7a390ededc4150991c7ec4ad79a000000000000000000000000000000000000000000000000000000003b9aca00";
+        String tokenTo = "0x" + input.substring(34, 74);
+        System.out.println("tokenTo:" + tokenTo);
+        String tokenValue = String.valueOf(Integer.parseInt(
+            input.substring(98), 16));
+        System.out.println("tokenValue:" + input.substring(98));
+        System.out.println("tokenValue:" + tokenValue);
+
     }
 
     @Override

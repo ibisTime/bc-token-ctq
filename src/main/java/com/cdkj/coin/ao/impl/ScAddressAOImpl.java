@@ -14,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.web3j.protocol.Web3j;
 
 import com.cdkj.coin.ao.IScAddressAO;
 import com.cdkj.coin.bo.ISYSConfigBO;
@@ -23,7 +22,6 @@ import com.cdkj.coin.bo.IScTransactionBO;
 import com.cdkj.coin.bo.base.Paginable;
 import com.cdkj.coin.domain.ScAddress;
 import com.cdkj.coin.dto.req.UploadScAddressReq;
-import com.cdkj.coin.ethereum.Web3JClient;
 import com.cdkj.coin.exception.BizErrorCode;
 import com.cdkj.coin.exception.BizException;
 
@@ -35,8 +33,6 @@ import com.cdkj.coin.exception.BizException;
 @Service
 public class ScAddressAOImpl implements IScAddressAO {
     static final Logger logger = LoggerFactory.getLogger(ScAddressAOImpl.class);
-
-    private static Web3j web3j = Web3JClient.getClient();
 
     @Autowired
     private IScAddressBO scAddressBO;

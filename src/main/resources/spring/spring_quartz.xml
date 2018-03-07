@@ -19,12 +19,13 @@
     <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="triggers">
             <list>
-                <ref bean="ethTransactionSyncTrigger"/>
-                <ref bean="ethPushSyncTrigger"/>
-                <ref bean="scTransactionSyncTrigger"/>
+                <!-- <ref bean="ethTransactionSyncTrigger"/> -->
+            	<ref bean="ethPushSyncTrigger"/>
+                <ref bean="ethContractTransactionSyncTrigger"/>
+              <!--   <ref bean="scTransactionSyncTrigger"/>
                 <ref bean="scPushSyncTrigger"/>
                 <ref bean="btcPushSyncTrigger"/>
-           		<ref bean="btcTransactionSyncTrigger"/>
+           		<ref bean="btcTransactionSyncTrigger"/> -->
             </list>
         </property>
         <property name="autoStartup" value="true"/>
@@ -47,7 +48,7 @@
         <!-- 是否允许任务并发执行。当值为false时，表示必须等到前一个线程处理完毕后才再启一个新的线程 -->
         <property name="concurrent" value="false"/>
     </bean>
-
+    
     <!-- ########   ETH交易推送  #############-->
     <bean id="ethPushSyncTrigger"
           class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
@@ -59,6 +60,22 @@
           class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
         <property name="targetObject" ref="ethTxAOImpl"/>
         <property name="targetMethod" value="pushTx"/>
+        <!-- 是否允许任务并发执行。当值为false时，表示必须等到前一个线程处理完毕后才再启一个新的线程 -->
+        <property name="concurrent" value="false"/>
+    </bean>
+    
+    <!-- ########   ETH 智能合约交易处理  #############-->
+    <bean id="ethContractTransactionSyncTrigger"
+          class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="doEthContractTransactionSync"/>
+        <!--<property name="cronExpression" value="0 */1 * * * ?" />-->
+        <property name="cronExpression" value="*/20 * * * * ?"/>
+    </bean>
+    
+     <bean id="doEthContractTransactionSync"
+          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="ethTxAOImpl"/>
+        <property name="targetMethod" value="doEthContractTransactionSync"/>
         <!-- 是否允许任务并发执行。当值为false时，表示必须等到前一个线程处理完毕后才再启一个新的线程 -->
         <property name="concurrent" value="false"/>
     </bean>

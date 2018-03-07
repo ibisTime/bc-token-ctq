@@ -10,7 +10,7 @@ import java.util.Map;
  */
 public enum ESystemCode {
 
-    COIN("CD-COIN000017", "区块链货币");
+    TOEKN_OGC("CD-TOKEN00018", "以太坊代币");
     public static Map<String, ESystemCode> getMap() {
         Map<String, ESystemCode> map = new HashMap<String, ESystemCode>();
         for (ESystemCode direction : ESystemCode.values()) {

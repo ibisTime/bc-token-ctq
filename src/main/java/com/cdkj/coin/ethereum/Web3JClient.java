@@ -20,7 +20,7 @@ import com.cdkj.coin.common.PropertiesUtil;
  */
 public class Web3JClient {
 
-    private static String ETH_URL = PropertiesUtil.Config.ETH_URL;
+    private static String TOKEN_URL = PropertiesUtil.Config.TOKEN_URL;
 
     private Web3JClient() {
     }
@@ -31,7 +31,7 @@ public class Web3JClient {
         if (web3j == null) {
             synchronized (Web3JClient.class) {
                 if (web3j == null) {
-                    web3j = Web3j.build(new HttpService(ETH_URL));
+                    web3j = Web3j.build(new HttpService(TOKEN_URL));
 
                 }
             }

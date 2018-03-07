@@ -28,6 +28,11 @@ public class PropertiesUtil {
 
     public static final class Config {
 
+        public static String TOKEN_PUSH_ADDRESS_URL = props
+            .getProperty("TOKEN_PUSH_ADDRESS_URL");
+
+        public static String TOKEN_URL = props.getProperty("TOKEN_URL");
+
         public static String ETH_PUSH_ADDRESS_URL = props
             .getProperty("ETH_PUSH_ADDRESS_URL");
 
