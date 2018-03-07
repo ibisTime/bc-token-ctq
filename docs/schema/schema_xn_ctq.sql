@@ -16,6 +16,10 @@ CREATE TABLE `tctq_eth_transaction` (
   `from` char(42) NOT NULL COMMENT '转出地址',
   `to` char(42) NOT NULL COMMENT '转入地址',
   `value` varchar(30) NOT NULL COMMENT '交易额',
+  `input` text COMMENT 'input 输入',
+  `token_from` char(42) DEFAULT NULL COMMENT 'token币发起地址',
+  `token_to` char(42) DEFAULT NULL COMMENT 'token币接收地址',
+  `token_value` varchar(30) DEFAULT NULL COMMENT 'token币数量',
   `gas_price` varchar(20) NOT NULL COMMENT 'gas价格',
   `block_create_datetime` datetime NOT NULL COMMENT '区块形成时间',
   `sync_datetime` datetime NOT NULL COMMENT '同步时间',
@@ -25,7 +29,7 @@ CREATE TABLE `tctq_eth_transaction` (
   `gas_used` bigint(10) NOT NULL COMMENT 'gas消耗',
   PRIMARY KEY (`hash`),
   KEY `from_index` (`from`),
-  KEY `to_index` (`to`),
+  KEY `to_index` (`to`,`status`),
   KEY `status_index` (`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
