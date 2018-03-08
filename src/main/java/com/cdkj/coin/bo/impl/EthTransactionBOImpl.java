@@ -67,9 +67,9 @@ public class EthTransactionBOImpl extends PaginableBOImpl<EthTransaction>
         String input = tx.getInput();
         if (StringUtils.isNotBlank(input) && input.length() >= 138) {
             String tokenFrom = tx.getFrom();
-            String tokenTo = input.substring(34, 74);
-            String tokenValue = String.valueOf(Integer.parseInt(
-                input.substring(98), 16));
+            String tokenTo = "0x" + input.substring(34, 74);
+            BigInteger tokenValueBig = new BigInteger(input.substring(98), 16);
+            String tokenValue = tokenValueBig.toString();
             tx.setTokenFrom(tokenFrom);
             tx.setTokenTo(tokenTo);
             tx.setTokenValue(tokenValue);
@@ -77,12 +77,9 @@ public class EthTransactionBOImpl extends PaginableBOImpl<EthTransaction>
     }
 
     public static void main(String[] args) {
-        String input = "0xa9059cbb000000000000000000000000919ac3ff41ccb7a390ededc4150991c7ec4ad79a000000000000000000000000000000000000000000000000000000003b9aca00";
-        String tokenTo = "0x" + input.substring(34, 74);
-        System.out.println("tokenTo:" + tokenTo);
-        String tokenValue = String.valueOf(Integer.parseInt(
-            input.substring(98), 16));
-        System.out.println("tokenValue:" + input.substring(98));
+        BigInteger baa = new BigInteger(
+            "0000000000000000000000000000000283baec00", 16);
+        String tokenValue = baa.toString();
         System.out.println("tokenValue:" + tokenValue);
 
     }
