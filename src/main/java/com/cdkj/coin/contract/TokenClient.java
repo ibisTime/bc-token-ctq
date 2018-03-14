@@ -64,15 +64,12 @@ public class TokenClient {
     }
 
     public static List<TransferEventResponse> loadTransferEvents(
-            String txHash) {
+            TransactionReceipt transactionReceipt) {
 
         List<OrangeCoinToken.TransferEventResponse> transferEventList = null;
 
         OrangeCoinToken contract = loadHolderContract();
-        TransactionReceipt transactionReceipt;
         try {
-            transactionReceipt = Web3JClient.getClient()
-                .ethGetTransactionReceipt(txHash).send().getResult();
             transferEventList = contract.getTransferEvents(transactionReceipt);
         } catch (Exception e) {
             throw new BizException(EBizErrorCode.DEFAULT.getErrorCode(),

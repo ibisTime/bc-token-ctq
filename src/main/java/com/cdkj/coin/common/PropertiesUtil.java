@@ -55,5 +55,8 @@ public class PropertiesUtil {
         public static String KEY_STORE_PATH = props
             .getProperty("KEY_STORE_PATH");
 
+        public static String TOKEN_PUSH_ADDRESS_URL = props
+            .getProperty("TOKEN_PUSH_ADDRESS_URL");
+
     }
 }

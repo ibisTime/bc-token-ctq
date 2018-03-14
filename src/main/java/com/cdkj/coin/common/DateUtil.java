@@ -30,8 +30,8 @@ public class DateUtil {
     public static final String TIME_END = " 23:59:59";
 
     public static Date getStartDatetime(String startDate) {
-        Date repayDatetime = DateUtil.strToDate(
-            startDate + DateUtil.TIME_BEGIN, DateUtil.DATA_TIME_PATTERN_1);
+        Date repayDatetime = DateUtil.strToDate(startDate + DateUtil.TIME_BEGIN,
+            DateUtil.DATA_TIME_PATTERN_1);
         return repayDatetime;
     }
 
@@ -118,8 +118,8 @@ public class DateUtil {
      */
     public static Date getTomorrowStart(Date today) {
         String str = dateToStr(today, FRONT_DATE_FORMAT_STRING);
-        Date tommrow = getRelativeDate(
-            strToDate(str, FRONT_DATE_FORMAT_STRING), 24 * 3600);
+        Date tommrow = getRelativeDate(strToDate(str, FRONT_DATE_FORMAT_STRING),
+            24 * 3600);
         return tommrow;
     }
 
@@ -204,7 +204,8 @@ public class DateUtil {
      * @param format 时间格式
      * @return
      */
-    public static int daysBetween(String beginStr, String endStr, String format) {
+    public static int daysBetween(String beginStr, String endStr,
+            String format) {
         Date end = strToDate(endStr, format);
         Date begin = strToDate(beginStr, format);
         long times = end.getTime() - begin.getTime();
@@ -242,6 +243,13 @@ public class DateUtil {
         Date begin = strToDate(beginStr, DateUtil.FRONT_DATE_FORMAT_STRING);
         long times = end.getTime() - begin.getTime();
         return (int) (times / 60 / 60 / 1000 / 24);
+    }
+
+    public static Date TimeStamp2Date(String timestampString, String formats) {
+        Long timestamp = Long.parseLong(timestampString) * 1000;
+        String date = new java.text.SimpleDateFormat(formats)
+            .format(new java.util.Date(timestamp));
+        return strToDate(date, formats);
     }
 
     public static void main(String[] args) {

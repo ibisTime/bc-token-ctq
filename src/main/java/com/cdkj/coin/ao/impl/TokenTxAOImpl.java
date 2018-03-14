@@ -1,39 +1,35 @@
 package com.cdkj.coin.ao.impl;
 
-import java.io.IOException;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.Properties;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.methods.response.EthBlock;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 
 import com.cdkj.coin.ao.ITokenTxAO;
-import com.cdkj.coin.bo.IEthTransactionBO;
 import com.cdkj.coin.bo.ISYSConfigBO;
 import com.cdkj.coin.bo.ITokenAddressBO;
 import com.cdkj.coin.bo.ITokenContractBO;
-import com.cdkj.coin.bo.base.Paginable;
+import com.cdkj.coin.bo.ITokenTransactionBO;
 import com.cdkj.coin.common.DateUtil;
 import com.cdkj.coin.common.JsonUtil;
 import com.cdkj.coin.common.PropertiesUtil;
 import com.cdkj.coin.common.SysConstants;
 import com.cdkj.coin.contract.OrangeCoinToken.TransferEventResponse;
 import com.cdkj.coin.contract.TokenClient;
-import com.cdkj.coin.domain.EthTransaction;
 import com.cdkj.coin.domain.SYSConfig;
-import com.cdkj.coin.dto.req.EthTxPageReq;
-import com.cdkj.coin.enums.EEthContractMethodID;
+import com.cdkj.coin.domain.TokenTransaction;
 import com.cdkj.coin.enums.EPushStatus;
 import com.cdkj.coin.ethereum.Web3JClient;
 import com.cdkj.coin.exception.BizException;
@@ -46,10 +42,7 @@ import com.cdkj.coin.http.PostSimulater;
 @Service
 public class TokenTxAOImpl implements ITokenTxAO {
 
-    static final org.slf4j.Logger logger = LoggerFactory
-        .getLogger(TokenTxAOImpl.class);
-
-    private static Web3j web3j = Web3JClient.getClient();
+    static final Logger logger = LoggerFactory.getLogger(TokenTxAOImpl.class);
 
     @Autowired
     private ITokenContractBO tokenContractBO;
@@ -58,50 +51,12 @@ public class TokenTxAOImpl implements ITokenTxAO {
     private ITokenAddressBO tokenAddressBO;
 
     @Autowired
-    private IEthTransactionBO ethTransactionBO;
+    private ITokenTransactionBO tokenTransactionBO;
 
     @Autowired
     private ISYSConfigBO sysConfigBO;
 
-    @Override
-    public Paginable<EthTransaction> queryTxPage(EthTxPageReq req) {
-
-        //
-        EthTransaction condation = new EthTransaction();
-        condation.setStatus(req.getStatus());
-        condation.setTo(req.getTo());
-        condation.setFrom(req.getFrom());
-
-        // 时间
-        Date startDate = null;
-        Date endDate = null;
-
-        if (req.getBlockCreateDatetimeStart() != null) {
-            startDate = DateUtil.strToDate(req.getBlockCreateDatetimeStart(),
-                DateUtil.DATA_TIME_PATTERN_1);
-        }
-
-        if (req.getBlockCreateDatetimeEnd() != null) {
-            endDate = DateUtil.strToDate(req.getBlockCreateDatetimeEnd(),
-                DateUtil.DATA_TIME_PATTERN_1);
-        }
-
-        if (startDate != null && endDate != null) {
-            if (startDate.compareTo(endDate) > 0) {
-                throw new BizException(EBizErrorCode.DEFAULT.getErrorCode(),
-                    "开始时间需 <= 结束时间");
-            }
-
-        }
-
-        condation.setBlockCreateDatetimeStart(startDate);
-        condation.setBlockCreateDatetimeEnd(endDate);
-
-        return this.ethTransactionBO.getPaginable(
-            Integer.valueOf(req.getStart()), Integer.valueOf(req.getLimit()),
-            condation);
-    }
-
+    @SuppressWarnings("rawtypes")
     @Override
     public void doTokenTransactionSync() {
         boolean isDebug = true;
@@ -144,7 +99,7 @@ public class TokenTxAOImpl implements ITokenTxAO {
                     break;
                 }
 
-                List<EthTransaction> transactionList = new ArrayList<>();
+                List<TokenTransaction> transactionList = new ArrayList<>();
 
                 // 如果取到区块信息
                 for (EthBlock.TransactionResult txObj : currentBlock
@@ -161,47 +116,36 @@ public class TokenTxAOImpl implements ITokenTxAO {
 
                     // 如果to地址是橙提取关心合约地址，说明是执行合约的交易，进行解析
                     if (tokenContractBO.isTokenContractExist(toAddress)) {
-                        // 1、获取该交易向下的event
-                        // 2、遍历eventlist,检查event是否已经处理过，如果已经处理过，直接跳过
-                        // 3、检查event中的 from to 是否是我们关心的地址
-                        // 4、落地event
 
+                        TransactionReceipt transactionReceipt = Web3JClient
+                            .getClient().ethGetTransactionReceipt(tx.getHash())
+                            .send().getResult();
+
+                        // 1、获取该交易向下的event
                         List<TransferEventResponse> transferEventList = TokenClient
-                            .loadTransferEvents(tx.getHash());
+                            .loadTransferEvents(transactionReceipt);
+                        // 2、遍历eventlist
                         if (CollectionUtils.isNotEmpty(transferEventList)) {
                             for (TransferEventResponse transferEventResponse : transferEventList) {
-
+                                // 检查event是否已经处理过，如果已经处理过，直接跳过
+                                if (tokenTransactionBO.isTokenTransactionExist(
+                                    tx.getHash(),
+                                    transferEventResponse.log.getLogIndex())) {
+                                    continue;
+                                }
+                                // 3、检查event中的 from to 是否是我们关心的地址
+                                long fromCount = tokenAddressBO
+                                    .addressCount(fromAddress);
+                                long toCount = tokenAddressBO
+                                    .addressCount(toAddress);
+                                if (toCount > 0 || fromCount > 0) {
+                                    TokenTransaction tokenTransaction = convertTokenTransaction(
+                                        currentBlock, tx, transactionReceipt,
+                                        transferEventResponse);
+                                    transactionList.add(tokenTransaction);
+                                }
                             }
                         }
-                    }
-
-                    // 查询to地址是否是合约地址，并且Input中前缀是0xa9059cbb打头的转账方法,MethodID=0xa9059cbb
-                    if (toAddress.equals(contractAddress.toLowerCase())
-                            && tx.getInput().startsWith(
-                                EEthContractMethodID.Transfer.getCode())) {
-                        // 需要同步，判断是否已经处理过
-                        if (ethTransactionBO
-                            .isEthTransactionExist(tx.getHash())) {
-                            continue;
-                        }
-                        // 获取交易收据
-                        Optional<TransactionReceipt> transactionReceipt = web3j
-                            .ethGetTransactionReceipt(tx.getHash()).send()
-                            .getTransactionReceipt();
-
-                        if (transactionReceipt.isPresent()) {
-
-                            TransactionReceipt transactionReceipt1 = transactionReceipt
-                                .get();
-                            BigInteger gasUsed = transactionReceipt1
-                                .getGasUsed();
-                            EthTransaction ethTransaction = this.ethTransactionBO
-                                .convertTx(tx, gasUsed,
-                                    currentBlock.getTimestamp());
-                            transactionList.add(ethTransaction);
-
-                        }
-
                     }
 
                 }
@@ -210,26 +154,60 @@ public class TokenTxAOImpl implements ITokenTxAO {
 
             }
 
-        } catch (IOException e1) {
-
-            logger.error("扫描以太坊区块同步流水发送异常，原因：" + e1.getMessage());
+        } catch (Exception e) {
+            logger.error("扫描以太坊区块同步流水发送异常，原因：" + e.getMessage());
         }
 
     }
 
+    private TokenTransaction convertTokenTransaction(
+            EthBlock.Block currentBlock, EthBlock.TransactionObject tx,
+            TransactionReceipt transactionReceipt,
+            TransferEventResponse transferEventResponse) {
+        TokenTransaction tokenTransaction = new TokenTransaction();
+        tokenTransaction.setHash(tx.getHash());
+        tokenTransaction.setNonce(tx.getNonce());
+        tokenTransaction.setBlockHash(tx.getBlockHash());
+        tokenTransaction.setTransactionIndex(tx.getTransactionIndex());
+        tokenTransaction.setFrom(tx.getFrom());
+        tokenTransaction.setTo(tx.getTo());
+        tokenTransaction.setValue(new BigDecimal(tx.getValue().toString()));
+        tokenTransaction.setInput(tx.getInput());
+        tokenTransaction.setTokenFrom(transferEventResponse.from);
+        tokenTransaction.setTokenTo(transferEventResponse.to);
+        tokenTransaction.setTokenValue(
+            new BigDecimal(transferEventResponse.value.toString()));
+        tokenTransaction
+            .setTokenLogIndex(transferEventResponse.log.getLogIndex());
+        tokenTransaction.setBlockCreateDatetime(
+            DateUtil.TimeStamp2Date(currentBlock.getTimestamp().toString(),
+                DateUtil.DATA_TIME_PATTERN_1));
+        tokenTransaction.setSyncDatetime(new Date());
+        tokenTransaction.setBlockNumber(tx.getBlockNumber());
+        tokenTransaction
+            .setGasPrice(new BigDecimal(tx.getGasPrice().toString()));
+        tokenTransaction.setGasLimit(tx.getGas());
+        tokenTransaction.setGasUsed(transactionReceipt.getGasUsed());
+        tokenTransaction.setStatus(EPushStatus.UN_PUSH.getCode());
+        return tokenTransaction;
+    }
+
     @Transactional
-    public void saveToDB(List<EthTransaction> transactionList,
+    public void saveToDB(List<TokenTransaction> transactionList,
             Long blockNumber) {
+
         //
         if (transactionList.isEmpty() == false) {
 
-            this.ethTransactionBO.insertTxList(transactionList);
+            for (TokenTransaction tokenTransaction : transactionList) {
+                this.tokenTransactionBO.saveTokenTransaction(tokenTransaction);
+            }
 
         }
 
         // 修改_区块遍历信息
         SYSConfig config = sysConfigBO
-            .getSYSConfig(SysConstants.CUR_ETH_BLOCK_NUMBER);
+            .getSYSConfig(SysConstants.CUR_TOKEN_BLOCK_NUMBER);
         //
         sysConfigBO.refreshSYSConfig(config.getId(),
             String.valueOf(blockNumber + 1), config.getUpdater(),
@@ -240,18 +218,17 @@ public class TokenTxAOImpl implements ITokenTxAO {
     // 时间调度任务,定期扫描——未推送的——交易
     public void pushTx() {
 
-        EthTransaction con = new EthTransaction();
+        TokenTransaction con = new TokenTransaction();
         con.setStatus(EPushStatus.UN_PUSH.getCode());
-        List<EthTransaction> txList = this.ethTransactionBO.queryEthTxPage(con,
-            0, 30);
+        List<TokenTransaction> txList = this.tokenTransactionBO
+            .getPaginable(0, 30, con).getList();
         if (txList.size() > 0) {
             // 推送出去
             try {
-
                 String pushJsonStr = JsonUtil.Object2Json(txList);
                 String url = PropertiesUtil.Config.TOKEN_PUSH_ADDRESS_URL;
                 Properties formProperties = new Properties();
-                formProperties.put("ethTxlist", pushJsonStr);
+                formProperties.put("tokenTxlist", pushJsonStr);
                 PostSimulater.requestPostForm(url, formProperties);
             } catch (Exception e) {
                 logger.error("回调业务biz异常，原因：" + e.getMessage());
@@ -262,16 +239,21 @@ public class TokenTxAOImpl implements ITokenTxAO {
 
     // 确认推送
     @Override
-    public Object confirmPush(List<String> hashList) {
+    public Object confirmPush(List<Long> idList) {
 
-        if (hashList == null || hashList.size() <= 0) {
+        if (idList == null || idList.size() <= 0) {
             throw new BizException(
                 EBizErrorCode.PUSH_STATUS_UPDATE_FAILURE.getErrorCode(),
                 "请传入正确的json数组" + EBizErrorCode.PUSH_STATUS_UPDATE_FAILURE
                     .getErrorCode());
         }
 
-        this.ethTransactionBO.changeTxStatusToPushed(hashList);
+        for (Long id : idList) {
+            TokenTransaction data = tokenTransactionBO.getTokenTransaction(id);
+            tokenTransactionBO.refreshStatus(data,
+                EPushStatus.PUSHED.getCode());
+        }
+
         return new Object();
 
     }
