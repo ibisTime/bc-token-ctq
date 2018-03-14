@@ -1,9 +1,19 @@
+
+DROP TABLE IF EXISTS `tctq_token_contract`;
+CREATE TABLE `tctq_token_contract` (
+  `symbol` varchar(32) NOT NULL COMMENT '币种符号',
+  `contract_address` varchar(255) NOT NULL COMMENT '合约地址',
+  `create_datetime` datetime NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`symbol`),
+  KEY `address_index` (`contract_address`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 DROP TABLE IF EXISTS `tctq_token_address`;
 CREATE TABLE `tctq_token_address` (
-  `code` varchar(32) NOT NULL,
-  `address` varchar(64) NOT NULL,
-  `contract_address` varchar(64) NOT NULL,
-  `create_datetime` datetime NOT NULL,
+  `code` varchar(32) NOT NULL COMMENT '编号',
+  `address` varchar(64) NOT NULL COMMENT '地址',
+  `symbol` varchar(64) NOT NULL COMMENT '所属币种',
+  `create_datetime` datetime NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`code`),
   KEY `address_index` (`address`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

@@ -17,17 +17,16 @@ public class TokenAddressAOImpl implements ITokenAddressAO {
     private ITokenAddressBO tokenAddressBO;
 
     @Override
-    public void uploadAddress(String address, String contractAddress) {
+    public void uploadAddress(String address, String symbol) {
 
         // 首先判断 地址 是否已存在
-        int alreadyCount = tokenAddressBO.queryAddressCount(address,
-            contractAddress);
+        int alreadyCount = tokenAddressBO.queryAddressCount(address, symbol);
         // 已经存在 也告知成功告知地址添加成功
         if (alreadyCount > 0) {
             return;
         }
 
-        int count = tokenAddressBO.uploadAddress(address, contractAddress);
+        int count = tokenAddressBO.uploadAddress(address, symbol);
         if (count != 1) {
             throw new BizException("xn000", "上传token地址失败");
         }
@@ -38,10 +37,11 @@ public class TokenAddressAOImpl implements ITokenAddressAO {
      */
     @Override
     public List<TokenAddress> queryTokenAddressListByAddress(String address,
-            String contractAddress) {
+            String symbol) {
         TokenAddress condition = new TokenAddress();
         condition.setAddress(address);
-        condition.setContractAddress(contractAddress);
+        condition.setSymbol(symbol);
+        ;
         return tokenAddressBO.queryAddressList(condition);
     }
 }

@@ -1,5 +1,6 @@
 package com.cdkj.coin.bo.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -13,8 +14,8 @@ import com.cdkj.coin.dao.ITokenAddressDAO;
 import com.cdkj.coin.domain.TokenAddress;
 
 @Component
-public class TokenAddressBOImpl extends PaginableBOImpl<TokenAddress> implements
-        ITokenAddressBO {
+public class TokenAddressBOImpl extends PaginableBOImpl<TokenAddress>
+        implements ITokenAddressBO {
 
     @Autowired
     private ITokenAddressDAO tokenAddressDAO;
@@ -25,11 +26,12 @@ public class TokenAddressBOImpl extends PaginableBOImpl<TokenAddress> implements
     }
 
     @Override
-    public int uploadAddress(String address, String contractAddress) {
+    public int uploadAddress(String address, String symbol) {
         TokenAddress tokenAddress = new TokenAddress();
         tokenAddress.setCode(OrderNoGenerater.generateM("AD"));
         tokenAddress.setAddress(address);
-        tokenAddress.setContractAddress(contractAddress);
+        tokenAddress.setSymbol(symbol);
+        tokenAddress.setCreateDatetime(new Date());
         int count = tokenAddressDAO.insert(tokenAddress);
         return count;
     }
@@ -44,10 +46,10 @@ public class TokenAddressBOImpl extends PaginableBOImpl<TokenAddress> implements
     }
 
     @Override
-    public int queryAddressCount(String address, String contractAddress) {
+    public int queryAddressCount(String address, String symbol) {
         TokenAddress condition = new TokenAddress();
         condition.setAddress(address);
-        condition.setContractAddress(contractAddress);
+        condition.setSymbol(symbol);
         return this.tokenAddressDAO.selectTotalCount(condition).intValue();
     }
 }

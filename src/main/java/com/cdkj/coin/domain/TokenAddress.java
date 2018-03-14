@@ -20,8 +20,8 @@ public class TokenAddress extends ABaseDO {
     // 以太坊地址
     private String address;
 
-    // 合约地址
-    private String contractAddress;
+    // 币种
+    private String symbol;
 
     // 生成时间
     private Date createDatetime;
@@ -42,12 +42,12 @@ public class TokenAddress extends ABaseDO {
         this.address = address;
     }
 
-    public String getContractAddress() {
-        return contractAddress;
+    public String getSymbol() {
+        return symbol;
     }
 
-    public void setContractAddress(String contractAddress) {
-        this.contractAddress = contractAddress;
+    public void setSymbol(String symbol) {
+        this.symbol = symbol;
     }
 
     public Date getCreateDatetime() {

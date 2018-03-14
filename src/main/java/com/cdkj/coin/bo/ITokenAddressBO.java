@@ -11,11 +11,11 @@ public interface ITokenAddressBO extends IPaginableBO<TokenAddress> {
     public long addressCount(String address);
 
     // 上传地址
-    public int uploadAddress(String address, String tokenAddress);
+    public int uploadAddress(String address, String symbol);
 
     public List<TokenAddress> queryAddressList(TokenAddress condition);
 
     // 地址 + 合约地址
-    public int queryAddressCount(String address, String contractAddress);
+    public int queryAddressCount(String address, String symbol);
 
 }
