@@ -26,7 +26,7 @@ import com.cdkj.coin.common.PropertiesUtil;
 import com.cdkj.coin.common.SysConstants;
 import com.cdkj.coin.domain.SYSConfig;
 import com.cdkj.coin.enums.EBTCUtxoStatus;
-import com.cdkj.coin.exception.BizErrorCode;
+import com.cdkj.coin.exception.EBizErrorCode;
 import com.cdkj.coin.exception.BizException;
 import com.cdkj.coin.http.PostSimulater;
 
@@ -239,8 +239,8 @@ public class BTCTxAOImpl implements IBTCTxAO {
 
         if (utxoList == null || utxoList.size() <= 0) {
             throw new BizException(
-                BizErrorCode.PUSH_STATUS_UPDATE_FAILURE.getErrorCode(),
-                "请传入正确的json数组" + BizErrorCode.PUSH_STATUS_UPDATE_FAILURE
+                EBizErrorCode.PUSH_STATUS_UPDATE_FAILURE.getErrorCode(),
+                "请传入正确的json数组" + EBizErrorCode.PUSH_STATUS_UPDATE_FAILURE
                     .getErrorCode());
         }
 

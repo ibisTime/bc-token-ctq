@@ -15,7 +15,7 @@ import com.cdkj.coin.bo.base.PaginableBOImpl;
 import com.cdkj.coin.dao.IEthTransactionDAO;
 import com.cdkj.coin.domain.EthTransaction;
 import com.cdkj.coin.enums.EPushStatus;
-import com.cdkj.coin.exception.BizErrorCode;
+import com.cdkj.coin.exception.EBizErrorCode;
 import com.cdkj.coin.exception.BizException;
 
 @Component
@@ -106,7 +106,7 @@ public class EthTransactionBOImpl extends PaginableBOImpl<EthTransaction>
             data = ethTransactionDAO.select(condition);
             if (data == null) {
                 throw new BizException(
-                    BizErrorCode.DEFAULT_ERROR_CODE.getErrorCode(),
+                    EBizErrorCode.DEFAULT.getErrorCode(),
                     "以太坊交易记录不存在");
             }
         }

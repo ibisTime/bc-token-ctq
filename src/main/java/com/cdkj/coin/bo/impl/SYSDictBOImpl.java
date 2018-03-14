@@ -12,7 +12,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.cdkj.coin.dao.DictMapper;
-import com.cdkj.coin.exception.BizErrorCode;
+import com.cdkj.coin.exception.EBizErrorCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -55,7 +55,7 @@ public class SYSDictBOImpl extends PaginableBOImpl<SYSDict> implements
         data.setUpdater(updater);
         data.setRemark(remark);
         if (sysDictDAO.updateValue(data) <= 0) {
-            throw new BizException(BizErrorCode.DEFAULT_ERROR_CODE.getErrorCode(),"更新失败");
+            throw new BizException(EBizErrorCode.DEFAULT.getErrorCode(),"更新失败");
         }
 
     }
@@ -97,7 +97,7 @@ public class SYSDictBOImpl extends PaginableBOImpl<SYSDict> implements
         fDict.setType(EDictType.FIRST.getCode());
 
         if (getTotalCount(fDict) <= 0) {
-            throw new BizException(BizErrorCode.DEFAULT_ERROR_CODE.getErrorCode(), "parentKey不存在");
+            throw new BizException(EBizErrorCode.DEFAULT.getErrorCode(), "parentKey不存在");
         }
         // 第二层数据字典 在当前父节点下key不能重复
         SYSDict condition = new SYSDict();
@@ -106,7 +106,7 @@ public class SYSDictBOImpl extends PaginableBOImpl<SYSDict> implements
         condition.setType(EDictType.SECOND.getCode());
 
         if (getTotalCount(condition) > 0) {
-            throw new BizException(BizErrorCode.DEFAULT_ERROR_CODE.getErrorCode(), "当前节点下，key重复");
+            throw new BizException(EBizErrorCode.DEFAULT.getErrorCode(), "当前节点下，key重复");
         }
 
     }

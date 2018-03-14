@@ -20,7 +20,7 @@ import com.cdkj.coin.bo.IEthAddressBO;
 import com.cdkj.coin.bo.base.Paginable;
 import com.cdkj.coin.domain.EthAddress;
 import com.cdkj.coin.dto.req.UploadEthAddressReq;
-import com.cdkj.coin.exception.BizErrorCode;
+import com.cdkj.coin.exception.EBizErrorCode;
 import com.cdkj.coin.exception.BizException;
 
 /**
@@ -64,7 +64,7 @@ public class EthAddressAOImpl implements IEthAddressAO {
 
         if (typeList != null && typeList.isEmpty()) {
             throw new BizException(
-                BizErrorCode.DEFAULT_ERROR_CODE.getErrorCode(), "size 需大于 0");
+                EBizErrorCode.DEFAULT.getErrorCode(), "size 需大于 0");
         }
         //
         EthAddress condation = new EthAddress();

@@ -13,4 +13,8 @@ public class SysConstants {
     public static final String CUR_BTC_BLOCK_NUMBER = "curBtcBlockNumber"; // BTC当前扫描至哪个区块
 
     public static final String BLOCK_CONFIRM_BTC = "blockConfirmBtc"; // BTC需要多少个区块确认
+
+    public static final String CUR_TOKEN_BLOCK_NUMBER = "curTokenBlockNumber"; // Token当前扫描至哪个区块
+
+    public static final String BLOCK_CONFIRM_TOKEN = "blockConfirmToken"; // Token需要多少个区块确认
 }

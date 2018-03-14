@@ -22,7 +22,7 @@ import com.cdkj.coin.common.SysConstants;
 import com.cdkj.coin.domain.SYSConfig;
 import com.cdkj.coin.domain.ScTransaction;
 import com.cdkj.coin.enums.EPushStatus;
-import com.cdkj.coin.exception.BizErrorCode;
+import com.cdkj.coin.exception.EBizErrorCode;
 import com.cdkj.coin.exception.BizException;
 import com.cdkj.coin.http.PostSimulater;
 import com.cdkj.coin.siacoin.Input;
@@ -237,8 +237,8 @@ public class ScTxAOImpl implements IScTxAO {
 
         if (hashList == null || hashList.size() <= 0) {
             throw new BizException(
-                BizErrorCode.PUSH_STATUS_UPDATE_FAILURE.getErrorCode(),
-                "请传入正确的json数组" + BizErrorCode.PUSH_STATUS_UPDATE_FAILURE
+                EBizErrorCode.PUSH_STATUS_UPDATE_FAILURE.getErrorCode(),
+                "请传入正确的json数组" + EBizErrorCode.PUSH_STATUS_UPDATE_FAILURE
                     .getErrorCode());
         }
 

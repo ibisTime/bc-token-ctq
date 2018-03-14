@@ -24,7 +24,7 @@ import com.cdkj.coin.bo.base.Paginable;
 import com.cdkj.coin.domain.ScAddress;
 import com.cdkj.coin.dto.req.UploadScAddressReq;
 import com.cdkj.coin.ethereum.Web3JClient;
-import com.cdkj.coin.exception.BizErrorCode;
+import com.cdkj.coin.exception.EBizErrorCode;
 import com.cdkj.coin.exception.BizException;
 
 /**
@@ -75,7 +75,7 @@ public class ScAddressAOImpl implements IScAddressAO {
 
         if (typeList != null && typeList.isEmpty()) {
             throw new BizException(
-                BizErrorCode.DEFAULT_ERROR_CODE.getErrorCode(), "size 需大于 0");
+                EBizErrorCode.DEFAULT.getErrorCode(), "size 需大于 0");
         }
         //
         ScAddress condation = new ScAddress();

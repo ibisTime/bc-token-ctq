@@ -3,10 +3,10 @@ package com.cdkj.coin.exception;
 /**
  * Created by tianlei on 2017/十一月/02.
  */
-public enum BizErrorCode {
+public enum EBizErrorCode {
 
 
-    DEFAULT_ERROR_CODE("xn000000","自己填充"),
+    DEFAULT("xn000000","自己填充"),
     PUSH_STATUS_UPDATE_FAILURE("eth000001","地址状态更新失败");
 
     private String errorCode;
@@ -29,7 +29,7 @@ public enum BizErrorCode {
         this.errorInfo = errorInfo;
     }
 
-    BizErrorCode(String errorCode, String errorInfo) {
+    EBizErrorCode(String errorCode, String errorInfo) {
         this.errorCode = errorCode;
         this.errorInfo = errorInfo;
     }

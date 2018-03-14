@@ -8,39 +8,43 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.web3j.protocol.Web3j;
-import org.web3j.protocol.core.DefaultBlockParameterNumber;
 import org.web3j.protocol.core.methods.response.EthBlock;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 
-import com.cdkj.coin.ao.IEthTxAO;
-import com.cdkj.coin.bo.IEthAddressBO;
+import com.cdkj.coin.ao.ITokenTxAO;
 import com.cdkj.coin.bo.IEthTransactionBO;
 import com.cdkj.coin.bo.ISYSConfigBO;
+import com.cdkj.coin.bo.ITokenAddressBO;
+import com.cdkj.coin.bo.ITokenContractBO;
 import com.cdkj.coin.bo.base.Paginable;
 import com.cdkj.coin.common.DateUtil;
 import com.cdkj.coin.common.JsonUtil;
 import com.cdkj.coin.common.PropertiesUtil;
 import com.cdkj.coin.common.SysConstants;
+import com.cdkj.coin.contract.OrangeCoinToken.TransferEventResponse;
+import com.cdkj.coin.contract.TokenClient;
 import com.cdkj.coin.domain.EthTransaction;
 import com.cdkj.coin.domain.SYSConfig;
 import com.cdkj.coin.dto.req.EthTxPageReq;
+import com.cdkj.coin.enums.EEthContractMethodID;
 import com.cdkj.coin.enums.EPushStatus;
 import com.cdkj.coin.ethereum.Web3JClient;
-import com.cdkj.coin.exception.BizErrorCode;
 import com.cdkj.coin.exception.BizException;
+import com.cdkj.coin.exception.EBizErrorCode;
 import com.cdkj.coin.http.PostSimulater;
 
 /**
  * Created by tianlei on 2017/十一月/02.
  */
 @Service
-public class TokenTxAOImpl implements IEthTxAO {
+public class TokenTxAOImpl implements ITokenTxAO {
 
     static final org.slf4j.Logger logger = LoggerFactory
         .getLogger(TokenTxAOImpl.class);
@@ -48,7 +52,10 @@ public class TokenTxAOImpl implements IEthTxAO {
     private static Web3j web3j = Web3JClient.getClient();
 
     @Autowired
-    private IEthAddressBO ethAddressBO;
+    private ITokenContractBO tokenContractBO;
+
+    @Autowired
+    private ITokenAddressBO tokenAddressBO;
 
     @Autowired
     private IEthTransactionBO ethTransactionBO;
@@ -81,8 +88,7 @@ public class TokenTxAOImpl implements IEthTxAO {
 
         if (startDate != null && endDate != null) {
             if (startDate.compareTo(endDate) > 0) {
-                throw new BizException(
-                    BizErrorCode.DEFAULT_ERROR_CODE.getErrorCode(),
+                throw new BizException(EBizErrorCode.DEFAULT.getErrorCode(),
                     "开始时间需 <= 结束时间");
             }
 
@@ -97,63 +103,50 @@ public class TokenTxAOImpl implements IEthTxAO {
     }
 
     @Override
-    public void doEthTransactionSync() {
+    public void doTokenTransactionSync() {
+        boolean isDebug = true;
 
-        boolean isDebug = false;
-        //
         try {
             //
             while (true) {
 
                 Long blockNumber = sysConfigBO
-                    .getLongValue(SysConstants.CUR_ETH_BLOCK_NUMBER);
+                    .getLongValue(SysConstants.CUR_TOKEN_BLOCK_NUMBER);
+
                 if (isDebug == true) {
-
                     System.out.println(
-                        "*********同步循环开始，扫描区块" + blockNumber + "*******");
-
+                        "*********Token同步循环开始，扫描区块" + blockNumber + "*******");
                 }
 
-                // 获取当前区块
-                EthBlock ethBlockResp = web3j
-                    .ethGetBlockByNumber(
-                        new DefaultBlockParameterNumber(blockNumber), true)
-                    .send();
-                if (ethBlockResp.getError() != null) {
-                    logger.error(
-                        "扫描以太坊区块同步流水发送异常，原因：获取区块-" + ethBlockResp.getError());
-                }
-
-                //
-                EthBlock.Block currentBlock = ethBlockResp.getResult();
+                // 获取当前扫描区块信息
+                EthBlock.Block currentBlock = Web3JClient.getBlock(blockNumber);
 
                 // 获取当前区块链长度
-                BigInteger maxBlockNumber = web3j.ethBlockNumber().send()
-                    .getBlockNumber();
-                if (isDebug == true) {
+                BigInteger maxBlockNumber = Web3JClient.getCurBlockNumber();
 
+                if (isDebug == true) {
                     System.out
                         .println("*********最大区块号" + maxBlockNumber + "*******");
                 }
 
                 // 判断是否有足够的区块确认 暂定12
                 BigInteger blockConfirm = sysConfigBO
-                    .getBigIntegerValue(SysConstants.BLOCK_CONFIRM_ETH);
+                    .getBigIntegerValue(SysConstants.BLOCK_CONFIRM_TOKEN);
                 if (currentBlock == null || maxBlockNumber
                     .subtract(BigInteger.valueOf(blockNumber))
                     .compareTo(blockConfirm) < 0) {
 
                     if (isDebug == true) {
-
                         System.out.println("*********同步循环结束,区块号"
                                 + (blockNumber - 1) + "为最后一个可信任区块*******");
                     }
+
                     break;
                 }
 
-                // 如果取到区块信息
                 List<EthTransaction> transactionList = new ArrayList<>();
 
+                // 如果取到区块信息
                 for (EthBlock.TransactionResult txObj : currentBlock
                     .getTransactions()) {
 
@@ -166,12 +159,26 @@ public class TokenTxAOImpl implements IEthTxAO {
                         continue;
                     }
 
-                    // 查询改地址是否在我们系统中存在
-                    // to 或者 from 为我们的地址就要进行同步
-                    long toCount = ethAddressBO.addressCount(toAddress);
-                    long fromCount = ethAddressBO.addressCount(fromAddress);
+                    // 如果to地址是橙提取关心合约地址，说明是执行合约的交易，进行解析
+                    if (tokenContractBO.isTokenContractExist(toAddress)) {
+                        // 1、获取该交易向下的event
+                        // 2、遍历eventlist,检查event是否已经处理过，如果已经处理过，直接跳过
+                        // 3、检查event中的 from to 是否是我们关心的地址
+                        // 4、落地event
 
-                    if (toCount > 0 || fromCount > 0) {
+                        List<TransferEventResponse> transferEventList = TokenClient
+                            .loadTransferEvents(tx.getHash());
+                        if (CollectionUtils.isNotEmpty(transferEventList)) {
+                            for (TransferEventResponse transferEventResponse : transferEventList) {
+
+                            }
+                        }
+                    }
+
+                    // 查询to地址是否是合约地址，并且Input中前缀是0xa9059cbb打头的转账方法,MethodID=0xa9059cbb
+                    if (toAddress.equals(contractAddress.toLowerCase())
+                            && tx.getInput().startsWith(
+                                EEthContractMethodID.Transfer.getCode())) {
                         // 需要同步，判断是否已经处理过
                         if (ethTransactionBO
                             .isEthTransactionExist(tx.getHash())) {
@@ -242,7 +249,7 @@ public class TokenTxAOImpl implements IEthTxAO {
             try {
 
                 String pushJsonStr = JsonUtil.Object2Json(txList);
-                String url = PropertiesUtil.Config.ETH_PUSH_ADDRESS_URL;
+                String url = PropertiesUtil.Config.TOKEN_PUSH_ADDRESS_URL;
                 Properties formProperties = new Properties();
                 formProperties.put("ethTxlist", pushJsonStr);
                 PostSimulater.requestPostForm(url, formProperties);
@@ -259,8 +266,8 @@ public class TokenTxAOImpl implements IEthTxAO {
 
         if (hashList == null || hashList.size() <= 0) {
             throw new BizException(
-                BizErrorCode.PUSH_STATUS_UPDATE_FAILURE.getErrorCode(),
-                "请传入正确的json数组" + BizErrorCode.PUSH_STATUS_UPDATE_FAILURE
+                EBizErrorCode.PUSH_STATUS_UPDATE_FAILURE.getErrorCode(),
+                "请传入正确的json数组" + EBizErrorCode.PUSH_STATUS_UPDATE_FAILURE
                     .getErrorCode());
         }
 

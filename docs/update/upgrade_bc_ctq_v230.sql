@@ -44,3 +44,6 @@ CREATE TABLE `tctq_token_transaction` (
   KEY `to_index` (`hash`,`token_log_index`),
   KEY `status_index` (`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `tsys_config`(type, ckey, cvalue, updater, update_datetime, remark) VALUES ('0','curTokenBlockNumber','0','admin',now(),'Token下次从哪个区块开始扫描');
+INSERT INTO `tsys_config`(type, ckey, cvalue, updater, update_datetime, remark) VALUES ('0','blockConfirmToken','0','admin',now(),'Token需要多少个区块确认');

@@ -32,7 +32,7 @@ import com.cdkj.coin.domain.SYSConfig;
 import com.cdkj.coin.dto.req.EthTxPageReq;
 import com.cdkj.coin.enums.EPushStatus;
 import com.cdkj.coin.ethereum.Web3JClient;
-import com.cdkj.coin.exception.BizErrorCode;
+import com.cdkj.coin.exception.EBizErrorCode;
 import com.cdkj.coin.exception.BizException;
 import com.cdkj.coin.http.PostSimulater;
 
@@ -82,7 +82,7 @@ public class EthTxAOImpl implements IEthTxAO {
         if (startDate != null && endDate != null) {
             if (startDate.compareTo(endDate) > 0) {
                 throw new BizException(
-                    BizErrorCode.DEFAULT_ERROR_CODE.getErrorCode(),
+                    EBizErrorCode.DEFAULT.getErrorCode(),
                     "开始时间需 <= 结束时间");
             }
 
@@ -259,8 +259,8 @@ public class EthTxAOImpl implements IEthTxAO {
 
         if (hashList == null || hashList.size() <= 0) {
             throw new BizException(
-                BizErrorCode.PUSH_STATUS_UPDATE_FAILURE.getErrorCode(),
-                "请传入正确的json数组" + BizErrorCode.PUSH_STATUS_UPDATE_FAILURE
+                EBizErrorCode.PUSH_STATUS_UPDATE_FAILURE.getErrorCode(),
+                "请传入正确的json数组" + EBizErrorCode.PUSH_STATUS_UPDATE_FAILURE
                     .getErrorCode());
         }
 

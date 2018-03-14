@@ -11,7 +11,7 @@ import com.cdkj.coin.core.OrderNoGenerater;
 import com.cdkj.coin.dao.IScAddressDAO;
 import com.cdkj.coin.domain.ScAddress;
 import com.cdkj.coin.dto.req.UploadScAddressReq;
-import com.cdkj.coin.exception.BizErrorCode;
+import com.cdkj.coin.exception.EBizErrorCode;
 import com.cdkj.coin.exception.BizException;
 
 @Component
@@ -38,7 +38,7 @@ public class ScAddressBOImpl extends PaginableBOImpl<ScAddress> implements
         if (count <= 0) {
 
             throw new BizException(
-                BizErrorCode.DEFAULT_ERROR_CODE.getErrorCode(), "失败");
+                EBizErrorCode.DEFAULT.getErrorCode(), "失败");
         }
 
     }

@@ -12,7 +12,7 @@ import com.cdkj.coin.dao.IEthAddressDAO;
 import com.cdkj.coin.domain.EthAddress;
 import com.cdkj.coin.dto.req.UploadEthAddressReq;
 import com.cdkj.coin.dto.res.UploadEthAddressRes;
-import com.cdkj.coin.exception.BizErrorCode;
+import com.cdkj.coin.exception.EBizErrorCode;
 import com.cdkj.coin.exception.BizException;
 
 @Component
@@ -39,7 +39,7 @@ public class EthAddressBOImpl extends PaginableBOImpl<EthAddress> implements
         if (count <= 0) {
 
             throw new BizException(
-                BizErrorCode.DEFAULT_ERROR_CODE.getErrorCode(), "失败");
+                EBizErrorCode.DEFAULT.getErrorCode(), "失败");
         }
 
         return new UploadEthAddressRes();

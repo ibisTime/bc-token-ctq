@@ -43,5 +43,17 @@ public class PropertiesUtil {
 
         public static String BTC_URL = props.getProperty("BTC_URL");
 
+        public static String CONTRACT_HOLDER_PWD = props
+            .getProperty("CONTRACT_HOLDER_PWD");
+
+        public static String CONTRACT_HOLDER_KEYSTORE = props
+            .getProperty("CONTRACT_HOLDER_KEYSTORE");
+
+        public static String CONTRACT_ADDRESS = props
+            .getProperty("CONTRACT_ADDRESS");
+
+        public static String KEY_STORE_PATH = props
+            .getProperty("KEY_STORE_PATH");
+
     }
 }
