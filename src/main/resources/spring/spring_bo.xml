@@ -51,5 +51,9 @@
 	<bean id="tokenContractBO" class="com.cdkj.coin.bo.impl.TokenContractBOImpl">
 		<property name="paginableDAO" ref="tokenContractDAOImpl"/>
 	</bean>
+	
+	<bean id="tokenTransactionBO" class="com.cdkj.coin.bo.impl.TokenTransactionBOImpl">
+		<property name="paginableDAO" ref="tokenTransactionDAOImpl"/>
+	</bean>
 
 </beans>

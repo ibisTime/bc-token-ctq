@@ -94,8 +94,8 @@
 		,nonce
 		,block_hash
 		,transaction_index
-		,from
-		,to
+		,`from`
+		,`to`
 		,value
 		,input
 		,token_from

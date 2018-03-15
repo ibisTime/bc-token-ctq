@@ -26,15 +26,14 @@ import com.cdkj.coin.common.DateUtil;
 import com.cdkj.coin.common.JsonUtil;
 import com.cdkj.coin.common.PropertiesUtil;
 import com.cdkj.coin.common.SysConstants;
-import com.cdkj.coin.contract.OrangeCoinToken.TransferEventResponse;
-import com.cdkj.coin.contract.TokenClient;
 import com.cdkj.coin.domain.SYSConfig;
 import com.cdkj.coin.domain.TokenTransaction;
 import com.cdkj.coin.enums.EPushStatus;
-import com.cdkj.coin.ethereum.Web3JClient;
 import com.cdkj.coin.exception.BizException;
 import com.cdkj.coin.exception.EBizErrorCode;
 import com.cdkj.coin.http.PostSimulater;
+import com.cdkj.coin.token.OrangeCoinToken.TransferEventResponse;
+import com.cdkj.coin.token.TokenClient;
 
 /**
  * Created by tianlei on 2017/十一月/02.
@@ -74,10 +73,10 @@ public class TokenTxAOImpl implements ITokenTxAO {
                 }
 
                 // 获取当前扫描区块信息
-                EthBlock.Block currentBlock = Web3JClient.getBlock(blockNumber);
+                EthBlock.Block currentBlock = TokenClient.getBlock(blockNumber);
 
                 // 获取当前区块链长度
-                BigInteger maxBlockNumber = Web3JClient.getCurBlockNumber();
+                BigInteger maxBlockNumber = TokenClient.getCurBlockNumber();
 
                 if (isDebug == true) {
                     System.out
@@ -117,7 +116,7 @@ public class TokenTxAOImpl implements ITokenTxAO {
                     // 如果to地址是橙提取关心合约地址，说明是执行合约的交易，进行解析
                     if (tokenContractBO.isTokenContractExist(toAddress)) {
 
-                        TransactionReceipt transactionReceipt = Web3JClient
+                        TransactionReceipt transactionReceipt = TokenClient
                             .getClient().ethGetTransactionReceipt(tx.getHash())
                             .send().getResult();
 
@@ -135,9 +134,9 @@ public class TokenTxAOImpl implements ITokenTxAO {
                                 }
                                 // 3、检查event中的 from to 是否是我们关心的地址
                                 long fromCount = tokenAddressBO
-                                    .addressCount(fromAddress);
+                                    .addressCount(transferEventResponse.from);
                                 long toCount = tokenAddressBO
-                                    .addressCount(toAddress);
+                                    .addressCount(transferEventResponse.to);
                                 if (toCount > 0 || fromCount > 0) {
                                     TokenTransaction tokenTransaction = convertTokenTransaction(
                                         currentBlock, tx, transactionReceipt,

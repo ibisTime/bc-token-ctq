@@ -1,4 +1,4 @@
-package com.cdkj.coin.contract;
+package com.cdkj.coin.token;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
