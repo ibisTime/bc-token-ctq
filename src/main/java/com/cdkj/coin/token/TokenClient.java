@@ -45,7 +45,7 @@ public class TokenClient {
 
     public static Web3j getClient() {
         if (web3j == null) {
-            synchronized (Web3JClient.class) {
+            synchronized (TokenClient.class) {
                 if (web3j == null) {
                     web3j = Web3j.build(new HttpService(TOKEN_URL));
                 }
