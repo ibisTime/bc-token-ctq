@@ -54,9 +54,6 @@ public class PropertiesUtil {
         public static String CONTRACT_HOLDER_KEYSTORE = props
             .getProperty("CONTRACT_HOLDER_KEYSTORE");
 
-        public static String CONTRACT_ADDRESS = props
-            .getProperty("CONTRACT_ADDRESS");
-
         public static String KEY_STORE_PATH = props
             .getProperty("KEY_STORE_PATH");
 
