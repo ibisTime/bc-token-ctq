@@ -26,6 +26,7 @@
                 <ref bean="btcPushSyncTrigger"/>
            		<ref bean="btcTransactionSyncTrigger"/> -->
            		<ref bean="tokenTransactionSyncTrigger"/>
+           		<ref bean="tokenPushSyncTrigger"/>
             </list>
         </property>
         <property name="autoStartup" value="true"/>
@@ -139,6 +140,21 @@
           class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
         <property name="targetObject" ref="tokenTxAOImpl"/>
         <property name="targetMethod" value="doTokenTransactionSync"/>
+        <!-- 是否允许任务并发执行。当值为false时，表示必须等到前一个线程处理完毕后才再启一个新的线程 -->
+        <property name="concurrent" value="false"/>
+    </bean>
+    
+    <!-- ########   TOKEN交易推送  #############-->
+    <bean id="tokenPushSyncTrigger"
+          class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="tokenPushTx"/>
+        <property name="cronExpression" value="*/20 * * * * ?"/>
+    </bean>
+
+    <bean id="tokenPushTx"
+          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="tokenTxAOImpl"/>
+        <property name="targetMethod" value="pushTx"/>
         <!-- 是否允许任务并发执行。当值为false时，表示必须等到前一个线程处理完毕后才再启一个新的线程 -->
         <property name="concurrent" value="false"/>
     </bean>

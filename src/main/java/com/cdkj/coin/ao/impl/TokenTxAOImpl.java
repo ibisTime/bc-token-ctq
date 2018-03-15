@@ -58,7 +58,7 @@ public class TokenTxAOImpl implements ITokenTxAO {
     @SuppressWarnings("rawtypes")
     @Override
     public void doTokenTransactionSync() {
-        boolean isDebug = true;
+        boolean isDebug = false;
 
         try {
             //
