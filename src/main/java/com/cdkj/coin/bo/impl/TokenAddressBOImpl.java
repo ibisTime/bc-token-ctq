@@ -37,10 +37,10 @@ public class TokenAddressBOImpl extends PaginableBOImpl<TokenAddress>
     }
 
     @Override
-    public long addressCount(String address) {
+    public long addressCount(String address, String symbol) {
         long count = 0;
         if (StringUtils.isNotBlank(address)) {
-            count = tokenAddressDAO.selectTotalCountByAddress(address);
+            count = tokenAddressDAO.selectTotalCountByAddress(address, symbol);
         }
         return count;
     }

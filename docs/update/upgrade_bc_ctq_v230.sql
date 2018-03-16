@@ -40,6 +40,7 @@ CREATE TABLE `tctq_token_transaction` (
   `gas_limit` bigint(20) NOT NULL COMMENT 'gas最大使用限制',
   `gas_used` bigint(20) NOT NULL COMMENT 'gas实际使用量',
   `status` varchar(4) NOT NULL COMMENT '状态 0-未推送 1-已推送',
+  `symbol` varchar(32) NOT NULL COMMENT '币种符号',
   PRIMARY KEY (`id`),
   KEY `to_index` (`hash`,`token_log_index`),
   KEY `status_index` (`status`)

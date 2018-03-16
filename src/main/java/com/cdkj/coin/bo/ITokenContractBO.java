@@ -15,6 +15,6 @@ public interface ITokenContractBO extends IPaginableBO<TokenContract> {
 
     public List<TokenContract> queryTokenContractList(TokenContract condition);
 
-    public TokenContract getTokenContract(String code);
+    public TokenContract getTokenContract(String contractAddress);
 
 }

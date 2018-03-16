@@ -76,6 +76,8 @@ public class TokenTransaction extends ABaseDO {
     // 状态 0-未推送 1-已推送
     private String status;
 
+    private String symbol;
+
     public Long getId() {
         return id;
     }
@@ -234,6 +236,14 @@ public class TokenTransaction extends ABaseDO {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getSymbol() {
+        return symbol;
+    }
+
+    public void setSymbol(String symbol) {
+        this.symbol = symbol;
     }
 
 }

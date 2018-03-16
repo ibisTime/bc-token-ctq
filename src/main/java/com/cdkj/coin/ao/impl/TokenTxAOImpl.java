@@ -27,6 +27,7 @@ import com.cdkj.coin.common.JsonUtil;
 import com.cdkj.coin.common.PropertiesUtil;
 import com.cdkj.coin.common.SysConstants;
 import com.cdkj.coin.domain.SYSConfig;
+import com.cdkj.coin.domain.TokenContract;
 import com.cdkj.coin.domain.TokenTransaction;
 import com.cdkj.coin.enums.EPushStatus;
 import com.cdkj.coin.exception.BizException;
@@ -115,7 +116,8 @@ public class TokenTxAOImpl implements ITokenTxAO {
 
                     // 如果to地址是橙提取关心合约地址，说明是执行合约的交易，进行解析
                     if (tokenContractBO.isTokenContractExist(toAddress)) {
-
+                        TokenContract tokenContract = tokenContractBO
+                            .getTokenContract(toAddress);
                         TransactionReceipt transactionReceipt = TokenClient
                             .getClient().ethGetTransactionReceipt(tx.getHash())
                             .send().getResult();
@@ -133,14 +135,16 @@ public class TokenTxAOImpl implements ITokenTxAO {
                                     continue;
                                 }
                                 // 3、检查event中的 from to 是否是我们关心的地址
-                                long fromCount = tokenAddressBO
-                                    .addressCount(transferEventResponse.from);
-                                long toCount = tokenAddressBO
-                                    .addressCount(transferEventResponse.to);
+                                long fromCount = tokenAddressBO.addressCount(
+                                    transferEventResponse.from,
+                                    tokenContract.getSymbol());
+                                long toCount = tokenAddressBO.addressCount(
+                                    transferEventResponse.to,
+                                    tokenContract.getSymbol());
                                 if (toCount > 0 || fromCount > 0) {
                                     TokenTransaction tokenTransaction = convertTokenTransaction(
                                         currentBlock, tx, transactionReceipt,
-                                        transferEventResponse);
+                                        transferEventResponse, tokenContract);
                                     transactionList.add(tokenTransaction);
                                 }
                             }
@@ -162,7 +166,8 @@ public class TokenTxAOImpl implements ITokenTxAO {
     private TokenTransaction convertTokenTransaction(
             EthBlock.Block currentBlock, EthBlock.TransactionObject tx,
             TransactionReceipt transactionReceipt,
-            TransferEventResponse transferEventResponse) {
+            TransferEventResponse transferEventResponse,
+            TokenContract tokenContract) {
         TokenTransaction tokenTransaction = new TokenTransaction();
         tokenTransaction.setHash(tx.getHash());
         tokenTransaction.setNonce(tx.getNonce());
@@ -188,6 +193,7 @@ public class TokenTxAOImpl implements ITokenTxAO {
         tokenTransaction.setGasLimit(tx.getGas());
         tokenTransaction.setGasUsed(transactionReceipt.getGasUsed());
         tokenTransaction.setStatus(EPushStatus.UN_PUSH.getCode());
+        tokenTransaction.setSymbol(tokenContract.getSymbol());
         return tokenTransaction;
     }
 

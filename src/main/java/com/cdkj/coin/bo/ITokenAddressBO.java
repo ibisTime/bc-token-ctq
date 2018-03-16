@@ -8,7 +8,7 @@ import com.cdkj.coin.domain.TokenAddress;
 public interface ITokenAddressBO extends IPaginableBO<TokenAddress> {
 
     // 用于查询地址是否存在
-    public long addressCount(String address);
+    public long addressCount(String address, String symbol);
 
     // 上传地址
     public int uploadAddress(String address, String symbol);

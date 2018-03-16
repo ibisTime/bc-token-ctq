@@ -54,11 +54,11 @@ public class TokenContractBOImpl extends PaginableBOImpl<TokenContract>
     }
 
     @Override
-    public TokenContract getTokenContract(String symbol) {
+    public TokenContract getTokenContract(String contractAddress) {
         TokenContract data = null;
-        if (StringUtils.isNotBlank(symbol)) {
+        if (StringUtils.isNotBlank(contractAddress)) {
             TokenContract condition = new TokenContract();
-            condition.setSymbol(symbol);
+            condition.setContractAddress(contractAddress);
             data = tokenContractDAO.select(condition);
             if (data == null) {
                 throw new BizException("xn0000", "币种合约不存在");

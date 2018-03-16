@@ -9,8 +9,8 @@ import com.cdkj.coin.dao.base.support.AMybatisTemplate;
 import com.cdkj.coin.domain.TokenAddress;
 
 @Repository("tokenAddressDAOImpl")
-public class TokenAddressDAOImpl extends AMybatisTemplate implements
-        ITokenAddressDAO {
+public class TokenAddressDAOImpl extends AMybatisTemplate
+        implements ITokenAddressDAO {
 
     @Override
     public int insert(TokenAddress data) {
@@ -24,10 +24,11 @@ public class TokenAddressDAOImpl extends AMybatisTemplate implements
     }
 
     @Override
-    public Long selectTotalCountByAddress(String address) {
+    public Long selectTotalCountByAddress(String address, String symbol) {
 
         TokenAddress condation = new TokenAddress();
         condation.setAddress(address);
+        condation.setSymbol(symbol);
         return super.selectTotalCount(
             NAMESPACE.concat("selectTotalCountByAddress"), condation);
 

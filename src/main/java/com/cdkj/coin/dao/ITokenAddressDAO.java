@@ -7,6 +7,6 @@ public interface ITokenAddressDAO extends IBaseDAO<TokenAddress> {
 
     String NAMESPACE = ITokenAddressDAO.class.getName().concat(".");
 
-    public Long selectTotalCountByAddress(String address);
+    public Long selectTotalCountByAddress(String address, String symbol);
 
 }
