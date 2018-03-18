@@ -41,8 +41,8 @@ public class APIServlet extends HttpServlet {
             HttpServletResponse response) throws ServletException, IOException {
         logger.info("Successful Deployment");
         PrintWriter writer = response.getWriter();
-        writer.append("Version:1.0.0_token \n");
-        writer.append("Description:bc-ctq 2nd \n");
+        writer.append("Version:1.1.0_2nd \n");
+        writer.append("Description:bc-token-ctq \n");
         writer.flush();
     }
 
