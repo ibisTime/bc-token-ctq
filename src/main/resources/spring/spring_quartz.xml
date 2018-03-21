@@ -19,12 +19,12 @@
     <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="triggers">
             <list>
-                <!-- <ref bean="ethTransactionSyncTrigger"/>
+                <ref bean="ethTransactionSyncTrigger"/>
                 <ref bean="ethPushSyncTrigger"/>
                 <ref bean="scTransactionSyncTrigger"/>
                 <ref bean="scPushSyncTrigger"/>
                 <ref bean="btcPushSyncTrigger"/>
-           		<ref bean="btcTransactionSyncTrigger"/> -->
+           		<ref bean="btcTransactionSyncTrigger"/>
            		<ref bean="tokenTransactionSyncTrigger"/>
            		<ref bean="tokenPushSyncTrigger"/>
             </list>
