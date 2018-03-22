@@ -8,18 +8,18 @@
  */
 package com.cdkj.coin.token;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.web3j.crypto.Credentials;
-import org.web3j.crypto.WalletUtils;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterNumber;
 import org.web3j.protocol.core.methods.response.EthBlock;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.http.HttpService;
+import org.web3j.tx.ClientTransactionManager;
 
 import com.cdkj.coin.common.PropertiesUtil;
 import com.cdkj.coin.ethereum.Web3JClient;
@@ -92,19 +92,17 @@ public class TokenClient {
     // 加载合约
     public static OrangeCoinToken loadHolderContract(String contractAddress) {
         try {
-            Credentials credentials = WalletUtils.loadCredentials(
-                PropertiesUtil.Config.CONTRACT_HOLDER_PWD,
-                PropertiesUtil.Config.KEY_STORE_PATH + "/"
-                        + PropertiesUtil.Config.CONTRACT_HOLDER_KEYSTORE);
+
+            ClientTransactionManager transactionManager = new ClientTransactionManager(
+                web3j, contractAddress);
+
             BigInteger gasLimit = BigInteger.valueOf(210000);
             BigInteger gasPrice = Web3JClient.getClient().ethGasPrice().send()
                 .getGasPrice();
-            BigInteger txFee = gasLimit.multiply(gasPrice);
-            logger.info("以太坊平均价格=" + gasPrice + "，预计矿工费=" + txFee);
             synchronized (TokenClient.class) {
                 if (orangeCoinToken == null) {
                     orangeCoinToken = OrangeCoinToken.load(contractAddress,
-                        getClient(), credentials, gasPrice, gasLimit);
+                        getClient(), transactionManager, gasPrice, gasLimit);
                 }
             }
         } catch (Exception e) {
@@ -115,6 +113,20 @@ public class TokenClient {
     }
 
     public static void main(String[] args) {
+
+        try {
+            TransactionReceipt transactionReceipt = getClient()
+                .ethGetTransactionReceipt(
+                    "0x0aac1866de7fbcf53896d4613b0cc1536a9c705a311b1a2fe7a7ec1c47492445")
+                .send().getResult();
+            List<TransferEventResponse> res = loadTransferEvents(
+                transactionReceipt);
+            System.out.println(
+                "0x0aac1866de7fbcf53896d4613b0cc1536a9c705a311b1a2fe7a7ec1c47492445");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public static List<TransferEventResponse> loadTransferEvents(
@@ -131,6 +143,7 @@ public class TokenClient {
                 "智能合约解析交易事件失败，原因：" + e.getMessage());
         }
         return transferEventList;
+
     }
 
 }
