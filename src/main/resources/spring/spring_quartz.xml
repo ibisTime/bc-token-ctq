@@ -21,8 +21,6 @@
             <list>
                 <ref bean="ethTransactionSyncTrigger"/>
                 <ref bean="ethPushSyncTrigger"/>
-                <ref bean="scTransactionSyncTrigger"/>
-                <ref bean="scPushSyncTrigger"/>
                 <ref bean="btcPushSyncTrigger"/>
            		<ref bean="btcTransactionSyncTrigger"/>
            		<ref bean="tokenTransactionSyncTrigger"/>
@@ -64,38 +62,6 @@
         <!-- 是否允许任务并发执行。当值为false时，表示必须等到前一个线程处理完毕后才再启一个新的线程 -->
         <property name="concurrent" value="false"/>
     </bean>
-
-    <!-- ########   SC  #############-->
-    <bean id="scTransactionSyncTrigger"
-          class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-        <property name="jobDetail" ref="doScTransactionSync"/>
-        <!--<property name="cronExpression" value="0 */1 * * * ?" />-->
-        <property name="cronExpression" value="*/20 * * * * ?"/>
-    </bean>
-
-    <bean id="doScTransactionSync"
-          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-        <property name="targetObject" ref="scTxAOImpl"/>
-        <property name="targetMethod" value="doScTransactionSync"/>
-        <!-- 是否允许任务并发执行。当值为false时，表示必须等到前一个线程处理完毕后才再启一个新的线程 -->
-        <property name="concurrent" value="false"/>
-    </bean>
-
-    <!-- ########   SC交易推送  #############-->
-    <bean id="scPushSyncTrigger"
-          class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-        <property name="jobDetail" ref="scPushTx"/>
-        <property name="cronExpression" value="*/20 * * * * ?"/>
-    </bean>
-
-    <bean id="scPushTx"
-          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-        <property name="targetObject" ref="scTxAOImpl"/>
-        <property name="targetMethod" value="pushTx"/>
-        <!-- 是否允许任务并发执行。当值为false时，表示必须等到前一个线程处理完毕后才再启一个新的线程 -->
-        <property name="concurrent" value="false"/>
-    </bean>
-
 
     <!-- ########    BTC 交易扫描        #############-->
     <bean id="btcTransactionSyncTrigger"

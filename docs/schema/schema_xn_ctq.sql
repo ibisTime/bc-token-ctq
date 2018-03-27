@@ -29,29 +29,6 @@ CREATE TABLE `tctq_eth_transaction` (
   KEY `status_index` (`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `tctq_sc_address` (
-  `code` varchar(32) NOT NULL,
-  `address` varchar(255) NOT NULL,
-  `type` varchar(3) NOT NULL,
-  `create_datetime` datetime NOT NULL,
-  PRIMARY KEY (`code`),
-  KEY `address_index` (`address`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE `tctq_sc_transaction` (
-  `transactionid` varchar(255) NOT NULL COMMENT '交易哈希',
-  `outputid` varchar(255) NOT NULL COMMENT 'output哈希',
-  `confirmationheight` varchar(66) NOT NULL COMMENT '确认区块高度',
-  `confirmationtimestamp` bigint(20) NOT NULL COMMENT '确认时间',
-  `from` varchar(255) NOT NULL COMMENT '转出地址',
-  `to` varchar(255) NOT NULL COMMENT '转入地址',
-  `value` varchar(30) NOT NULL COMMENT '交易数量',
-  `minerfee` varchar(30) NOT NULL COMMENT '矿工费',
-  `sync_datetime` datetime NOT NULL COMMENT '同步时间',
-  `status` varchar(4) NOT NULL COMMENT '状态 0-未推送 1-已推送',
-  PRIMARY KEY (`transactionid`, `outputid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 CREATE TABLE `tctq_btc_address` (
   `code` varchar(32) NOT NULL,
   `address` char(36) NOT NULL COMMENT '地址',
