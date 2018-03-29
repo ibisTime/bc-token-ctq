@@ -1,9 +1,9 @@
 
 #!/usr/bin/expect
 
-set tomcat_path "/mnt/www/coin/tomcat_bc_ctq"
+set tomcat_path "/mnt/www/token/tomcat_bc_ctq"
 set war_name "bc-ctq"
-set host_ip "121.43.101.148"
+set host_ip "120.26.6.213"
 set host_pwd "cdkj123456Q"
 
 ######## 1.传输文件至服务器根目录 ########

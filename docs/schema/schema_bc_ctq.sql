@@ -1,4 +1,5 @@
 
+DROP TABLE IF EXISTS `tctq_eth_address`;
 CREATE TABLE `tctq_eth_address` (
   `code` varchar(32) NOT NULL,
   `address` char(42) NOT NULL,
@@ -8,6 +9,7 @@ CREATE TABLE `tctq_eth_address` (
   KEY `address_index` (`address`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `tctq_eth_transaction`;
 CREATE TABLE `tctq_eth_transaction` (
   `hash` char(66) NOT NULL COMMENT '交易哈希',
   `nonce` bigint(20) NOT NULL COMMENT '交易次数',
@@ -29,6 +31,7 @@ CREATE TABLE `tctq_eth_transaction` (
   KEY `status_index` (`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `tctq_btc_address`;
 CREATE TABLE `tctq_btc_address` (
   `code` varchar(32) NOT NULL,
   `address` char(36) NOT NULL COMMENT '地址',
@@ -37,6 +40,7 @@ CREATE TABLE `tctq_btc_address` (
   KEY `address_index` (`address`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `tctq_btc_utxo`;
 CREATE TABLE `tctq_btc_utxo` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `txid` char(64) NOT NULL,
