@@ -23,6 +23,7 @@
 		<result column="gas_limit" property="gasLimit" />
 		<result column="gas_used" property="gasUsed" />
 		<result column="status" property="status" />
+		<result column="symbol" property="symbol" />
 	</resultMap>
 	<sql id="where_condition">
 		<trim prefix="WHERE" prefixOverrides="AND | OR">
@@ -46,6 +47,9 @@
 			</if>
 			<if test="status != null and status != '' ">
 				AND t.status = #{status}
+			</if>
+			<if test="symbol != null and symbol != '' ">
+				AND t.symbol = #{symbol}
 			</if>
 		</trim>
 	</sql>
@@ -71,6 +75,7 @@
 		,t.gas_limit
 		,t.gas_used
 		,t.status
+		,t.symbol
 		FROM
 		tctq_token_transaction t
 		<include refid="where_condition" />
@@ -109,6 +114,7 @@
 		,gas_limit
 		,gas_used
 		,status
+		,symbol
 		)
 		VALUES(
 		#{hash}
@@ -130,6 +136,7 @@
 		,#{gasLimit}
 		,#{gasUsed}
 		,#{status}
+		,#{symbol}
 		)
 	</insert>
 
