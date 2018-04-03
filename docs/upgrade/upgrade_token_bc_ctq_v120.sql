@@ -10,6 +10,13 @@ INSERT INTO `tsys_config`(type, ckey, cvalue, updater, update_datetime, remark) 
 
 UPDATE `tsys_config` SET `cvalue`= (SELECT `cvalue` FROM dev_token_bc_ctq.tsys_config where `ckey`='curEthBlockNumber') WHERE `ckey`='curTokenBlockNumber';
 
+/*插入OGC合约*/
+INSERT INTO `tctq_token_contract` 
+(`symbol`,`contract_address`,`create_datetime`)
+SELECT 
+ 'OGC'   ,`cvalue`          ,now() 
+ FROM dev_token_bc_ctq.tsys_config where `ckey`='contractAddress'
+
 /*迁移地址表*/
 INSERT INTO `tctq_token_address` 
 (`code`,`address`,`symbol`,`create_datetime`) 
