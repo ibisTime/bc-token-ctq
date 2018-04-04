@@ -26,8 +26,8 @@ import com.cdkj.coin.common.PropertiesUtil;
 import com.cdkj.coin.common.SysConstants;
 import com.cdkj.coin.domain.SYSConfig;
 import com.cdkj.coin.enums.EBTCUtxoStatus;
-import com.cdkj.coin.exception.EBizErrorCode;
 import com.cdkj.coin.exception.BizException;
+import com.cdkj.coin.exception.EBizErrorCode;
 import com.cdkj.coin.http.PostSimulater;
 
 @Service
@@ -49,7 +49,7 @@ public class BTCTxAOImpl implements IBTCTxAO {
 
     public void doBtcTransactionSync() {
 
-        logger.info("******BTC扫描区块开始******");
+        // logger.info("******BTC扫描区块开始******");
 
         Long blockNumber = sysConfigBO
             .getLongValue(SysConstants.CUR_BTC_BLOCK_NUMBER);
@@ -68,8 +68,8 @@ public class BTCTxAOImpl implements IBTCTxAO {
         // 查询的分页
         Integer pageNum = 0;
         while (true) {
-            logger.info(
-                "******扫描区块：" + blockNumber + " 第" + pageNum + "页：" + "******");
+            // logger.info(
+            // "******扫描区块：" + blockNumber + " 第" + pageNum + "页：" + "******");
 
             BTCTXs btctXs = null;
             try {
@@ -89,7 +89,7 @@ public class BTCTxAOImpl implements IBTCTxAO {
 
             // 说明该区块已经遍历完了
             if (btctXs.getTxs().size() <= 0) {
-                logger.info("******扫描区块完成：" + blockNumber + "******");
+                // logger.info("******扫描区块完成：" + blockNumber + "******");
                 break;
             }
 
