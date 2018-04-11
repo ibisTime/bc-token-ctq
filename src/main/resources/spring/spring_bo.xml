@@ -43,5 +43,9 @@
 	<bean id="btcAddressBO" class="com.cdkj.coin.bo.impl.BTCAddressBOImpl">
 		<property name="paginableDAO" ref="btcAddressDAOImpl"/>
 	</bean>
+	
+	<bean id="tokenAddressBO" class="com.cdkj.coin.bo.impl.TokenAddressBOImpl">
+		<property name="paginableDAO" ref="tokenAddressDAOImpl"/>
+	</bean>
 
 </beans>

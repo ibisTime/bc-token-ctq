@@ -1,3 +1,14 @@
+DROP TABLE IF EXISTS `tctq_token_address`;
+CREATE TABLE `tctq_token_address` (
+  `code` varchar(32) NOT NULL,
+  `address` varchar(64) NOT NULL,
+  `contract_address` varchar(64) NOT NULL,
+  `create_datetime` datetime NOT NULL,
+  PRIMARY KEY (`code`),
+  KEY `address_index` (`address`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `tctq_token_transaction`;
 CREATE TABLE `tctq_token_transaction` (
   `id` bigint(32) NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `hash` char(66) NOT NULL COMMENT '交易哈希',
