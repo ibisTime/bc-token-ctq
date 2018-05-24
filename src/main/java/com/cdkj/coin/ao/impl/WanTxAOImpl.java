@@ -105,7 +105,7 @@ public class WanTxAOImpl implements IWanTxAO {
             while (true) {
 
                 Long blockNumber = sysConfigBO
-                    .getLongValue(SysConstants.CUR_ETH_BLOCK_NUMBER);
+                    .getLongValue(SysConstants.CUR_WAN_BLOCK_NUMBER);
                 if (isDebug == true) {
 
                     System.out.println(
@@ -137,7 +137,7 @@ public class WanTxAOImpl implements IWanTxAO {
 
                 // 判断是否有足够的区块确认 暂定12
                 BigInteger blockConfirm = sysConfigBO
-                    .getBigIntegerValue(SysConstants.BLOCK_CONFIRM_ETH);
+                    .getBigIntegerValue(SysConstants.BLOCK_CONFIRM_WAN);
                 if (currentBlock == null || maxBlockNumber
                     .subtract(BigInteger.valueOf(blockNumber))
                     .compareTo(blockConfirm) < 0) {
@@ -221,7 +221,7 @@ public class WanTxAOImpl implements IWanTxAO {
 
         // 修改_区块遍历信息
         SYSConfig config = sysConfigBO
-            .getSYSConfig(SysConstants.CUR_ETH_BLOCK_NUMBER);
+            .getSYSConfig(SysConstants.CUR_WAN_BLOCK_NUMBER);
         //
         sysConfigBO.refreshSYSConfig(config.getId(),
             String.valueOf(blockNumber + 1), config.getUpdater(),
