@@ -128,3 +128,35 @@ CREATE TABLE `tctq_token_transaction` (
   KEY `to_index` (`hash`,`token_log_index`),
   KEY `status_index` (`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `tctq_wan_address`;
+CREATE TABLE `tctq_wan_address` (
+  `code` varchar(32) NOT NULL,
+  `address` char(42) NOT NULL,
+  `type` varchar(3) NOT NULL,
+  `create_datetime` datetime NOT NULL,
+  PRIMARY KEY (`code`),
+  KEY `address_index` (`address`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `tctq_wan_transaction`;
+CREATE TABLE `tctq_wan_transaction` (
+  `hash` char(66) NOT NULL COMMENT '交易哈希',
+  `nonce` bigint(20) NOT NULL COMMENT '交易次数',
+  `block_hash` varchar(66) NOT NULL COMMENT '区块哈希',
+  `transaction_index` bigint(20) NOT NULL,
+  `from` char(42) NOT NULL COMMENT '转出地址',
+  `to` char(42) NOT NULL COMMENT '转入地址',
+  `value` varchar(30) NOT NULL COMMENT '交易额',
+  `gas_price` varchar(20) NOT NULL COMMENT 'gas价格',
+  `block_create_datetime` datetime NOT NULL COMMENT '区块形成时间',
+  `sync_datetime` datetime NOT NULL COMMENT '同步时间',
+  `status` varchar(4) NOT NULL COMMENT '状态 0-未推送 1-已推送',
+  `gas` bigint(20) NOT NULL COMMENT 'gas使用量',
+  `block_number` varchar(20) NOT NULL,
+  `gas_used` bigint(10) NOT NULL COMMENT 'gas消耗',
+  PRIMARY KEY (`hash`),
+  KEY `from_index` (`from`),
+  KEY `to_index` (`to`),
+  KEY `status_index` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

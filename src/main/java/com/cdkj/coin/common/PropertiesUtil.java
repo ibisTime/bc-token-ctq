@@ -28,21 +28,25 @@ public class PropertiesUtil {
 
     public static final class Config {
 
+        /* 以太坊 */
         public static String ETH_PUSH_ADDRESS_URL = props
             .getProperty("ETH_PUSH_ADDRESS_URL");
 
         public static String ETH_URL = props.getProperty("ETH_URL");
 
-        public static String SC_PUSH_ADDRESS_URL = props
-            .getProperty("SC_PUSH_ADDRESS_URL");
-
-        public static String SC_URL = props.getProperty("SC_URL");
-
+        /* 比特币 */
         public static String BTC_PUSH_ADDRESS_URL = props
             .getProperty("BTC_PUSH_ADDRESS_URL");
 
         public static String BTC_URL = props.getProperty("BTC_URL");
 
+        /* 万维币 */
+        public static String WAN_PUSH_ADDRESS_URL = props
+            .getProperty("WAN_PUSH_ADDRESS_URL");
+
+        public static String WAN_URL = props.getProperty("WAN_URL");
+
+        /* 以太坊token */
         public static String TOKEN_URL = props.getProperty("TOKEN_URL");
 
         public static String TOKEN_PUSH_ADDRESS_URL = props

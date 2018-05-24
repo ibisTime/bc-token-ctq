@@ -12,6 +12,9 @@
         <typeAlias alias="btcUtxo" type="com.cdkj.coin.bitcoin.BtcUtxo"/>
         <typeAlias alias="btcAddress" type="com.cdkj.coin.bitcoin.BTCAddress"/>
         
+        <typeAlias alias="wanAddress" type="com.cdkj.coin.domain.WanAddress"/>
+        <typeAlias alias="wanTransaction" type="com.cdkj.coin.domain.WanTransaction"/>
+        
         <typeAlias alias="tokenAddress" type="com.cdkj.coin.domain.TokenAddress"/>
         <typeAlias alias="tokenContract" type="com.cdkj.coin.domain.TokenContract"/>
         <typeAlias alias="tokenTransaction" type="com.cdkj.coin.domain.TokenTransaction"/>
