@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.Properties;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,21 +32,23 @@ import com.cdkj.coin.domain.SYSConfig;
 import com.cdkj.coin.domain.WanTransaction;
 import com.cdkj.coin.dto.req.WanTxPageReq;
 import com.cdkj.coin.enums.EPushStatus;
-import com.cdkj.coin.ethereum.Web3JClient;
 import com.cdkj.coin.exception.BizException;
 import com.cdkj.coin.exception.EBizErrorCode;
 import com.cdkj.coin.http.PostSimulater;
+import com.cdkj.coin.wanchain.WanClient;
 
 /**
- * Created by tianlei on 2017/十一月/02.
+ * @author: haiqingzheng 
+ * @since: 2018年5月25日 下午12:56:09 
+ * @history:
  */
 @Service
 public class WanTxAOImpl implements IWanTxAO {
 
-    static final org.slf4j.Logger logger = LoggerFactory
+    private static final Logger logger = LoggerFactory
         .getLogger(WanTxAOImpl.class);
 
-    private static Web3j web3j = Web3JClient.getClient();
+    private static Web3j web3j = WanClient.getClient();
 
     @Autowired
     private IWanAddressBO wanAddressBO;
@@ -109,7 +112,7 @@ public class WanTxAOImpl implements IWanTxAO {
                 if (isDebug == true) {
 
                     System.out.println(
-                        "*********同步循环开始，扫描区块" + blockNumber + "*******");
+                        "*********万维链同步循环开始，扫描区块" + blockNumber + "*******");
 
                 }
 
@@ -144,7 +147,7 @@ public class WanTxAOImpl implements IWanTxAO {
 
                     if (isDebug == true) {
 
-                        System.out.println("*********同步循环结束,区块号"
+                        System.out.println("*********万维链同步循环结束,区块号"
                                 + (blockNumber - 1) + "为最后一个可信任区块*******");
                     }
                     break;

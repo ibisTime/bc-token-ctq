@@ -19,12 +19,19 @@
     <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="triggers">
             <list>
-                <ref bean="ethTransactionSyncTrigger"/>
-                <ref bean="ethPushSyncTrigger"/>
-                <ref bean="btcPushSyncTrigger"/>
-           		<ref bean="btcTransactionSyncTrigger"/>
-           		<ref bean="tokenTransactionSyncTrigger"/>
-           		<ref bean="tokenPushSyncTrigger"/>
+                <!-- 以太坊 -->
+                <!-- <ref bean="ethTransactionSyncTrigger"/>
+                <ref bean="ethPushSyncTrigger"/> -->
+                <!-- 比特币 -->
+                <!-- <ref bean="btcPushSyncTrigger"/>
+           		<ref bean="btcTransactionSyncTrigger"/> -->
+           		<!-- 万维链 -->
+           		<ref bean="wanTransactionSyncTrigger"/>
+           		<ref bean="wanPushSyncTrigger"/>
+           		<!-- 以太坊token -->
+           		<!-- <ref bean="tokenTransactionSyncTrigger"/>
+           		<ref bean="tokenPushSyncTrigger"/> -->
+           		
             </list>
         </property>
         <property name="autoStartup" value="true"/>
@@ -120,6 +127,37 @@
     <bean id="tokenPushTx"
           class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
         <property name="targetObject" ref="tokenTxAOImpl"/>
+        <property name="targetMethod" value="pushTx"/>
+        <!-- 是否允许任务并发执行。当值为false时，表示必须等到前一个线程处理完毕后才再启一个新的线程 -->
+        <property name="concurrent" value="false"/>
+    </bean>
+    
+    <!-- ########   WAN  #############-->
+    <bean id="wanTransactionSyncTrigger"
+          class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="doWanTransactionSync"/>
+        <!--<property name="cronExpression" value="0 */1 * * * ?" />-->
+        <property name="cronExpression" value="*/20 * * * * ?"/>
+    </bean>
+
+    <bean id="doWanTransactionSync"
+          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="wanTxAOImpl"/>
+        <property name="targetMethod" value="doWanTransactionSync"/>
+        <!-- 是否允许任务并发执行。当值为false时，表示必须等到前一个线程处理完毕后才再启一个新的线程 -->
+        <property name="concurrent" value="false"/>
+    </bean>
+
+    <!-- ########   WAN交易推送  #############-->
+    <bean id="wanPushSyncTrigger"
+          class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="pushWanTx"/>
+        <property name="cronExpression" value="*/20 * * * * ?"/>
+    </bean>
+
+    <bean id="pushWanTx"
+          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="wanTxAOImpl"/>
         <property name="targetMethod" value="pushTx"/>
         <!-- 是否允许任务并发执行。当值为false时，表示必须等到前一个线程处理完毕后才再启一个新的线程 -->
         <property name="concurrent" value="false"/>
