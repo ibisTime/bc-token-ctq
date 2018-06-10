@@ -19,7 +19,6 @@ import org.web3j.protocol.core.methods.response.EthBlock;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 
 import com.cdkj.coin.ao.IEthTxAO;
-import com.cdkj.coin.bo.IEthAddressBO;
 import com.cdkj.coin.bo.IEthTransactionBO;
 import com.cdkj.coin.bo.ISYSConfigBO;
 import com.cdkj.coin.bo.base.Paginable;
@@ -32,8 +31,8 @@ import com.cdkj.coin.domain.SYSConfig;
 import com.cdkj.coin.dto.req.EthTxPageReq;
 import com.cdkj.coin.enums.EPushStatus;
 import com.cdkj.coin.ethereum.Web3JClient;
-import com.cdkj.coin.exception.EBizErrorCode;
 import com.cdkj.coin.exception.BizException;
+import com.cdkj.coin.exception.EBizErrorCode;
 import com.cdkj.coin.http.PostSimulater;
 
 /**
@@ -46,9 +45,6 @@ public class EthTxAOImpl implements IEthTxAO {
         .getLogger(EthTxAOImpl.class);
 
     private static Web3j web3j = Web3JClient.getClient();
-
-    @Autowired
-    private IEthAddressBO ethAddressBO;
 
     @Autowired
     private IEthTransactionBO ethTransactionBO;
@@ -81,8 +77,7 @@ public class EthTxAOImpl implements IEthTxAO {
 
         if (startDate != null && endDate != null) {
             if (startDate.compareTo(endDate) > 0) {
-                throw new BizException(
-                    EBizErrorCode.DEFAULT.getErrorCode(),
+                throw new BizException(EBizErrorCode.DEFAULT.getErrorCode(),
                     "开始时间需 <= 结束时间");
             }
 
@@ -99,7 +94,7 @@ public class EthTxAOImpl implements IEthTxAO {
     @Override
     public void doEthTransactionSync() {
 
-        boolean isDebug = false;
+        boolean isDebug = true;
         //
         try {
             //
@@ -166,34 +161,24 @@ public class EthTxAOImpl implements IEthTxAO {
                         continue;
                     }
 
-                    // 查询改地址是否在我们系统中存在
-                    // to 或者 from 为我们的地址就要进行同步
-                    long toCount = ethAddressBO.addressCount(toAddress);
-                    long fromCount = ethAddressBO.addressCount(fromAddress);
+                    // 需要同步，判断是否已经处理过
+                    if (ethTransactionBO.isEthTransactionExist(tx.getHash())) {
+                        continue;
+                    }
+                    // 获取交易收据
+                    Optional<TransactionReceipt> transactionReceipt = web3j
+                        .ethGetTransactionReceipt(tx.getHash()).send()
+                        .getTransactionReceipt();
 
-                    if (toCount > 0 || fromCount > 0) {
-                        // 需要同步，判断是否已经处理过
-                        if (ethTransactionBO
-                            .isEthTransactionExist(tx.getHash())) {
-                            continue;
-                        }
-                        // 获取交易收据
-                        Optional<TransactionReceipt> transactionReceipt = web3j
-                            .ethGetTransactionReceipt(tx.getHash()).send()
-                            .getTransactionReceipt();
+                    if (transactionReceipt.isPresent()) {
 
-                        if (transactionReceipt.isPresent()) {
-
-                            TransactionReceipt transactionReceipt1 = transactionReceipt
-                                .get();
-                            BigInteger gasUsed = transactionReceipt1
-                                .getGasUsed();
-                            EthTransaction ethTransaction = this.ethTransactionBO
-                                .convertTx(tx, gasUsed,
-                                    currentBlock.getTimestamp());
-                            transactionList.add(ethTransaction);
-
-                        }
+                        TransactionReceipt transactionReceipt1 = transactionReceipt
+                            .get();
+                        BigInteger gasUsed = transactionReceipt1.getGasUsed();
+                        EthTransaction ethTransaction = this.ethTransactionBO
+                            .convertTx(tx, gasUsed,
+                                currentBlock.getTimestamp());
+                        transactionList.add(ethTransaction);
 
                     }
 

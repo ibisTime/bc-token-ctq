@@ -20,17 +20,11 @@
         <property name="triggers">
             <list>
                 <!-- 以太坊 -->
-                <!-- <ref bean="ethTransactionSyncTrigger"/>
-                <ref bean="ethPushSyncTrigger"/> -->
+                <ref bean="ethTransactionSyncTrigger"/>
                 <!-- 比特币 -->
-                <!-- <ref bean="btcPushSyncTrigger"/>
-           		<ref bean="btcTransactionSyncTrigger"/> -->
+           		<!-- <ref bean="btcTransactionSyncTrigger"/> -->
            		<!-- 万维链 -->
-           		<ref bean="wanTransactionSyncTrigger"/>
-           		<ref bean="wanPushSyncTrigger"/>
-           		<!-- 以太坊token -->
-           		<!-- <ref bean="tokenTransactionSyncTrigger"/>
-           		<ref bean="tokenPushSyncTrigger"/> -->
+           		<!-- <ref bean="wanTransactionSyncTrigger"/> -->
            		
             </list>
         </property>
@@ -55,21 +49,6 @@
         <property name="concurrent" value="false"/>
     </bean>
 
-    <!-- ########   ETH交易推送  #############-->
-    <bean id="ethPushSyncTrigger"
-          class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-        <property name="jobDetail" ref="pushTx"/>
-        <property name="cronExpression" value="*/20 * * * * ?"/>
-    </bean>
-
-    <bean id="pushTx"
-          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-        <property name="targetObject" ref="ethTxAOImpl"/>
-        <property name="targetMethod" value="pushTx"/>
-        <!-- 是否允许任务并发执行。当值为false时，表示必须等到前一个线程处理完毕后才再启一个新的线程 -->
-        <property name="concurrent" value="false"/>
-    </bean>
-
     <!-- ########    BTC 交易扫描        #############-->
     <bean id="btcTransactionSyncTrigger"
           class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
@@ -86,52 +65,6 @@
         <property name="concurrent" value="false"/>
     </bean>
 
-    <!-- ########   BTC交易推送  #############-->
-    <bean id="btcPushSyncTrigger"
-          class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-        <property name="jobDetail" ref="btcPushTx"/>
-        <property name="cronExpression" value="*/20 * * * * ?"/>
-    </bean>
-
-    <bean id="btcPushTx"
-          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-        <property name="targetObject" ref="BTCTxAOImpl"/>
-        <property name="targetMethod" value="pushTx"/>
-        <!-- 是否允许任务并发执行。当值为false时，表示必须等到前一个线程处理完毕后才再启一个新的线程 -->
-        <property name="concurrent" value="false"/>
-    </bean>
-    
-    <!-- ########   TOKEN  #############-->
-    <bean id="tokenTransactionSyncTrigger"
-          class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-        <property name="jobDetail" ref="doTokenTransactionSync"/>
-        <!--<property name="cronExpression" value="0 */1 * * * ?" />-->
-        <property name="cronExpression" value="*/20 * * * * ?"/>
-    </bean>
-
-    <bean id="doTokenTransactionSync"
-          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-        <property name="targetObject" ref="tokenTxAOImpl"/>
-        <property name="targetMethod" value="doTokenTransactionSync"/>
-        <!-- 是否允许任务并发执行。当值为false时，表示必须等到前一个线程处理完毕后才再启一个新的线程 -->
-        <property name="concurrent" value="false"/>
-    </bean>
-    
-    <!-- ########   TOKEN交易推送  #############-->
-    <bean id="tokenPushSyncTrigger"
-          class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-        <property name="jobDetail" ref="tokenPushTx"/>
-        <property name="cronExpression" value="*/20 * * * * ?"/>
-    </bean>
-
-    <bean id="tokenPushTx"
-          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-        <property name="targetObject" ref="tokenTxAOImpl"/>
-        <property name="targetMethod" value="pushTx"/>
-        <!-- 是否允许任务并发执行。当值为false时，表示必须等到前一个线程处理完毕后才再启一个新的线程 -->
-        <property name="concurrent" value="false"/>
-    </bean>
-    
     <!-- ########   WAN  #############-->
     <bean id="wanTransactionSyncTrigger"
           class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
@@ -148,19 +81,5 @@
         <property name="concurrent" value="false"/>
     </bean>
 
-    <!-- ########   WAN交易推送  #############-->
-    <bean id="wanPushSyncTrigger"
-          class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-        <property name="jobDetail" ref="pushWanTx"/>
-        <property name="cronExpression" value="*/20 * * * * ?"/>
-    </bean>
-
-    <bean id="pushWanTx"
-          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-        <property name="targetObject" ref="wanTxAOImpl"/>
-        <property name="targetMethod" value="pushTx"/>
-        <!-- 是否允许任务并发执行。当值为false时，表示必须等到前一个线程处理完毕后才再启一个新的线程 -->
-        <property name="concurrent" value="false"/>
-    </bean>
 
 </beans>

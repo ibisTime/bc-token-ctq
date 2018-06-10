@@ -168,34 +168,24 @@ public class WanTxAOImpl implements IWanTxAO {
                         continue;
                     }
 
-                    // 查询改地址是否在我们系统中存在
-                    // to 或者 from 为我们的地址就要进行同步
-                    long toCount = wanAddressBO.addressCount(toAddress);
-                    long fromCount = wanAddressBO.addressCount(fromAddress);
+                    // 需要同步，判断是否已经处理过
+                    if (wanTransactionBO.isWanTransactionExist(tx.getHash())) {
+                        continue;
+                    }
+                    // 获取交易收据
+                    Optional<TransactionReceipt> transactionReceipt = web3j
+                        .ethGetTransactionReceipt(tx.getHash()).send()
+                        .getTransactionReceipt();
 
-                    if (toCount > 0 || fromCount > 0) {
-                        // 需要同步，判断是否已经处理过
-                        if (wanTransactionBO
-                            .isWanTransactionExist(tx.getHash())) {
-                            continue;
-                        }
-                        // 获取交易收据
-                        Optional<TransactionReceipt> transactionReceipt = web3j
-                            .ethGetTransactionReceipt(tx.getHash()).send()
-                            .getTransactionReceipt();
+                    if (transactionReceipt.isPresent()) {
 
-                        if (transactionReceipt.isPresent()) {
-
-                            TransactionReceipt transactionReceipt1 = transactionReceipt
-                                .get();
-                            BigInteger gasUsed = transactionReceipt1
-                                .getGasUsed();
-                            WanTransaction wanTransaction = this.wanTransactionBO
-                                .convertTx(tx, gasUsed,
-                                    currentBlock.getTimestamp());
-                            transactionList.add(wanTransaction);
-
-                        }
+                        TransactionReceipt transactionReceipt1 = transactionReceipt
+                            .get();
+                        BigInteger gasUsed = transactionReceipt1.getGasUsed();
+                        WanTransaction wanTransaction = this.wanTransactionBO
+                            .convertTx(tx, gasUsed,
+                                currentBlock.getTimestamp());
+                        transactionList.add(wanTransaction);
 
                     }
 
