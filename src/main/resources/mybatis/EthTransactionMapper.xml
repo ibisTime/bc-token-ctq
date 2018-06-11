@@ -39,6 +39,9 @@
 			<if test="to != null and to != ''">
 				 t.to = #{to}
 			</if>
+			<if test="address != null and address != '' ">
+				AND t.from = #{address} or t.to = #{address}
+			</if>
 		</trim>
 	</sql>
 

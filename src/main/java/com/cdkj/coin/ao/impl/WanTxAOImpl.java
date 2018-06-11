@@ -261,4 +261,13 @@ public class WanTxAOImpl implements IWanTxAO {
 
     }
 
+    /** 
+     * @see com.cdkj.coin.ao.IEthTransactionAO#queryEthTransactionPage(int, int, com.cdkj.coin.domain.EthTransaction)
+     */
+    @Override
+    public Paginable<WanTransaction> queryWanTransactionPage(int start,
+            int limit, WanTransaction condition) {
+        return wanTransactionBO.getPaginable(start, limit, condition);
+    }
+
 }

@@ -69,6 +69,12 @@ public class WanTransaction extends ABaseDO {
 
     private Date blockCreateDatetimeEnd;
 
+    private String address;
+
+    private String createsStart;
+
+    private String createsEnd;
+
     public Date getBlockCreateDatetimeStart() {
         return blockCreateDatetimeStart;
     }
@@ -208,5 +214,29 @@ public class WanTransaction extends ABaseDO {
 
     public void setGas(BigInteger gas) {
         this.gas = gas;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getCreatesStart() {
+        return createsStart;
+    }
+
+    public void setCreatesStart(String createsStart) {
+        this.createsStart = createsStart;
+    }
+
+    public String getCreatesEnd() {
+        return createsEnd;
+    }
+
+    public void setCreatesEnd(String createsEnd) {
+        this.createsEnd = createsEnd;
     }
 }

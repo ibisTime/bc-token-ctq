@@ -19,4 +19,8 @@ public interface IWanTxAO {
 
     // 分页查询交易
     public Paginable<WanTransaction> queryTxPage(WanTxPageReq req);
+
+    // 分页查询广播记录
+    public Paginable<WanTransaction> queryWanTransactionPage(int start,
+            int limit, WanTransaction condition);
 }

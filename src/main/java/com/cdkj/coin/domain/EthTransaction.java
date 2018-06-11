@@ -1,9 +1,9 @@
 package com.cdkj.coin.domain;
 
-import com.cdkj.coin.dao.base.ABaseDO;
-
 import java.math.BigInteger;
 import java.util.Date;
+
+import com.cdkj.coin.dao.base.ABaseDO;
 
 /**
 * 以太坊交易
@@ -13,203 +13,230 @@ import java.util.Date;
 */
 public class EthTransaction extends ABaseDO {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	// 交易hash
-	private String hash;
+    // 交易hash
+    private String hash;
 
-	// 第几个交易
-	private BigInteger nonce;
+    // 第几个交易
+    private BigInteger nonce;
 
-	// 区块hash
-	private String blockHash;
+    // 区块hash
+    private String blockHash;
 
-	// 区块编号
-	private String blockNumber;
+    // 区块编号
+    private String blockNumber;
 
-	// transactionIndex
-	private BigInteger transactionIndex;
+    // transactionIndex
+    private BigInteger transactionIndex;
 
-	// 发送地址
-	private String from;
+    // 发送地址
+    private String from;
 
-	// 接受地址
-	private String to;
+    // 接受地址
+    private String to;
 
-	// 数量
-	private String value;
+    // 数量
+    private String value;
 
-	// gas价格
-	private String gasPrice;
+    // gas价格
+    private String gasPrice;
 
-	// gasLimit
-	private BigInteger gas;
+    // gasLimit
+    private BigInteger gas;
 
-	//消耗gas
-	private BigInteger gasUsed;
+    // 消耗gas
+    private BigInteger gasUsed;
 
-	public BigInteger getGasUsed() {
-		return gasUsed;
-	}
+    public BigInteger getGasUsed() {
+        return gasUsed;
+    }
 
-	public void setGasUsed(BigInteger gasUsed) {
-		this.gasUsed = gasUsed;
-	}
+    public void setGasUsed(BigInteger gasUsed) {
+        this.gasUsed = gasUsed;
+    }
 
-	//区块生成时间
-	private Date blockCreateDatetime;
+    // 区块生成时间
+    private Date blockCreateDatetime;
 
-	//区块生成时间
-	private Date syncDatetime;
+    // 区块生成时间
+    private Date syncDatetime;
 
-	private String status;
+    private String status;
 
-	// ################# 一下属性为查询而添加 ##############
-	private Date blockCreateDatetimeStart;
-	private Date blockCreateDatetimeEnd;
+    // ################# 一下属性为查询而添加 ##############
+    private Date blockCreateDatetimeStart;
 
+    private Date blockCreateDatetimeEnd;
 
-	public Date getBlockCreateDatetimeStart() {
-		return blockCreateDatetimeStart;
-	}
+    private String address;
 
-	public void setBlockCreateDatetimeStart(Date blockCreateDatetimeStart) {
-		this.blockCreateDatetimeStart = blockCreateDatetimeStart;
-	}
+    private String createsStart;
 
-	public Date getBlockCreateDatetimeEnd() {
-		return blockCreateDatetimeEnd;
-	}
+    private String createsEnd;
 
-	public void setBlockCreateDatetimeEnd(Date blockCreateDatetimeEnd) {
-		this.blockCreateDatetimeEnd = blockCreateDatetimeEnd;
-	}
+    public Date getBlockCreateDatetimeStart() {
+        return blockCreateDatetimeStart;
+    }
 
-	public static long getSerialVersionUID() {
-		return serialVersionUID;
-	}
+    public void setBlockCreateDatetimeStart(Date blockCreateDatetimeStart) {
+        this.blockCreateDatetimeStart = blockCreateDatetimeStart;
+    }
 
-	public Date getBlockCreateDatetime() {
-		return blockCreateDatetime;
-	}
+    public Date getBlockCreateDatetimeEnd() {
+        return blockCreateDatetimeEnd;
+    }
 
-	public void setBlockCreateDatetime(Date blockCreateDatetime) {
-		this.blockCreateDatetime = blockCreateDatetime;
-	}
+    public void setBlockCreateDatetimeEnd(Date blockCreateDatetimeEnd) {
+        this.blockCreateDatetimeEnd = blockCreateDatetimeEnd;
+    }
 
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
 
-	public Date getSyncDatetime() {
-		return syncDatetime;
-	}
+    public Date getBlockCreateDatetime() {
+        return blockCreateDatetime;
+    }
 
-	public void setSyncDatetime(Date syncDatetime) {
-		this.syncDatetime = syncDatetime;
-	}
+    public void setBlockCreateDatetime(Date blockCreateDatetime) {
+        this.blockCreateDatetime = blockCreateDatetime;
+    }
 
-	public String getStatus() {
-		return status;
-	}
+    public Date getSyncDatetime() {
+        return syncDatetime;
+    }
 
-	public void setStatus(String status) {
-		this.status = status;
-	}
-	//	// input
-//	private String input;
-//
-//	// 创建时间
-//	private String creates;
-//
-//	// publicKey
-//	private String publicKey;
-//
-//	// raw
-//	private String raw;
-//
-//	// r
-//	private String r;
-//
-//	// s
-//	private String s;
+    public void setSyncDatetime(Date syncDatetime) {
+        this.syncDatetime = syncDatetime;
+    }
 
+    public String getStatus() {
+        return status;
+    }
 
+    public void setStatus(String status) {
+        this.status = status;
+    }
+    // // input
+    // private String input;
+    //
+    // // 创建时间
+    // private String creates;
+    //
+    // // publicKey
+    // private String publicKey;
+    //
+    // // raw
+    // private String raw;
+    //
+    // // r
+    // private String r;
+    //
+    // // s
+    // private String s;
 
-	public void setHash(String hash) {
-		this.hash = hash;
-	}
+    public void setHash(String hash) {
+        this.hash = hash;
+    }
 
-	public String getHash() {
-		return hash;
-	}
+    public String getHash() {
+        return hash;
+    }
 
-	public BigInteger getNonce() {
-		return nonce;
-	}
+    public BigInteger getNonce() {
+        return nonce;
+    }
 
-	public void setNonce(BigInteger nonce) {
-		this.nonce = nonce;
-	}
+    public void setNonce(BigInteger nonce) {
+        this.nonce = nonce;
+    }
 
-	public void setBlockHash(String blockHash) {
-		this.blockHash = blockHash;
-	}
+    public void setBlockHash(String blockHash) {
+        this.blockHash = blockHash;
+    }
 
-	public String getBlockHash() {
-		return blockHash;
-	}
+    public String getBlockHash() {
+        return blockHash;
+    }
 
-	public void setBlockNumber(String blockNumber) {
-		this.blockNumber = blockNumber;
-	}
+    public void setBlockNumber(String blockNumber) {
+        this.blockNumber = blockNumber;
+    }
 
-	public String getBlockNumber() {
-		return blockNumber;
-	}
+    public String getBlockNumber() {
+        return blockNumber;
+    }
 
-	public BigInteger getTransactionIndex() {
-		return transactionIndex;
-	}
+    public BigInteger getTransactionIndex() {
+        return transactionIndex;
+    }
 
-	public void setTransactionIndex(BigInteger transactionIndex) {
-		this.transactionIndex = transactionIndex;
-	}
+    public void setTransactionIndex(BigInteger transactionIndex) {
+        this.transactionIndex = transactionIndex;
+    }
 
-	public void setFrom(String from) {
-		this.from = from;
-	}
+    public void setFrom(String from) {
+        this.from = from;
+    }
 
-	public String getFrom() {
-		return from;
-	}
+    public String getFrom() {
+        return from;
+    }
 
-	public void setTo(String to) {
-		this.to = to;
-	}
+    public void setTo(String to) {
+        this.to = to;
+    }
 
-	public String getTo() {
-		return to;
-	}
+    public String getTo() {
+        return to;
+    }
 
-	public void setValue(String value) {
-		this.value = value;
-	}
+    public void setValue(String value) {
+        this.value = value;
+    }
 
-	public String getValue() {
-		return value;
-	}
+    public String getValue() {
+        return value;
+    }
 
-	public void setGasPrice(String gasPrice) {
-		this.gasPrice = gasPrice;
-	}
+    public void setGasPrice(String gasPrice) {
+        this.gasPrice = gasPrice;
+    }
 
-	public String getGasPrice() {
-		return gasPrice;
-	}
+    public String getGasPrice() {
+        return gasPrice;
+    }
 
-	public BigInteger getGas() {
-		return gas;
-	}
+    public BigInteger getGas() {
+        return gas;
+    }
 
-	public void setGas(BigInteger gas) {
-		this.gas = gas;
-	}
+    public void setGas(BigInteger gas) {
+        this.gas = gas;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getCreatesStart() {
+        return createsStart;
+    }
+
+    public void setCreatesStart(String createsStart) {
+        this.createsStart = createsStart;
+    }
+
+    public String getCreatesEnd() {
+        return createsEnd;
+    }
+
+    public void setCreatesEnd(String createsEnd) {
+        this.createsEnd = createsEnd;
+    }
 }
