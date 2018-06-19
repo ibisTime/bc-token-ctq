@@ -2,7 +2,7 @@
 #!/usr/bin/expect
 
 set tomcat_path "/mnt/www/theia/tomcat_bc_ctq"
-set war_name "bc-ctq"
+set war_name "bc-token-ctq"
 set host_ip "47.75.165.70"
 set host_pwd "THA2018Online"
 

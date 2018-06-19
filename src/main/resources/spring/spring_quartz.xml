@@ -20,17 +20,17 @@
         <property name="triggers">
             <list>
                 <!-- 以太坊 -->
-                <!-- <ref bean="ethTransactionSyncTrigger"/>
-                <ref bean="ethPushSyncTrigger"/> -->
+                <ref bean="ethTransactionSyncTrigger"/>
+                <ref bean="ethPushSyncTrigger"/>
                 <!-- 比特币 -->
-                <!-- <ref bean="btcPushSyncTrigger"/>
-           		<ref bean="btcTransactionSyncTrigger"/> -->
+                <ref bean="btcPushSyncTrigger"/>
+           		<ref bean="btcTransactionSyncTrigger"/>
            		<!-- 万维链 -->
            		<ref bean="wanTransactionSyncTrigger"/>
            		<ref bean="wanPushSyncTrigger"/>
            		<!-- 以太坊token -->
-           		<!-- <ref bean="tokenTransactionSyncTrigger"/>
-           		<ref bean="tokenPushSyncTrigger"/> -->
+           		<ref bean="tokenTransactionSyncTrigger"/>
+           		<ref bean="tokenPushSyncTrigger"/>
            		
             </list>
         </property>
