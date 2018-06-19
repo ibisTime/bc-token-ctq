@@ -1,7 +1,7 @@
 
 #!/usr/bin/expect
 
-set tomcat_path "/mnt/www/ethereum/tomcat_test_data"
+set tomcat_path "/mnt/www/ethereum/tomcat_prod_data"
 set war_name "bc-ctq"
 set host_ip "47.75.165.70"
 set host_pwd "THA2018Online"

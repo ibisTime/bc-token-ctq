@@ -42,7 +42,7 @@ public class APIServlet extends HttpServlet {
         logger.info("Successful Deployment");
         PrintWriter writer = response.getWriter();
         writer.append("Version:1.3.0 \n");
-        writer.append("Description:bc-ctq THA 1st \n");
+        writer.append("Description:bc-ctq syn all online data THA  1st \n");
         writer.flush();
     }
 
