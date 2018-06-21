@@ -33,4 +33,7 @@ public interface IWanTransactionBO extends IPaginableBO<WanTransaction> {
 
     public boolean isWanTransactionExist(String hash);
 
+    // 更新实际消耗的gas
+    public void refreshGasUsed(WanTransaction tx, BigInteger gasUsed);
+
 }

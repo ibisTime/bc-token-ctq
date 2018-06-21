@@ -93,7 +93,7 @@
 
 	<insert id="insertTxList" parameterType="List">
 
-		INSERT INTO
+		INSERT IGNORE INTO
 			`tctq_eth_transaction`(`hash`, nonce, block_hash, block_number,transaction_index,`from`,`to`,`value`,gas_price,gas,
 									block_create_datetime,sync_datetime,`status`,gas_used)
 		VALUES
@@ -108,5 +108,11 @@
 		  </foreach>
 
 	</insert>
+	
+	<update id="update_gasUsed" parameterType="com.cdkj.coin.domain.EthTransaction">
+		UPDATE  `tctq_eth_transaction`
+		SET `gas_used` = #{gasUsed} 
+		where `hash` = #{hash}
+	</update>
 
 </mapper>

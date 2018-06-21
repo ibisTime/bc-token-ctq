@@ -127,4 +127,14 @@ public class WanTransactionBOImpl extends PaginableBOImpl<WanTransaction>
         return result;
     }
 
+    @Override
+    public void refreshGasUsed(WanTransaction tx, BigInteger gasUsed) {
+
+        if (tx != null && gasUsed != null) {
+            tx.setGasUsed(gasUsed);
+            wanTransactionDAO.updateTxGasUsed(tx);
+        }
+
+    }
+
 }

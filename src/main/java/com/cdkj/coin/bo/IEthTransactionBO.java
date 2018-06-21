@@ -26,10 +26,14 @@ public interface IEthTransactionBO extends IPaginableBO<EthTransaction> {
 
     public int saveEthTransaction(EthTransaction tx);
 
-    public List<EthTransaction> queryEthTransactionList(EthTransaction condition);
+    public List<EthTransaction> queryEthTransactionList(
+            EthTransaction condition);
 
     public EthTransaction getEthTransaction(String hash);
 
     public boolean isEthTransactionExist(String hash);
+
+    // 更新实际消耗的gas
+    public void refreshGasUsed(EthTransaction tx, BigInteger gasUsed);
 
 }

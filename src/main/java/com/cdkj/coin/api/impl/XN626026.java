@@ -8,7 +8,7 @@
  */
 package com.cdkj.coin.api.impl;
 
-import com.cdkj.coin.ao.IEthTransactionAO;
+import com.cdkj.coin.ao.IEthTxAO;
 import com.cdkj.coin.api.AProcessor;
 import com.cdkj.coin.common.JsonUtil;
 import com.cdkj.coin.core.ObjValidater;
@@ -27,8 +27,7 @@ import com.cdkj.coin.spring.SpringContextHolder;
  */
 public class XN626026 extends AProcessor {
 
-    private IEthTransactionAO ethTransactionAO = SpringContextHolder
-        .getBean(IEthTransactionAO.class);
+    private IEthTxAO ethTxAO = SpringContextHolder.getBean(IEthTxAO.class);
 
     private XN626026Req req = null;
 
@@ -49,8 +48,7 @@ public class XN626026 extends AProcessor {
         condition.setOrder("block_create_datetime", "desc");
         int start = StringValidater.toInteger(req.getStart());
         int limit = StringValidater.toInteger(req.getLimit());
-        return ethTransactionAO.queryEthTransactionPage(start, limit,
-            condition);
+        return ethTxAO.queryEthTransactionPage(start, limit, condition);
     }
 
     /** 

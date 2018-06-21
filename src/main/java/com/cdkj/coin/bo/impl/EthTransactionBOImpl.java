@@ -15,8 +15,8 @@ import com.cdkj.coin.bo.base.PaginableBOImpl;
 import com.cdkj.coin.dao.IEthTransactionDAO;
 import com.cdkj.coin.domain.EthTransaction;
 import com.cdkj.coin.enums.EPushStatus;
-import com.cdkj.coin.exception.EBizErrorCode;
 import com.cdkj.coin.exception.BizException;
+import com.cdkj.coin.exception.EBizErrorCode;
 
 @Component
 public class EthTransactionBOImpl extends PaginableBOImpl<EthTransaction>
@@ -49,8 +49,8 @@ public class EthTransactionBOImpl extends PaginableBOImpl<EthTransaction>
 
         //
         transaction.setStatus(EPushStatus.UN_PUSH.getCode());
-        transaction.setBlockCreateDatetime(new Date(
-            timestamp.longValue() * 1000));
+        transaction
+            .setBlockCreateDatetime(new Date(timestamp.longValue() * 1000));
         //
         transaction.setGasUsed(gasUsed);
 
@@ -65,7 +65,8 @@ public class EthTransactionBOImpl extends PaginableBOImpl<EthTransaction>
     }
 
     @Override
-    public List<EthTransaction> queryEthTransactionList(EthTransaction condition) {
+    public List<EthTransaction> queryEthTransactionList(
+            EthTransaction condition) {
         return ethTransactionDAO.selectList(condition);
     }
 
@@ -105,8 +106,7 @@ public class EthTransactionBOImpl extends PaginableBOImpl<EthTransaction>
             condition.setHash(hash);
             data = ethTransactionDAO.select(condition);
             if (data == null) {
-                throw new BizException(
-                    EBizErrorCode.DEFAULT.getErrorCode(),
+                throw new BizException(EBizErrorCode.DEFAULT.getErrorCode(),
                     "以太坊交易记录不存在");
             }
         }
@@ -125,6 +125,16 @@ public class EthTransactionBOImpl extends PaginableBOImpl<EthTransaction>
         }
 
         return result;
+    }
+
+    @Override
+    public void refreshGasUsed(EthTransaction tx, BigInteger gasUsed) {
+
+        if (tx != null && gasUsed != null) {
+            tx.setGasUsed(gasUsed);
+            ethTransactionDAO.updateTxGasUsed(tx);
+        }
+
     }
 
 }

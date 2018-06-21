@@ -1,10 +1,10 @@
 package com.cdkj.coin.ao;
 
+import java.util.List;
+
 import com.cdkj.coin.bo.base.Paginable;
 import com.cdkj.coin.domain.EthTransaction;
 import com.cdkj.coin.dto.req.EthTxPageReq;
-
-import java.util.List;
 
 /**
  * Created by tianlei on 2017/十一月/02.
@@ -19,4 +19,8 @@ public interface IEthTxAO {
 
     // 分页查询交易
     public Paginable<EthTransaction> queryTxPage(EthTxPageReq req);
+
+    // 分页查询广播记录
+    public Paginable<EthTransaction> queryEthTransactionPage(int start,
+            int limit, EthTransaction condition);
 }

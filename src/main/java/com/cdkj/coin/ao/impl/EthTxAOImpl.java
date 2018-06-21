@@ -94,7 +94,7 @@ public class EthTxAOImpl implements IEthTxAO {
     @Override
     public void doEthTransactionSync() {
 
-        boolean isDebug = true;
+        boolean isDebug = false;
         //
         try {
             //
@@ -104,8 +104,8 @@ public class EthTxAOImpl implements IEthTxAO {
                     .getLongValue(SysConstants.CUR_ETH_BLOCK_NUMBER);
                 if (isDebug == true) {
 
-                    System.out.println(
-                        "*********同步循环开始，扫描区块" + blockNumber + "*******");
+                    System.out.println("*********同步循环开始，扫描区块" + blockNumber
+                            + " 开始时间：" + new Date() + "*******");
 
                 }
 
@@ -149,6 +149,12 @@ public class EthTxAOImpl implements IEthTxAO {
                 // 如果取到区块信息
                 List<EthTransaction> transactionList = new ArrayList<>();
 
+                if (isDebug == true) {
+
+                    System.out.println("*********开始遍历区块交易，" + blockNumber
+                            + " 开始时间：" + new Date() + "*******");
+
+                }
                 for (EthBlock.TransactionResult txObj : currentBlock
                     .getTransactions()) {
 
@@ -161,26 +167,16 @@ public class EthTxAOImpl implements IEthTxAO {
                         continue;
                     }
 
-                    // 需要同步，判断是否已经处理过
-                    if (ethTransactionBO.isEthTransactionExist(tx.getHash())) {
-                        continue;
-                    }
-                    // 获取交易收据
-                    Optional<TransactionReceipt> transactionReceipt = web3j
-                        .ethGetTransactionReceipt(tx.getHash()).send()
-                        .getTransactionReceipt();
+                    EthTransaction ethTransaction = this.ethTransactionBO
+                        .convertTx(tx, BigInteger.ZERO,
+                            currentBlock.getTimestamp());
+                    transactionList.add(ethTransaction);
 
-                    if (transactionReceipt.isPresent()) {
+                }
+                if (isDebug == true) {
 
-                        TransactionReceipt transactionReceipt1 = transactionReceipt
-                            .get();
-                        BigInteger gasUsed = transactionReceipt1.getGasUsed();
-                        EthTransaction ethTransaction = this.ethTransactionBO
-                            .convertTx(tx, gasUsed,
-                                currentBlock.getTimestamp());
-                        transactionList.add(ethTransaction);
-
-                    }
+                    System.out.println("*********结束遍历区块交易，" + blockNumber
+                            + " 结束时间：" + new Date() + "*******");
 
                 }
                 // 存储
@@ -201,7 +197,12 @@ public class EthTxAOImpl implements IEthTxAO {
         //
         if (transactionList.isEmpty() == false) {
 
+            // System.out.println("*********开始插入交易，一共" + transactionList.size()
+            // + "条，" + blockNumber + " 开始时间：" + new Date() + "*******");
+
             this.ethTransactionBO.insertTxList(transactionList);
+            // System.out.println("*********结束插入交易，一共" + transactionList.size()
+            // + "条，" + blockNumber + " 结束时间：" + new Date() + "*******");
 
         }
 
@@ -252,6 +253,43 @@ public class EthTxAOImpl implements IEthTxAO {
         this.ethTransactionBO.changeTxStatusToPushed(hashList);
         return new Object();
 
+    }
+
+    /** 
+     * @see com.cdkj.coin.ao.IEthTransactionAO#queryEthTransactionPage(int, int, com.cdkj.coin.domain.EthTransaction)
+     */
+    @Override
+    public Paginable<EthTransaction> queryEthTransactionPage(int start,
+            int limit, EthTransaction condition) {
+        Paginable<EthTransaction> results = ethTransactionBO.getPaginable(start,
+            limit, condition);
+
+        for (EthTransaction tx : results.getList()) {
+            if (BigInteger.ZERO.compareTo(tx.getGasUsed()) == 0) {
+                try {
+                    // 获取交易收据
+                    Optional<TransactionReceipt> transactionReceipt = web3j
+                        .ethGetTransactionReceipt(tx.getHash()).send()
+                        .getTransactionReceipt();
+
+                    if (transactionReceipt.isPresent()) {
+
+                        TransactionReceipt transactionReceipt1 = transactionReceipt
+                            .get();
+                        BigInteger gasUsed = transactionReceipt1.getGasUsed();
+
+                        tx.setGasUsed(gasUsed);
+                        // 更新实际消耗的gas
+                        ethTransactionBO.refreshGasUsed(tx, gasUsed);
+
+                    }
+                } catch (Exception e) {
+                    logger.error("查询交易详情失败，原因：" + e.getMessage());
+                }
+            }
+        }
+
+        return results;
     }
 
 }

@@ -59,4 +59,9 @@ public class WanTransactionDAOImpl extends AMybatisTemplate
             start, count, condition, WanTransaction.class);
     }
 
+    @Override
+    public void updateTxGasUsed(WanTransaction data) {
+        super.update(NAMESPACE.concat("update_gasUsed"), data);
+    }
+
 }

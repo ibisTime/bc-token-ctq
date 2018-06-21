@@ -168,26 +168,10 @@ public class WanTxAOImpl implements IWanTxAO {
                         continue;
                     }
 
-                    // 需要同步，判断是否已经处理过
-                    if (wanTransactionBO.isWanTransactionExist(tx.getHash())) {
-                        continue;
-                    }
-                    // 获取交易收据
-                    Optional<TransactionReceipt> transactionReceipt = web3j
-                        .ethGetTransactionReceipt(tx.getHash()).send()
-                        .getTransactionReceipt();
-
-                    if (transactionReceipt.isPresent()) {
-
-                        TransactionReceipt transactionReceipt1 = transactionReceipt
-                            .get();
-                        BigInteger gasUsed = transactionReceipt1.getGasUsed();
-                        WanTransaction wanTransaction = this.wanTransactionBO
-                            .convertTx(tx, gasUsed,
-                                currentBlock.getTimestamp());
-                        transactionList.add(wanTransaction);
-
-                    }
+                    WanTransaction wanTransaction = this.wanTransactionBO
+                        .convertTx(tx, BigInteger.ZERO,
+                            currentBlock.getTimestamp());
+                    transactionList.add(wanTransaction);
 
                 }
                 // 存储
@@ -267,7 +251,35 @@ public class WanTxAOImpl implements IWanTxAO {
     @Override
     public Paginable<WanTransaction> queryWanTransactionPage(int start,
             int limit, WanTransaction condition) {
-        return wanTransactionBO.getPaginable(start, limit, condition);
+        Paginable<WanTransaction> results = wanTransactionBO.getPaginable(start,
+            limit, condition);
+
+        for (WanTransaction tx : results.getList()) {
+            if (BigInteger.ZERO.compareTo(tx.getGasUsed()) == 0) {
+                try {
+                    // 获取交易收据
+                    Optional<TransactionReceipt> transactionReceipt = web3j
+                        .ethGetTransactionReceipt(tx.getHash()).send()
+                        .getTransactionReceipt();
+
+                    if (transactionReceipt.isPresent()) {
+
+                        TransactionReceipt transactionReceipt1 = transactionReceipt
+                            .get();
+                        BigInteger gasUsed = transactionReceipt1.getGasUsed();
+
+                        tx.setGasUsed(gasUsed);
+                        // 更新实际消耗的gas
+                        wanTransactionBO.refreshGasUsed(tx, gasUsed);
+
+                    }
+                } catch (Exception e) {
+                    logger.error("查询交易详情失败，原因：" + e.getMessage());
+                }
+            }
+        }
+
+        return results;
     }
 
 }

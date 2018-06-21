@@ -9,8 +9,8 @@ import com.cdkj.coin.dao.base.support.AMybatisTemplate;
 import com.cdkj.coin.domain.EthTransaction;
 
 @Repository("ethTransactionDAOImpl")
-public class EthTransactionDAOImpl extends AMybatisTemplate implements
-        IEthTransactionDAO {
+public class EthTransactionDAOImpl extends AMybatisTemplate
+        implements IEthTransactionDAO {
 
     public void updateTxStatus(List<EthTransaction> txList) {
 
@@ -57,6 +57,11 @@ public class EthTransactionDAOImpl extends AMybatisTemplate implements
             int count) {
         return super.selectList(NAMESPACE.concat("select_ethTransaction"),
             start, count, condition, EthTransaction.class);
+    }
+
+    @Override
+    public void updateTxGasUsed(EthTransaction data) {
+        super.update(NAMESPACE.concat("update_gasUsed"), data);
     }
 
 }
