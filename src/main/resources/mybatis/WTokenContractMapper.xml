@@ -23,7 +23,7 @@
 		,t.contract_address
 		,t.create_datetime
 		FROM
-		tctq_token_contract t
+		tctq_wtoken_contract t
 		<include refid="where_condition" />
 		<trim prefix="ORDER BY ">
 			<if test="order != null and order != '' ">
@@ -34,13 +34,13 @@
 
 	<select id="select_wtokenContract_count" parameterType="wtokenContract"
 		resultType="java.lang.Long">
-		SELECT count(1) FROM tctq_token_contract t
+		SELECT count(1) FROM tctq_wtoken_contract t
 		<include refid="where_condition" />
 	</select>
 
 	<insert id="insert_wtokenContract" parameterType="wtokenContract">
 		INSERT INTO
-		tctq_token_contract(
+		tctq_wtoken_contract(
 		symbol
 		,contract_address
 		,create_datetime

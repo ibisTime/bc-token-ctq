@@ -32,7 +32,7 @@
         ,t.symbol
         ,t.create_datetime
         FROM
-        tctq_token_address t
+        tctq_wtoken_address t
         <include refid="where_condition"/>
         <trim prefix="ORDER BY ">
             <if test="order != null and order != '' ">
@@ -43,13 +43,13 @@
 
     <select id="selectTotalCount" parameterType="wtokenAddress"
             resultType="java.lang.Long">
-        SELECT count(1) FROM tctq_token_address t
+        SELECT count(1) FROM tctq_wtoken_address t
         <include refid="where_condition"/>
     </select>
 
     <insert id="insert_wtokenAddress" parameterType="wtokenAddress">
         INSERT INTO
-            tctq_token_address (
+            tctq_wtoken_address (
                 code,
                 address,
                 symbol,
@@ -65,7 +65,7 @@
 
     <select id="selectTotalCountByAddress" resultType="java.lang.Long">
         SELECT count(1)
-        FROM `tctq_token_address`
+        FROM `tctq_wtoken_address`
         WHERE `address` = #{address}
     </select>
 

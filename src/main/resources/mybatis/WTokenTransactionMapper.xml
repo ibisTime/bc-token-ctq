@@ -77,7 +77,7 @@
 		,t.status
 		,t.symbol
 		FROM
-		tctq_token_transaction t
+		tctq_wtoken_transaction t
 		<include refid="where_condition" />
 		<trim prefix="ORDER BY ">
 			<if test="order != null and order != '' ">
@@ -88,13 +88,13 @@
 
 	<select id="select_wtokenTransaction_count" parameterType="wtokenTransaction"
 		resultType="java.lang.Long">
-		SELECT count(1) FROM tctq_token_transaction t
+		SELECT count(1) FROM tctq_wtoken_transaction t
 		<include refid="where_condition" />
 	</select>
 
 	<insert id="insert_wtokenTransaction" parameterType="wtokenTransaction">
 		INSERT INTO
-		tctq_token_transaction(
+		tctq_wtoken_transaction(
 		hash
 		,nonce
 		,block_hash
@@ -141,7 +141,7 @@
 	</insert>
 
 	<update id="update_status" parameterType="wtokenTransaction">
-		UPDATE tctq_token_transaction
+		UPDATE tctq_wtoken_transaction
 		SET
 		status = #{status}
 		WHERE id = #{id}
