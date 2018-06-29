@@ -18,11 +18,11 @@ public class WTokenAddressBOImpl extends PaginableBOImpl<WTokenAddress>
         implements IWTokenAddressBO {
 
     @Autowired
-    private IWTokenAddressDAO tokenAddressDAO;
+    private IWTokenAddressDAO wtokenAddressDAO;
 
     @Override
     public List<WTokenAddress> queryAddressList(WTokenAddress condition) {
-        return tokenAddressDAO.selectList(condition);
+        return wtokenAddressDAO.selectList(condition);
     }
 
     @Override
@@ -32,7 +32,7 @@ public class WTokenAddressBOImpl extends PaginableBOImpl<WTokenAddress>
         tokenAddress.setAddress(address);
         tokenAddress.setSymbol(symbol);
         tokenAddress.setCreateDatetime(new Date());
-        int count = tokenAddressDAO.insert(tokenAddress);
+        int count = wtokenAddressDAO.insert(tokenAddress);
         return count;
     }
 
@@ -40,7 +40,7 @@ public class WTokenAddressBOImpl extends PaginableBOImpl<WTokenAddress>
     public long addressCount(String address, String symbol) {
         long count = 0;
         if (StringUtils.isNotBlank(address)) {
-            count = tokenAddressDAO.selectTotalCountByAddress(address, symbol);
+            count = wtokenAddressDAO.selectTotalCountByAddress(address, symbol);
         }
         return count;
     }
@@ -50,6 +50,6 @@ public class WTokenAddressBOImpl extends PaginableBOImpl<WTokenAddress>
         WTokenAddress condition = new WTokenAddress();
         condition.setAddress(address);
         condition.setSymbol(symbol);
-        return this.tokenAddressDAO.selectTotalCount(condition).intValue();
+        return this.wtokenAddressDAO.selectTotalCount(condition).intValue();
     }
 }

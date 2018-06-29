@@ -17,13 +17,13 @@ public class WTokenContractBOImpl extends PaginableBOImpl<WTokenContract>
         implements IWTokenContractBO {
 
     @Autowired
-    private IWTokenContractDAO tokenContractDAO;
+    private IWTokenContractDAO wtokenContractDAO;
 
     @Override
     public boolean isWTokenContractExist(String contractAddress) {
         WTokenContract condition = new WTokenContract();
         condition.setContractAddress(contractAddress);
-        if (tokenContractDAO.selectTotalCount(condition) > 0) {
+        if (wtokenContractDAO.selectTotalCount(condition) > 0) {
             return true;
         }
         return false;
@@ -33,7 +33,7 @@ public class WTokenContractBOImpl extends PaginableBOImpl<WTokenContract>
     public boolean isSymbolExist(String symbol) {
         WTokenContract condition = new WTokenContract();
         condition.setSymbol(symbol);
-        if (tokenContractDAO.selectTotalCount(condition) > 0) {
+        if (wtokenContractDAO.selectTotalCount(condition) > 0) {
             return true;
         }
         return false;
@@ -43,7 +43,7 @@ public class WTokenContractBOImpl extends PaginableBOImpl<WTokenContract>
     public int saveWTokenContract(WTokenContract data) {
         int count = 0;
         if (data != null) {
-            count = tokenContractDAO.insert(data);
+            count = wtokenContractDAO.insert(data);
         }
         return count;
     }
@@ -51,7 +51,7 @@ public class WTokenContractBOImpl extends PaginableBOImpl<WTokenContract>
     @Override
     public List<WTokenContract> queryWTokenContractList(
             WTokenContract condition) {
-        return tokenContractDAO.selectList(condition);
+        return wtokenContractDAO.selectList(condition);
     }
 
     @Override
@@ -60,7 +60,7 @@ public class WTokenContractBOImpl extends PaginableBOImpl<WTokenContract>
         if (StringUtils.isNotBlank(contractAddress)) {
             WTokenContract condition = new WTokenContract();
             condition.setContractAddress(contractAddress);
-            data = tokenContractDAO.select(condition);
+            data = wtokenContractDAO.select(condition);
             if (data == null) {
                 throw new BizException("xn0000", "币种合约不存在");
             }

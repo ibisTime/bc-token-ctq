@@ -180,7 +180,7 @@ public class BTCTxAOImpl implements IBTCTxAO {
 
         this.saveToDB(ourInUTXOList, ourOutUTXOList, blockNumber);
 
-        logger.info("******BTC扫描区块结束******");
+        // logger.info("******BTC扫描区块结束******");
 
     }
 

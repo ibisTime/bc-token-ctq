@@ -17,7 +17,7 @@ public class WTokenTransactionBOImpl extends PaginableBOImpl<WTokenTransaction>
         implements IWTokenTransactionBO {
 
     @Autowired
-    private IWTokenTransactionDAO tokenTransactionDAO;
+    private IWTokenTransactionDAO wtokenTransactionDAO;
 
     @Override
     public boolean isWTokenTransactionExist(String txHash,
@@ -25,7 +25,7 @@ public class WTokenTransactionBOImpl extends PaginableBOImpl<WTokenTransaction>
         WTokenTransaction condition = new WTokenTransaction();
         condition.setHash(txHash);
         condition.setTokenLogIndex(logIndex);
-        if (tokenTransactionDAO.selectTotalCount(condition) > 0) {
+        if (wtokenTransactionDAO.selectTotalCount(condition) > 0) {
             return true;
         }
         return false;
@@ -35,7 +35,7 @@ public class WTokenTransactionBOImpl extends PaginableBOImpl<WTokenTransaction>
     public String saveWTokenTransaction(WTokenTransaction data) {
         String code = null;
         if (data != null) {
-            tokenTransactionDAO.insert(data);
+            wtokenTransactionDAO.insert(data);
         }
         return code;
     }
@@ -45,7 +45,7 @@ public class WTokenTransactionBOImpl extends PaginableBOImpl<WTokenTransaction>
         int count = 0;
         if (data != null) {
             data.setStatus(status);
-            count = tokenTransactionDAO.updateStatus(data);
+            count = wtokenTransactionDAO.updateStatus(data);
         }
         return count;
     }
@@ -53,7 +53,7 @@ public class WTokenTransactionBOImpl extends PaginableBOImpl<WTokenTransaction>
     @Override
     public List<WTokenTransaction> queryWTokenTransactionList(
             WTokenTransaction condition) {
-        return tokenTransactionDAO.selectList(condition);
+        return wtokenTransactionDAO.selectList(condition);
     }
 
     @Override
@@ -62,7 +62,7 @@ public class WTokenTransactionBOImpl extends PaginableBOImpl<WTokenTransaction>
         if (id != null) {
             WTokenTransaction condition = new WTokenTransaction();
             condition.setId(id);
-            data = tokenTransactionDAO.select(condition);
+            data = wtokenTransactionDAO.select(condition);
             if (data == null) {
                 throw new BizException("xn0000", "token交易记录不存在");
             }

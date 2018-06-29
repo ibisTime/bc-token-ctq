@@ -28,7 +28,7 @@ public class WTokenContractAOImpl implements IWTokenContractAO {
         wtokenContract.setCreateDatetime(new Date());
         int count = wtokenContractBO.saveWTokenContract(wtokenContract);
         if (count != 1) {
-            throw new BizException("xn000", "上传token合约地址失败");
+            throw new BizException("xn000", "上传wan-token合约地址失败");
         }
     }
 
