@@ -34,7 +34,7 @@ import com.cdkj.coin.exception.BizException;
 import com.cdkj.coin.exception.EBizErrorCode;
 import com.cdkj.coin.http.PostSimulater;
 import com.cdkj.coin.token.OrangeCoinToken.TransferEventResponse;
-import com.cdkj.coin.token.TokenClient;
+import com.cdkj.coin.wanchain.WanTokenClient;
 
 /**
  * @author: haiqingzheng 
@@ -76,10 +76,11 @@ public class WTokenTxAOImpl implements IWTokenTxAO {
                 }
 
                 // 获取当前扫描区块信息
-                EthBlock.Block currentBlock = TokenClient.getBlock(blockNumber);
+                EthBlock.Block currentBlock = WanTokenClient
+                    .getBlock(blockNumber);
 
                 // 获取当前区块链长度
-                BigInteger maxBlockNumber = TokenClient.getCurBlockNumber();
+                BigInteger maxBlockNumber = WanTokenClient.getCurBlockNumber();
 
                 if (isDebug == true) {
                     System.out
@@ -120,12 +121,12 @@ public class WTokenTxAOImpl implements IWTokenTxAO {
                     if (wtokenContractBO.isWTokenContractExist(toAddress)) {
                         WTokenContract wtokenContract = wtokenContractBO
                             .getWTokenContract(toAddress);
-                        TransactionReceipt transactionReceipt = TokenClient
+                        TransactionReceipt transactionReceipt = WanTokenClient
                             .getClient().ethGetTransactionReceipt(tx.getHash())
                             .send().getResult();
 
                         // 1、获取该交易向下的event
-                        List<TransferEventResponse> transferEventList = TokenClient
+                        List<TransferEventResponse> transferEventList = WanTokenClient
                             .loadTransferEvents(transactionReceipt);
                         // 2、遍历eventlist
                         if (CollectionUtils.isNotEmpty(transferEventList)) {
