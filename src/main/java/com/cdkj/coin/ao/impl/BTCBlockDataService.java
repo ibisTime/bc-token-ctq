@@ -2,6 +2,7 @@ package com.cdkj.coin.ao.impl;
 
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
@@ -18,6 +19,8 @@ import okhttp3.Response;
 
 @Service
 public class BTCBlockDataService {
+
+    private static Logger logger = Logger.getLogger(BTCBlockDataService.class);
 
     private static OkHttpClient okHttpClient = new OkHttpClient();
 
@@ -78,14 +81,14 @@ public class BTCBlockDataService {
 
     private String get(String url) {
         String result = null;
+        Response response = null;
         // 200 ok
         // 404 如果没有
         Request req = new Request.Builder().get().url(url).build();
         try {
 
             Call call = okHttpClient.newCall(req);
-            Response response = call.execute();
-
+            response = call.execute();
             if (response.code() == 200) {
 
                 result = response.body().string();
@@ -95,6 +98,12 @@ public class BTCBlockDataService {
         } catch (Exception e) {
 
             // throw new BizException("xn000", "拉取数据失败" + e.getMessage());
+
+        } finally {
+
+            if (response != null) {
+                response.close();
+            }
 
         }
         return result;
