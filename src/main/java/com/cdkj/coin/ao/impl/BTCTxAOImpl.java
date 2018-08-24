@@ -56,7 +56,7 @@ public class BTCTxAOImpl implements IBTCTxAO {
 
         // 如果区块高度为达到带扫描的区块
         Long lasterBlockNumber = blockDataService.getBlockCount();
-        if (lasterBlockNumber < blockNumber) {
+        if (lasterBlockNumber == null || lasterBlockNumber < blockNumber) {
             return;
         }
 
