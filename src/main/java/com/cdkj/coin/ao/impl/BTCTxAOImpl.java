@@ -77,9 +77,9 @@ public class BTCTxAOImpl implements IBTCTxAO {
                     pageNum);
             } catch (Exception e) {
                 logger.info("******扫描区块：" + blockNumber + " 第" + pageNum + "页："
-                        + "发送异常，原因：" + e.getMessage() + "，重新扫描******");
+                        + "发送异常，重新扫描******");
                 try {
-                    Thread.sleep(3000);
+                    Thread.sleep(5000);
                 } catch (InterruptedException e1) {
                     e1.printStackTrace();
                 }
@@ -90,7 +90,7 @@ public class BTCTxAOImpl implements IBTCTxAO {
                 logger.info("******扫描区块：" + blockNumber + " 第" + pageNum + "页："
                         + "发送异常，重新扫描******");
                 try {
-                    Thread.sleep(3000);
+                    Thread.sleep(5000);
                 } catch (InterruptedException e1) {
                     e1.printStackTrace();
                 }
@@ -223,7 +223,7 @@ public class BTCTxAOImpl implements IBTCTxAO {
     // 时间调度任务,定期扫描——未推送的——交易
     public void pushTx() {
 
-        logger.info("******BTC推送UTXO开始******");
+        // logger.info("******BTC推送UTXO开始******");
 
         List<BtcUtxo> btcutxoList = this.btcUtxoBO.selectUnPush();
         if (btcutxoList != null && btcutxoList.size() > 0) {
