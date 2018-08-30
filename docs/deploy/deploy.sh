@@ -1,10 +1,10 @@
 
 #!/usr/bin/expect
 
-set tomcat_path "/mnt/www/theia/tomcat_bc_ctq"
+set tomcat_path "/mnt/www/theia_dev/tomcat_bc_ctq"
 set war_name "bc-token-ctq"
-set host_ip "120.26.6.213"
-set host_pwd "cdkj123456Q"
+set host_ip "47.254.69.142"
+set host_pwd "cdkjqwertyQ01"
 
 ######## 1.传输文件至服务器根目录 ########
 spawn scp ./${war_name}.war root@${host_ip}:~/
