@@ -66,7 +66,7 @@
     <select id="selectTotalCountByAddress" resultType="java.lang.Long">
         SELECT count(1)
         FROM `tctq_token_address`
-        WHERE `address` = #{address}
+        WHERE `address` = #{address} and `symbol` = #{symbol}
     </select>
 
 </mapper>

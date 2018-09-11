@@ -1,6 +1,7 @@
 package com.cdkj.coin.common;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 import com.cdkj.coin.core.CalculationUtil;
 
@@ -74,6 +75,11 @@ public class AmountUtil {
     public static Long eraseLiDown(Long amount) {
         String amountString = CalculationUtil.diviDown(amount);
         return Long.valueOf(CalculationUtil.multDown(amountString));
+    }
+
+    // BigInteget转BigDecimal
+    public static BigDecimal BigInteger2BigDecimal(BigInteger amount) {
+        return new BigDecimal(amount.toString());
     }
 
     public static void main(String[] args) {

@@ -17,7 +17,6 @@
         
         <typeAlias alias="tokenAddress" type="com.cdkj.coin.domain.TokenAddress"/>
         <typeAlias alias="tokenContract" type="com.cdkj.coin.domain.TokenContract"/>
-        <typeAlias alias="tokenTransaction" type="com.cdkj.coin.domain.TokenTransaction"/>
         
         <typeAlias alias="wtokenAddress" type="com.cdkj.coin.domain.WTokenAddress"/>
         <typeAlias alias="wtokenContract" type="com.cdkj.coin.domain.WTokenContract"/>
@@ -25,6 +24,7 @@
 
         <typeAlias alias="sysDict" type="com.cdkj.coin.domain.SYSDict"/>
         <typeAlias alias="sysConfig" type="com.cdkj.coin.domain.SYSConfig"/>
+        <typeAlias alias="tokenEvent" type="com.cdkj.coin.domain.TokenEvent"/>
     </typeAliases>
     <plugins>
         <!--<plugin interceptor=""></plugin>-->

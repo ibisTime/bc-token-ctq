@@ -30,10 +30,10 @@ import com.cdkj.coin.domain.SYSConfig;
 import com.cdkj.coin.domain.WTokenContract;
 import com.cdkj.coin.domain.WTokenTransaction;
 import com.cdkj.coin.enums.EPushStatus;
+import com.cdkj.coin.ethereum.OrangeCoinToken.TransferEventResponse;
 import com.cdkj.coin.exception.BizException;
 import com.cdkj.coin.exception.EBizErrorCode;
 import com.cdkj.coin.http.PostSimulater;
-import com.cdkj.coin.token.OrangeCoinToken.TransferEventResponse;
 import com.cdkj.coin.wanchain.WanTokenClient;
 
 /**

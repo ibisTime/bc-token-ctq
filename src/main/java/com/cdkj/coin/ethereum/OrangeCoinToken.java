@@ -1,4 +1,4 @@
-package com.cdkj.coin.token;
+package com.cdkj.coin.ethereum;
 
 import java.math.BigInteger;
 import java.util.ArrayList;

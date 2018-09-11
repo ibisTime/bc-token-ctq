@@ -22,11 +22,11 @@ import org.web3j.protocol.http.HttpService;
 import org.web3j.tx.ClientTransactionManager;
 
 import com.cdkj.coin.common.PropertiesUtil;
+import com.cdkj.coin.ethereum.OrangeCoinToken;
 import com.cdkj.coin.ethereum.Web3JClient;
+import com.cdkj.coin.ethereum.OrangeCoinToken.TransferEventResponse;
 import com.cdkj.coin.exception.BizException;
 import com.cdkj.coin.exception.EBizErrorCode;
-import com.cdkj.coin.token.OrangeCoinToken;
-import com.cdkj.coin.token.OrangeCoinToken.TransferEventResponse;
 
 /** 
  * @author: xieyj 

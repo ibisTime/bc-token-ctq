@@ -29,8 +29,8 @@
            		<ref bean="wanTransactionSyncTrigger"/>
            		<ref bean="wanPushSyncTrigger"/>
            		<!-- 以太坊token -->
-           		<ref bean="tokenTransactionSyncTrigger"/>
-           		<ref bean="tokenPushSyncTrigger"/>
+           		<!-- <ref bean="tokenTransactionSyncTrigger"/> -->
+           		<!-- <ref bean="tokenPushSyncTrigger"/> -->
            		<!-- 万维链token -->
            		<ref bean="wtokenTransactionSyncTrigger"/>
            		<ref bean="wtokenPushSyncTrigger"/>
@@ -99,37 +99,6 @@
     <bean id="btcPushTx"
           class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
         <property name="targetObject" ref="BTCTxAOImpl"/>
-        <property name="targetMethod" value="pushTx"/>
-        <!-- 是否允许任务并发执行。当值为false时，表示必须等到前一个线程处理完毕后才再启一个新的线程 -->
-        <property name="concurrent" value="false"/>
-    </bean>
-    
-    <!-- ########  ETH TOKEN  #############-->
-    <bean id="tokenTransactionSyncTrigger"
-          class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-        <property name="jobDetail" ref="doTokenTransactionSync"/>
-        <!--<property name="cronExpression" value="0 */1 * * * ?" />-->
-        <property name="cronExpression" value="*/20 * * * * ?"/>
-    </bean>
-
-    <bean id="doTokenTransactionSync"
-          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-        <property name="targetObject" ref="tokenTxAOImpl"/>
-        <property name="targetMethod" value="doTokenTransactionSync"/>
-        <!-- 是否允许任务并发执行。当值为false时，表示必须等到前一个线程处理完毕后才再启一个新的线程 -->
-        <property name="concurrent" value="false"/>
-    </bean>
-    
-    <!-- ########  ETH TOKEN交易推送  #############-->
-    <bean id="tokenPushSyncTrigger"
-          class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-        <property name="jobDetail" ref="tokenPushTx"/>
-        <property name="cronExpression" value="*/20 * * * * ?"/>
-    </bean>
-
-    <bean id="tokenPushTx"
-          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-        <property name="targetObject" ref="tokenTxAOImpl"/>
         <property name="targetMethod" value="pushTx"/>
         <!-- 是否允许任务并发执行。当值为false时，表示必须等到前一个线程处理完毕后才再启一个新的线程 -->
         <property name="concurrent" value="false"/>

@@ -5,8 +5,7 @@ package com.cdkj.coin.enums;
  */
 public enum EPushStatus {
 
-    UN_PUSH("0", "未推送"),
-    PUSHED("1", "已推送");
+    UN_PUSH("0", "未推送"), PUSHED("1", "已推送");
 
     EPushStatus(String code, String value) {
         this.code = code;
