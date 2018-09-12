@@ -117,14 +117,14 @@ public class EthTxAOImpl implements IEthTxAO {
     @SuppressWarnings("rawtypes")
     @Override
     public void doEthTransactionSync() {
-        boolean isDebug = true;
+        boolean isDebug = false;
         try {
 
             while (true) {
 
                 Long blockNumber = sysConfigBO
                     .getLongValue(SysConstants.CUR_ETH_BLOCK_NUMBER);
-                blockNumber = new Long("2968668");
+                // blockNumber = new Long("2968668");
                 if (isDebug == true) {
                     System.out.println("*********同步循环开始，扫描区块" + blockNumber
                             + "*******");
@@ -176,9 +176,10 @@ public class EthTxAOImpl implements IEthTxAO {
 
                     EthBlock.TransactionObject tx = (EthBlock.TransactionObject) txObj;
                     String toAddress = tx.getTo();
-                    if (!"0x82808fe6899bcd3ad5e4e0002697e8a662080b4f8861860340156dddcb8e3f98"
-                        .equals(tx.getHash()))
-                        continue;
+                    // if
+                    // (!"0x82808fe6899bcd3ad5e4e0002697e8a662080b4f8861860340156dddcb8e3f98"
+                    // .equals(tx.getHash()))
+                    // continue;
 
                     if (StringUtils.isBlank(toAddress)) {
                         continue;

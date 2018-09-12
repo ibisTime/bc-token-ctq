@@ -49,7 +49,7 @@ public class TokenEventDAOImpl extends AMybatisTemplate implements
 
     @Override
     public void insertEventList(List<TokenEvent> tokenEventList) {
-        super.insertBatch(NAMESPACE.concat("insert_eventsList"),
+        super.insertBatch(NAMESPACE.concat("insert_eventList"),
             (List) tokenEventList);
     }
 

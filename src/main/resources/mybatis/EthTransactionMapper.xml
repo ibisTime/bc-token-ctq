@@ -21,7 +21,7 @@
 		<result column="gas_limit" property="gasLimit" />
 		<result column="gas_used" property="gasUsed" />
 		
-		<result column="gas_free" property="gasFree" />
+		<result column="gas_fee" property="gasFee" />
 		<result column="input" property="input" />
 		<result column="public_key" property="publicKey" />
 		<result column="raw" property="raw" />

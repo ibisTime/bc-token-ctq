@@ -74,7 +74,7 @@
 		)
 	</insert>
 	
-	<insert id="insert_eventsList" parameterType="java.util.List">
+	<insert id="insert_eventList" parameterType="java.util.List">
 	
 		INSERT INTO `tcoin_token_event`(
 			`hash`
