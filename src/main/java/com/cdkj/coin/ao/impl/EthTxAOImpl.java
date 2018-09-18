@@ -126,16 +126,18 @@ public class EthTxAOImpl implements IEthTxAO {
                     .getLongValue(SysConstants.CUR_ETH_BLOCK_NUMBER);
                 // blockNumber = new Long("2968668");
                 if (isDebug == true) {
-                    System.out.println("*********同步循环开始，扫描区块" + blockNumber
-                            + "*******");
+                    System.out.println(
+                        "*********同步循环开始，扫描区块" + blockNumber + "*******");
                 }
 
                 // 获取当前区块
-                EthBlock ethBlockResp = web3j.ethGetBlockByNumber(
-                    new DefaultBlockParameterNumber(blockNumber), true).send();
+                EthBlock ethBlockResp = web3j
+                    .ethGetBlockByNumber(
+                        new DefaultBlockParameterNumber(blockNumber), true)
+                    .send();
                 if (ethBlockResp.getError() != null) {
-                    logger.error("扫描以太坊区块同步流水发送异常，原因：获取区块-"
-                            + ethBlockResp.getError());
+                    logger.error(
+                        "扫描以太坊区块同步流水发送异常，原因：获取区块-" + ethBlockResp.getError());
                     throw new BizException("xn00000",
                         "扫描以太坊区块同步流水发送异常，原因：获取区块-" + ethBlockResp.getError());
                 }
@@ -147,17 +149,16 @@ public class EthTxAOImpl implements IEthTxAO {
                     .getBlockNumber();
                 if (isDebug == true) {
 
-                    System.out.println("*********最大区块号" + maxBlockNumber
-                            + "*******");
+                    System.out
+                        .println("*********最大区块号" + maxBlockNumber + "*******");
                 }
 
                 // 判断是否有足够的区块确认 暂定12
                 BigInteger blockConfirm = sysConfigBO
                     .getBigIntegerValue(SysConstants.BLOCK_CONFIRM_ETH);
-                if (currentBlock == null
-                        || maxBlockNumber.subtract(
-                            BigInteger.valueOf(blockNumber)).compareTo(
-                            blockConfirm) < 0) {
+                if (currentBlock == null || maxBlockNumber
+                    .subtract(BigInteger.valueOf(blockNumber))
+                    .compareTo(blockConfirm) < 0) {
 
                     if (isDebug == true) {
 
@@ -171,8 +172,7 @@ public class EthTxAOImpl implements IEthTxAO {
                 List<EthTransaction> ethTransactionList = new ArrayList<>();
                 List<TokenEvent> tokenEventList = new ArrayList<>();
 
-                txLoop: for (TransactionResult txObj : currentBlock
-                    .getTransactions()) {
+                for (TransactionResult txObj : currentBlock.getTransactions()) {
 
                     EthBlock.TransactionObject tx = (EthBlock.TransactionObject) txObj;
                     String toAddress = tx.getTo();
@@ -207,13 +207,14 @@ public class EthTxAOImpl implements IEthTxAO {
                         .getClient().ethGetTransactionReceipt(tx.getHash())
                         .send().getResult();
                     // 判断交易是否成功
-                    if (!ETransactionRecetptStatus.SUCCESS.getCode().equals(
-                        transactionReceipt.getStatus())) {
+                    if (!ETransactionRecetptStatus.SUCCESS.getCode()
+                        .equals(transactionReceipt.getStatus())) {
                         continue;
                     }
 
                     // 如果合约存在，向下查询transfer事件
                     if (isTokenContractExist) {
+                        boolean isTokenRelate = false;
                         TokenContract tokenContract = tokenContractBO
                             .getTokenContract(toAddress);
                         // 1、获取该交易向下的event
@@ -225,12 +226,18 @@ public class EthTxAOImpl implements IEthTxAO {
                                 tokenContract.getSymbol());
                             // token地址不存在跳出
                             if (toTokenCount == 0) {
-                                continue txLoop;
+                                continue;
                             }
+                            isTokenRelate = true;
                             TokenEvent tokenEvent = tokenEventBO
                                 .convertTokenEvent(transferEventResponse,
                                     tx.getHash(), tokenContract.getSymbol());
                             tokenEventList.add(tokenEvent);
+
+                        }
+                        // token转移里面没有我们关心的地址
+                        if (!isTokenRelate) {
+                            continue;
                         }
                     }
 
@@ -310,9 +317,8 @@ public class EthTxAOImpl implements IEthTxAO {
         if (hashList == null || hashList.size() <= 0) {
             throw new BizException(
                 EBizErrorCode.PUSH_STATUS_UPDATE_FAILURE.getErrorCode(),
-                "请传入正确的json数组"
-                        + EBizErrorCode.PUSH_STATUS_UPDATE_FAILURE
-                            .getErrorCode());
+                "请传入正确的json数组" + EBizErrorCode.PUSH_STATUS_UPDATE_FAILURE
+                    .getErrorCode());
         }
 
         this.ethTransactionBO.changeTxStatusToPushed(hashList);
