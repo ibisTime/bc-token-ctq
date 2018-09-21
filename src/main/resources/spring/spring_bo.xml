@@ -67,5 +67,9 @@
 	<bean id="wtokenTransactionBO" class="com.cdkj.coin.bo.impl.WTokenTransactionBOImpl">
 		<property name="paginableDAO" ref="wtokenTransactionDAOImpl"/>
 	</bean>
-
+	
+	<bean id="usdtTransactionBO" class="com.cdkj.coin.bo.impl.UsdtTransactionBOImpl">
+		<property name="paginableDAO" ref="usdtTransactionDAOImpl"/>
+	</bean>
+	
 </beans>

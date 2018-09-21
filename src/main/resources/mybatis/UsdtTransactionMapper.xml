@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cdkj.coin.dao.IUsdtTransactionDAO">
+
+    <resultMap id="usdtTransaction_DB_Result" type="usdtTransaction">
+        <result column="id" property="id"/>
+        <result column="hash" property="hash"/>
+        <result column="from" property="from"/>
+        <result column="amount" property="amount"/>
+        <result column="to" property="to"/>
+        
+        <result column="fee" property="fee"/>        
+        <result column="status" property="status"/>
+        <result column="version" property="version"/>
+        <result column="type_int" property="typeInt"/>
+		<result column="type" property="type"/>
+		
+        <result column="property_id" property="propertyId"/>
+        <result column="blockHash" property="blockHash"/>
+		<result column="block_height" property="block_height"/>
+		<result column="confirmations" property="confirmations"/>
+        <result column="block_create_datetime" property="blockCreateDatetime"/>
+    </resultMap>
+
+    <sql id="where_condition">
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="hash != null and hash != '' ">
+                AND t.hash = #{hash}
+            </if>
+        </trim>
+    </sql>
+
+    <select id="select_usdtTransaction" parameterType="usdtTransaction" resultMap="usdtTransaction_DB_Result">
+        SELECT
+        t.id
+        ,t.hash
+        ,t.from
+        ,t.to
+        ,t.amonut
+        
+        ,t.fee
+        ,t.status
+        ,t.version
+        ,t.type_int
+        ,t.type
+        
+        ,t.property_id
+        ,t.block_hash
+        ,block_height
+        ,confirmations
+        ,block_create_datetime
+        FROM
+        tcoin_usdt_transaction t
+        <include refid="where_condition"/>
+        <trim prefix="ORDER BY ">
+            <if test="order != null and order != '' ">
+                t.${order}
+            </if>
+        </trim>
+    </select>
+
+    <select id="select_usdtTransaction_count" parameterType="usdtTransaction"
+            resultType="java.lang.Long">
+        SELECT count(1) FROM tcoin_usdt_transaction t
+        <include refid="where_condition"/>
+    </select>
+
+    <insert id="insert_usdtTransaction" parameterType="usdtTransaction">
+        INSERT INTO
+		tcoin_usdt_transaction
+		(
+		hash
+		,`from`
+		,`to`
+		,amount
+		,fee
+		
+		,status
+		,version
+		,type_int
+		,type
+		,property_id
+		
+		,block_hash
+		,block_height
+		,confirmations
+		,block_create_datetime
+        )
+        VALUES
+        (
+        #{hash}
+        ,#{from}
+        ,#{to}
+        ,#{amount}
+        ,#{fee}
+        
+		,#{status}        
+        ,#{version}
+        ,#{typeInt}
+        ,#{type}
+        ,#{propertyId}
+        
+        ,#{blockHash}
+        ,#{blockHeight}
+        ,#{confirmations}
+        ,#{blockCreateDatetime}
+        )
+    </insert>
+
+	<insert id="insert_usdtTransaction_list" parameterType="List">
+
+		INSERT INTO `tcoin_usdt_transaction`
+		(
+		hash
+		,`from`
+		,`to`
+		,amount
+		,fee
+		
+		,status
+		,version
+		,type_int
+		,type
+		,property_id
+		
+		,block_hash
+		,block_height
+		,confirmations
+		,block_create_datetime
+		)
+		VALUES
+
+		  <foreach collection="list" item="tx" separator=",">
+			  (
+			  	#{tx.hash}
+		        ,#{tx.from}
+		        ,#{tx.to}
+		        ,#{tx.amount}
+		        ,#{tx.fee}
+		        
+				,#{tx.status}        
+		        ,#{tx.version}
+		        ,#{tx.typeInt}
+		        ,#{tx.type}
+		        ,#{tx.propertyId}
+		        
+		        ,#{tx.blockHash}
+		        ,#{tx.blockHeight}
+		        ,#{tx.confirmations}
+		        ,#{tx.blockCreatetime}
+			  )
+		  </foreach>
+
+	</insert>
+
+</mapper>

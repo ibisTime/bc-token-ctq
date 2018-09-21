@@ -21,4 +21,9 @@ public class SysConstants {
     public static final String CUR_WTOKEN_BLOCK_NUMBER = "curWTokenBlockNumber"; // WANToken当前扫描至哪个区块
 
     public static final String BLOCK_CONFIRM_WTOKEN = "blockConfirmWToken"; // WANToken需要多少个区块确认
+
+    public static final String CUR_USDT_BLOCK_NUMBER = "curUsdtBlockNumber"; // USDT当前扫描至哪个区块
+
+    public static final String BLOCK_CONFIRM_USDT = "blockConfirmUsdt"; // USDT需要多少个区块确认
+
 }

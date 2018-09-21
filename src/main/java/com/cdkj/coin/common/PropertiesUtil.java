@@ -58,5 +58,11 @@ public class PropertiesUtil {
         public static String WAN_TOKEN_PUSH_ADDRESS_URL = props
             .getProperty("WAN_TOKEN_PUSH_ADDRESS_URL");
 
+        public static String OMNI_URL = props.getProperty("OMNI_URL");
+
+        public static String OMNI_USERNAME = props.getProperty("OMNI_USERNAME");
+
+        public static String OMNI_PASSWORD = props.getProperty("OMNI_PASSWORD");
+
     }
 }

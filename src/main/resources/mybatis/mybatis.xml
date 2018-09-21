@@ -25,6 +25,7 @@
 
         <typeAlias alias="sysDict" type="com.cdkj.coin.domain.SYSDict"/>
         <typeAlias alias="sysConfig" type="com.cdkj.coin.domain.SYSConfig"/>
+		<typeAlias alias="usdtTransaction" type="com.cdkj.coin.domain.UsdtTransaction"/>
     </typeAliases>
     <plugins>
         <!--<plugin interceptor=""></plugin>-->
