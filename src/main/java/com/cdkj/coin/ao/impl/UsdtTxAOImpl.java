@@ -62,7 +62,7 @@ public class UsdtTxAOImpl implements IUsdtTxAO {
                 OmniTransaction omniTransaction = UsdtClent
                     .getOmniTransInfoByTxid(hash);
                 // 判断是否是usdt交易
-                //PropertyId可能为Null
+                // PropertyId可能为Null
                 if (omniTransaction.getPropertyId() == null
                         || propertyID
                             .compareTo(omniTransaction.getPropertyId()) != 0) {
@@ -72,7 +72,12 @@ public class UsdtTxAOImpl implements IUsdtTxAO {
                 if (!omniTransaction.isValid()) {
                     continue;
                 }
-                // 只落地我们关注的地址
+
+                // 交易未确认
+                if (omniTransaction.getConfirmations() <= 0) {
+                    continue;
+                }
+
                 long toAddressCount = btcAddressBO
                     .queryAddressCount(omniTransaction.getReferenceAddress());
                 // 不是关注的则跳过
