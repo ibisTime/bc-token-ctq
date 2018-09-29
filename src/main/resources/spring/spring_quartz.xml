@@ -26,14 +26,14 @@
                 <ref bean="btcPushSyncTrigger"/>
            		<ref bean="btcTransactionSyncTrigger"/>
            		<!-- 万维链 -->
-           		<ref bean="wanTransactionSyncTrigger"/>
-           		<ref bean="wanPushSyncTrigger"/>
+           		<!-- <ref bean="wanTransactionSyncTrigger"/>
+           		<ref bean="wanPushSyncTrigger"/> -->
            		<!-- 以太坊token -->
-           		<!-- <ref bean="tokenTransactionSyncTrigger"/> -->
-           		<!-- <ref bean="tokenPushSyncTrigger"/> -->
+           		<!-- <ref bean="tokenTransactionSyncTrigger"/> 
+           		<ref bean="tokenPushSyncTrigger"/> -->
            		<!-- 万维链token -->
-           		<ref bean="wtokenTransactionSyncTrigger"/>
-           		<ref bean="wtokenPushSyncTrigger"/>
+           		<!-- <ref bean="wtokenTransactionSyncTrigger"/>
+           		<ref bean="wtokenPushSyncTrigger"/> -->
            		
             </list>
         </property>
