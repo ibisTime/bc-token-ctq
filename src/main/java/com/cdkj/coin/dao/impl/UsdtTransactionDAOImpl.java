@@ -54,4 +54,8 @@ public class UsdtTransactionDAOImpl extends AMybatisTemplate implements
             (List) usdtTransactionList);
     }
 
+    @Override
+    public void updateStatus(UsdtTransaction data) {
+        super.update(NAMESPACE.concat("update_usdtTransaction_status"), data);
+    }
 }

@@ -11,3 +11,5 @@ INSERT INTO `tsys_config`(type, ckey, cvalue, updater, update_datetime, remark) 
 INSERT INTO `tsys_config`(type, ckey, cvalue, updater, update_datetime, remark) VALUES ('0','blockConfirmToken','0','admin',now(),'ETH Token需要多少个区块确认');
 INSERT INTO `tsys_config`(type, ckey, cvalue, updater, update_datetime, remark) VALUES ('0','blockConfirmWToken','0','admin',now(),'WAN Token需要多少个区块确认');
 
+INSERT INTO `tsys_config` (`type`, `ckey`, `cvalue`, `updater`, `update_datetime`, `remark`) VALUES ('0', 'curUsdtBlockNumber', '0', 'admin', now(), 'USDT下次从哪个区块开始扫描');
+INSERT INTO `tsys_config` (`type`, `ckey`, `cvalue`, `updater`, `update_datetime`, `remark`) VALUES ('0', 'blockConfirmUsdt', '0', 'admin', now(), 'USDT需要多少个区块确认');

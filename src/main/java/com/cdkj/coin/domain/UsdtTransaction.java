@@ -1,7 +1,6 @@
 package com.cdkj.coin.domain;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.Date;
 
 import com.cdkj.coin.dao.base.ABaseDO;
@@ -13,7 +12,7 @@ public class UsdtTransaction extends ABaseDO {
      */
     private static final long serialVersionUID = 1L;
 
-    private BigInteger id;
+    private Long id;
 
     // 交易hash
     private String hash;
@@ -43,7 +42,7 @@ public class UsdtTransaction extends ABaseDO {
     private String type;
 
     // 属性id
-    private BigInteger propertyId;
+    private Long propertyId;
 
     // 区块hash
     private String blockHash;
@@ -58,14 +57,14 @@ public class UsdtTransaction extends ABaseDO {
     private int confirmations;
 
     // 区块生成时间
-    private Date blockCreatetime;
+    private Date blockCreateDatetime;
 
-    public Date getBlockCreatetime() {
-        return blockCreatetime;
+    public Date getBlockCreateDatetime() {
+        return blockCreateDatetime;
     }
 
-    public void setBlockCreatetime(Date blockCreatetime) {
-        this.blockCreatetime = blockCreatetime;
+    public void setBlockCreateDatetime(Date blockCreateDatetime) {
+        this.blockCreateDatetime = blockCreateDatetime;
     }
 
     public String getStatus() {
@@ -76,11 +75,11 @@ public class UsdtTransaction extends ABaseDO {
         this.status = status;
     }
 
-    public BigInteger getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(BigInteger id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -140,11 +139,11 @@ public class UsdtTransaction extends ABaseDO {
         this.type = type;
     }
 
-    public BigInteger getPropertyId() {
+    public Long getPropertyId() {
         return propertyId;
     }
 
-    public void setPropertyId(BigInteger propertyId) {
+    public void setPropertyId(Long propertyId) {
         this.propertyId = propertyId;
     }
 

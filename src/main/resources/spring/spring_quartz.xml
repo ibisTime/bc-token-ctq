@@ -23,8 +23,8 @@
                 <!-- <ref bean="ethTransactionSyncTrigger"/>
                 <ref bean="ethPushSyncTrigger"/> -->
                 <!-- 比特币 -->
-               <!--  <ref bean="btcPushSyncTrigger"/>
-           		<ref bean="btcTransactionSyncTrigger"/> -->
+                <ref bean="btcPushSyncTrigger"/>
+           		<ref bean="btcTransactionSyncTrigger"/>
            		<!-- 万维链 -->
            		<!-- <ref bean="wanTransactionSyncTrigger"/>
            		<ref bean="wanPushSyncTrigger"/> -->
@@ -36,6 +36,7 @@
            		<ref bean="wtokenPushSyncTrigger"/> -->
            		<!-- usdt交易扫描 -->
            		<ref bean="usdtTransactionSyncTrigger" />
+           		<ref bean="usdtPushSyncTrigger"/>
             </list>
         </property>
         <property name="autoStartup" value="true"/>
@@ -212,4 +213,17 @@
         <property name="concurrent" value="false"/>
     </bean>
 
+	<bean id="usdtPushSyncTrigger"
+          class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="confirmPushTx"/>
+        <property name="cronExpression" value="*/20 * * * * ?"/>
+    </bean>
+
+    <bean id="confirmPushTx"
+          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="usdtTxAOImpl"/>
+        <property name="targetMethod" value="pushTx"/>
+        <!-- 是否允许任务并发执行。当值为false时，表示必须等到前一个线程处理完毕后才再启一个新的线程 -->
+        <property name="concurrent" value="false"/>
+    </bean>
 </beans>

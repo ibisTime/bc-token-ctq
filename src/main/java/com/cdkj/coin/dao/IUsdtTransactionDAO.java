@@ -9,4 +9,6 @@ public interface IUsdtTransactionDAO extends IBaseDAO<UsdtTransaction> {
     String NAMESPACE = IUsdtTransactionDAO.class.getName().concat(".");
 
     public void insertList(List<UsdtTransaction> usdtTransactionList);
+
+    public void updateStatus(UsdtTransaction data);
 }

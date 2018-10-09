@@ -1,5 +1,5 @@
-DROP TABLE IF EXISTS `tcoin_usdt_transaction`;
-CREATE TABLE `tcoin_usdt_transaction` (
+DROP TABLE IF EXISTS `tctq_usdt_transaction`;
+CREATE TABLE `tctq_usdt_transaction` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `hash` varchar(255) DEFAULT NULL COMMENT '交易hash',
   `from` varchar(50) DEFAULT NULL COMMENT 'from地址',
@@ -16,7 +16,7 @@ CREATE TABLE `tcoin_usdt_transaction` (
   `confirmations` int(10) DEFAULT NULL,
   `block_create_datetime` datetime DEFAULT NULL COMMENT '区块生成时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `ctq`.`tsys_config` (`type`, `ckey`, `cvalue`, `updater`, `update_datetime`, `remark`) VALUES ('0', 'curUsdtBlockNumber', '279175', 'admin', now(), 'USDT下次从哪个区块开始扫描');
-INSERT INTO `ctq`.`tsys_config` (`type`, `ckey`, `cvalue`, `updater`, `update_datetime`, `remark`) VALUES ('0', 'blockConfirmUsdt', '0', 'admin', now(), 'USDT需要多少个区块确认');
+INSERT INTO `tsys_config` (`type`, `ckey`, `cvalue`, `updater`, `update_datetime`, `remark`) VALUES ('0', 'curUsdtBlockNumber', '279175', 'admin', now(), 'USDT下次从哪个区块开始扫描');
+INSERT INTO `tsys_config` (`type`, `ckey`, `cvalue`, `updater`, `update_datetime`, `remark`) VALUES ('0', 'blockConfirmUsdt', '0', 'admin', now(), 'USDT需要多少个区块确认');

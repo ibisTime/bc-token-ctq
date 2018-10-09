@@ -76,6 +76,10 @@ public class AmountUtil {
         return Long.valueOf(CalculationUtil.multDown(amountString));
     }
 
+    public static BigDecimal toOriginal(BigDecimal orgNum, Integer unit) {
+        return orgNum.multiply(BigDecimal.TEN.pow(unit));
+    }
+
     public static void main(String[] args) {
         System.out.println(mulRmbJinFen(1234L, 1.0));
         System.out.println(mulXnbJin1(1234L, 1.0));

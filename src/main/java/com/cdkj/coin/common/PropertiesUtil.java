@@ -38,6 +38,10 @@ public class PropertiesUtil {
         public static String BTC_PUSH_ADDRESS_URL = props
             .getProperty("BTC_PUSH_ADDRESS_URL");
 
+        /* USDT */
+        public static String USDT_PUSH_ADDRESS_URL = props
+            .getProperty("USDT_PUSH_ADDRESS_URL");
+
         public static String BTC_URL = props.getProperty("BTC_URL");
 
         /* 万维币 */
@@ -63,6 +67,8 @@ public class PropertiesUtil {
         public static String OMNI_USERNAME = props.getProperty("OMNI_USERNAME");
 
         public static String OMNI_PASSWORD = props.getProperty("OMNI_PASSWORD");
+
+        public static String USDT_ENV = props.getProperty("USDT_ENV");
 
     }
 }

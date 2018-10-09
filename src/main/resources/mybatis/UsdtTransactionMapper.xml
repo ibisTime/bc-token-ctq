@@ -18,16 +18,22 @@
 		<result column="type" property="type"/>
 		
         <result column="property_id" property="propertyId"/>
-        <result column="blockHash" property="blockHash"/>
-		<result column="block_height" property="block_height"/>
+        <result column="block_Hash" property="blockHash"/>
+		<result column="block_height" property="blockHeight"/>
 		<result column="confirmations" property="confirmations"/>
         <result column="block_create_datetime" property="blockCreateDatetime"/>
     </resultMap>
 
     <sql id="where_condition">
         <trim prefix="WHERE" prefixOverrides="AND | OR">
+        	<if test="id != null and id != '' ">
+				AND t.id = #{id}
+			</if>
             <if test="hash != null and hash != '' ">
                 AND t.hash = #{hash}
+            </if>
+            <if test="status != null and status != '' ">
+                AND t.status = #{status}
             </if>
         </trim>
     </sql>
@@ -38,7 +44,7 @@
         ,t.hash
         ,t.from
         ,t.to
-        ,t.amonut
+        ,t.amount
         
         ,t.fee
         ,t.status
@@ -52,7 +58,7 @@
         ,confirmations
         ,block_create_datetime
         FROM
-        tcoin_usdt_transaction t
+        tctq_usdt_transaction t
         <include refid="where_condition"/>
         <trim prefix="ORDER BY ">
             <if test="order != null and order != '' ">
@@ -63,13 +69,13 @@
 
     <select id="select_usdtTransaction_count" parameterType="usdtTransaction"
             resultType="java.lang.Long">
-        SELECT count(1) FROM tcoin_usdt_transaction t
+        SELECT count(1) FROM tctq_usdt_transaction t
         <include refid="where_condition"/>
     </select>
 
     <insert id="insert_usdtTransaction" parameterType="usdtTransaction">
         INSERT INTO
-		tcoin_usdt_transaction
+		tctq_usdt_transaction
 		(
 		hash
 		,`from`
@@ -111,7 +117,7 @@
 
 	<insert id="insert_usdtTransaction_list" parameterType="List">
 
-		INSERT INTO `tcoin_usdt_transaction`
+		INSERT INTO `tctq_usdt_transaction`
 		(
 		hash
 		,`from`
@@ -149,10 +155,16 @@
 		        ,#{tx.blockHash}
 		        ,#{tx.blockHeight}
 		        ,#{tx.confirmations}
-		        ,#{tx.blockCreatetime}
+		        ,#{tx.blockCreateDatetime}
 			  )
 		  </foreach>
 
 	</insert>
+
+	<update id="update_usdtTransaction_status" parameterType="usdtTransaction">
+		UPDATE `tctq_usdt_transaction` SET
+		`status` = #{status}
+		WHERE `id` = #{id}
+	</update>
 
 </mapper>

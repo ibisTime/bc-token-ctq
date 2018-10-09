@@ -209,7 +209,7 @@ CREATE TABLE `tctq_wtoken_transaction` (
   KEY `status_index` (`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `tcoin_usdt_transaction`;
+DROP TABLE IF EXISTS `tctq_usdt_transaction`;
 CREATE TABLE `tcoin_usdt_transaction` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `hash` varchar(255) DEFAULT NULL COMMENT '交易hash',
