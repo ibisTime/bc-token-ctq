@@ -1,9 +1,9 @@
 
 #!/usr/bin/expect
 
-set tomcat_path "/mnt/www/theia_dev/tomcat_bc_ctq"
+set tomcat_path "/mnt/www/hmoney/tomcat_bc_ctq"
 set war_name "bc-token-ctq"
-set host_ip "47.254.69.142"
+set host_ip "47.96.161.183"
 set host_pwd "cdkjqwertyQ01"
 
 ######## 1.传输文件至服务器根目录 ########
