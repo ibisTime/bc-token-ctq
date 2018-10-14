@@ -26,7 +26,7 @@ import com.cdkj.coin.exception.BizException;
 import com.cdkj.coin.exception.EBizErrorCode;
 import com.cdkj.coin.http.PostSimulater;
 import com.cdkj.coin.omni.OmniTransaction;
-import com.cdkj.coin.omni.UsdtClent;
+import com.cdkj.coin.omni.UsdtClient;
 
 @Service
 public class UsdtTxAOImpl implements IUsdtTxAO {
@@ -56,22 +56,33 @@ public class UsdtTxAOImpl implements IUsdtTxAO {
             Long blockNumber = sysConfigBO
                 .getLongValue(SysConstants.CUR_USDT_BLOCK_NUMBER);
 
-            // 如果区块高度为达到带扫描的区块
-            Long lasterBlockNumber = blockDataService.getBlockCount();
+            // 如果区块高度未达到待扫描的区块
+            Long lasterBlockNumber = UsdtClient.getBlockHeight();
             if (lasterBlockNumber < blockNumber) {
-                return;
+                break;
+            }
+
+            // 判断是否有足够的区块确认
+            BigInteger blockConfirm = sysConfigBO
+                .getBigIntegerValue(SysConstants.BLOCK_CONFIRM_USDT);
+            if (blockNumber == null
+                    || (lasterBlockNumber - blockNumber) < blockConfirm
+                        .longValue()) {
+                // System.out.println("*********同步循环结束,区块号"
+                // + (blockNumber - 1) + "为最后一个可信任区块*******");
+                break;
             }
 
             // 获取当前区块所有hash的列表
-            List<String> hashList = UsdtClent
+            List<String> hashList = UsdtClient
                 .getOmniHashListByBlock(blockNumber.intValue());
             List<UsdtTransaction> usdtTransactionList = new ArrayList<UsdtTransaction>();
             // 遍历查询交易记录
             for (String hash : hashList) {
-                OmniTransaction omniTransaction = UsdtClent
+                OmniTransaction omniTransaction = UsdtClient
                     .getOmniTransInfoByTxid(hash);
                 // 判断是否是usdt交易
-                // PropertyId可能为Null
+                // PropertyId可能为Null,0代表BTC
                 if (omniTransaction.getPropertyId() == null
                         || propertyID
                             .compareTo(omniTransaction.getPropertyId()) != 0) {
@@ -82,17 +93,10 @@ public class UsdtTxAOImpl implements IUsdtTxAO {
                     continue;
                 }
 
-                // 交易未确认
-                if (omniTransaction.getConfirmations() <= 0) {
-                    continue;
-                }
-
-                long fromAddressCount = btcAddressBO
-                    .queryAddressCount(omniTransaction.getSendingAddress());
                 long toAddressCount = btcAddressBO
                     .queryAddressCount(omniTransaction.getReferenceAddress());
                 // 不是关注的则跳过
-                if (toAddressCount == 0 && fromAddressCount == 0) {
+                if (toAddressCount == 0) {
                     continue;
                 }
                 // 查询数据库是否落地,已经落地就跳过

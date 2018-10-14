@@ -53,7 +53,7 @@ public class UsdtTransaction extends ABaseDO {
     // 区块高度
     private int blockHeight;
 
-    //
+    // 区块确认数量
     private int confirmations;
 
     // 区块生成时间

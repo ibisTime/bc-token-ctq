@@ -10,10 +10,10 @@ public class BTCOriginalTx {
 
     private Boolean isCoinBase;
 
-    /*输入列表*/
+    /* 输入列表 */
     private List<BTCVinUTXO> vin;
 
-    /*输出列表*/
+    /* 输出列表 */
     private List<BTCVoutUTXO> vout;
 
     public Boolean getCoinBase() {

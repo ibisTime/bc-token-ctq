@@ -1,5 +1,6 @@
 package com.cdkj.coin.ao.impl;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -15,7 +16,6 @@ import com.cdkj.coin.ao.IBTCTxAO;
 import com.cdkj.coin.bitcoin.BTCOriginalTx;
 import com.cdkj.coin.bitcoin.BTCScriptPubKey;
 import com.cdkj.coin.bitcoin.BTCTXs;
-import com.cdkj.coin.bitcoin.BTCVinUTXO;
 import com.cdkj.coin.bitcoin.BTCVoutUTXO;
 import com.cdkj.coin.bitcoin.BtcUtxo;
 import com.cdkj.coin.bo.IBTCAddressBO;
@@ -60,9 +60,18 @@ public class BTCTxAOImpl implements IBTCTxAO {
             return;
         }
 
+        // 判断是否有足够的区块确认 暂定12
+        BigInteger blockConfirm = sysConfigBO
+            .getBigIntegerValue(SysConstants.BLOCK_CONFIRM_BTC);
+        if (blockNumber == null
+                || (lasterBlockNumber - blockNumber) < blockConfirm.longValue()) {
+            // System.out.println("*********同步循环结束,区块号" + (blockNumber - 1)
+            // + "为最后一个可信任区块*******");
+            return;
+        }
+
         // 该区块有测试数据
         // Long blockNumber = Long.valueOf(1284522);
-        List<BtcUtxo> ourInUTXOList = new ArrayList<>();
         List<BtcUtxo> ourOutUTXOList = new ArrayList<>();
 
         // 查询的分页
@@ -73,8 +82,8 @@ public class BTCTxAOImpl implements IBTCTxAO {
 
             BTCTXs btctXs = null;
             try {
-                btctXs = this.blockDataService.getBlockTxs(blockNumber,
-                    pageNum);
+                btctXs = this.blockDataService
+                    .getBlockTxs(blockNumber, pageNum);
             } catch (Exception e) {
                 logger.info("******扫描区块：" + blockNumber + " 第" + pageNum + "页："
                         + "发送异常，原因：" + e.getMessage() + "，重新扫描******");
@@ -99,40 +108,6 @@ public class BTCTxAOImpl implements IBTCTxAO {
                 if (originalTx.getCoinBase() != null
                         && originalTx.getCoinBase()) {
                     continue;
-                }
-
-                // 遍历输入
-                for (BTCVinUTXO vinUTXO : originalTx.getVin()) {
-
-                    String outAddress = vinUTXO.getAddr();
-                    if (outAddress == null || outAddress.length() == 0) {
-                        continue;
-                    }
-                    // 如果此条INPUT已经已经处理过，无需重复处理
-                    if (btcUtxoBO.isBtcUtxoExist(vinUTXO.getTxid(),
-                        vinUTXO.getVout())) {
-                        BtcUtxo btcUtxo = btcUtxoBO
-                            .getBtcUtxo(vinUTXO.getTxid(), vinUTXO.getVout());
-                        if (EBTCUtxoStatus.OUT_UN_PUSH.getCode()
-                            .equals(btcUtxo.getStatus())
-                                || EBTCUtxoStatus.IN_PUSHED.getCode()
-                                    .equals(btcUtxo.getStatus())) {
-                            continue;
-                        }
-                    }
-
-                    long count = this.btcAddressBO.addressCount(outAddress);
-                    if (count <= 0) {
-                        continue;
-                    }
-
-                    // 添加需要更新
-                    BtcUtxo btcutxo = new BtcUtxo();
-                    btcutxo.setTxid(vinUTXO.getTxid());
-                    btcutxo.setVout(vinUTXO.getVout());
-                    btcutxo.setStatus(EBTCUtxoStatus.IN_UN_PUSH.getCode());
-                    ourInUTXOList.add(btcutxo);
-
                 }
 
                 // 遍历输出
@@ -178,22 +153,14 @@ public class BTCTxAOImpl implements IBTCTxAO {
 
         }
 
-        this.saveToDB(ourInUTXOList, ourOutUTXOList, blockNumber);
+        this.saveToDB(ourOutUTXOList, blockNumber);
 
         // logger.info("******BTC扫描区块结束******");
 
     }
 
     @Transactional(rollbackFor = RuntimeException.class)
-    public void saveToDB(List<BtcUtxo> ourInUTXOList,
-            List<BtcUtxo> ourOutUTXOList, Long blockNumber) {
-
-        // 变更 输入状态,为已归集
-        for (BtcUtxo updateUTXO : ourInUTXOList) {
-            // 变更状态为，已使用未推送
-            btcUtxoBO.refreshStatus(updateUTXO, EBTCUtxoStatus.IN_UN_PUSH);
-
-        }
+    public void saveToDB(List<BtcUtxo> ourOutUTXOList, Long blockNumber) {
 
         // 存储 utxo
         for (BtcUtxo insertUTXO : ourOutUTXOList) {
@@ -240,8 +207,9 @@ public class BTCTxAOImpl implements IBTCTxAO {
         if (utxoList == null || utxoList.size() <= 0) {
             throw new BizException(
                 EBizErrorCode.PUSH_STATUS_UPDATE_FAILURE.getErrorCode(),
-                "请传入正确的json数组" + EBizErrorCode.PUSH_STATUS_UPDATE_FAILURE
-                    .getErrorCode());
+                "请传入正确的json数组"
+                        + EBizErrorCode.PUSH_STATUS_UPDATE_FAILURE
+                            .getErrorCode());
         }
 
         for (BtcUtxo btcutxo : utxoList) {
@@ -250,22 +218,14 @@ public class BTCTxAOImpl implements IBTCTxAO {
                 btcutxo.getVout());
 
             EBTCUtxoStatus nextStatus = null;
-            if (ourBtcUtxo.getStatus()
-                .equals(EBTCUtxoStatus.OUT_UN_PUSH.getCode())) {
 
-                nextStatus = EBTCUtxoStatus.OUT_PUSHED;
+            nextStatus = EBTCUtxoStatus.OUT_PUSHED;
 
-            } else if (ourBtcUtxo.getStatus()
-                .equals(EBTCUtxoStatus.IN_UN_PUSH.getCode())) {
-
-                nextStatus = EBTCUtxoStatus.IN_PUSHED;
-
-            }
             if (nextStatus == null) {
 
-                logger
-                    .error("utxo 状态异常，无法对应，原因：" + "txid:" + ourBtcUtxo.getTxid()
-                            + "  " + "vout:" + ourBtcUtxo.getVout());
+                logger.error("utxo 状态异常，无法对应，原因：" + "txid:"
+                        + ourBtcUtxo.getTxid() + "  " + "vout:"
+                        + ourBtcUtxo.getVout());
 
             } else {
 

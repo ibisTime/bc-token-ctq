@@ -74,7 +74,6 @@ public class BtcUtxoBOImpl extends PaginableBOImpl<BtcUtxo> implements
     @Override
     public List<BtcUtxo> selectUnPush() {
         List<String> statusList = new ArrayList<String>();
-        statusList.add(EBTCUtxoStatus.IN_UN_PUSH.getCode());
         statusList.add(EBTCUtxoStatus.OUT_UN_PUSH.getCode());
         BtcUtxo condition = new BtcUtxo();
         condition.setStatusList(statusList);

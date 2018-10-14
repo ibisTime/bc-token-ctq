@@ -17,7 +17,7 @@ public class OmniTransaction {
     // 发送地址
     private String sendingAddress;
 
-    //
+    // 接收地址
     private String referenceAddress;
 
     // 交易地址是否牵涉到钱包中的地址
@@ -35,7 +35,7 @@ public class OmniTransaction {
     // 属性id
     private BigInteger propertyId;
 
-    //
+    // 是否是最小单位
     private boolean divisible;
 
     // 数量
@@ -56,7 +56,7 @@ public class OmniTransaction {
     // 区块高度
     private int block;
 
-    //
+    // 确认区块数量
     private int confirmations;
 
     public BigDecimal getFee() {

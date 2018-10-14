@@ -2,7 +2,6 @@ package com.cdkj.coin.omni;
 
 import java.math.BigDecimal;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +15,7 @@ import com.cdkj.coin.common.StringUtil;
 import com.cdkj.coin.exception.BizException;
 import com.googlecode.jsonrpc4j.JsonRpcHttpClient;
 
-public class UsdtClent {
+public class UsdtClient {
 
     private static String OMNI_URL = PropertiesUtil.Config.OMNI_URL;
 
@@ -29,6 +28,8 @@ public class UsdtClent {
     private final static String METHOD_GET_TRANSACTION = "omni_gettransaction";
 
     private final static String METHOD_GET_BALANCE = "omni_getbalance";
+
+    private final static String METHOD_GET_INFO = "omni_getinfo";
 
     private final static int USDt_PROPERTYID = 31;
 
@@ -79,6 +80,13 @@ public class UsdtClent {
         return balance;
     }
 
+    public static Long getBlockHeight() {
+        Object[] objParam = new Object[] {};
+        String result = doSend(METHOD_GET_INFO, objParam);
+        Long blockHeight = JSONObject.parseObject(result).getLongValue("block");
+        return blockHeight;
+    }
+
     public static String doSend(String method, Object[] objParam) {
         String result = null; // 身份认证
         Base64 base64 = new Base64();
@@ -94,21 +102,12 @@ public class UsdtClent {
                 Object.class));
 
         } catch (Throwable e) {
-            throw new BizException("调用rpc接口异常,原因:" + e.getMessage());
+            throw new BizException("调用usdt rpc接口异常,原因:" + e.getMessage());
         }
         return result;
     }
 
-    /*
-     * public static void main(String[] args) throws Throwable {
-     * System.out.println("......"); // 身份认证 Base64 base64 = new
-     * org.apache.commons.codec.binary.Base64(); String auth = OMNI_USERNAME +
-     * ":" + OMNI_PASSWORD; byte[] textByte = auth.getBytes("UTF-8"); String
-     * cred = base64.encodeToString(textByte); Map<String, String> headers = new
-     * HashMap<String, String>(1); headers.put("Authorization", "Basic " +
-     * cred); JsonRpcHttpClient client = new JsonRpcHttpClient(new
-     * URL(OMNI_URL), headers); LinkedHashMap result = (LinkedHashMap)
-     * client.invoke("omni_getinfo", new Object[] {}, Object.class);
-     * System.out.println(JSON.toJSONString(result)); }
-     */
+    // public static void main(String[] args) {
+    // System.out.print(getBlockHeight());
+    // }
 }
