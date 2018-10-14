@@ -60,11 +60,12 @@ public class BTCTxAOImpl implements IBTCTxAO {
             return;
         }
 
-        // 判断是否有足够的区块确认 暂定12
+        // 判断是否有足够的区块确认 推荐1
         BigInteger blockConfirm = sysConfigBO
             .getBigIntegerValue(SysConstants.BLOCK_CONFIRM_BTC);
         if (blockNumber == null
-                || (lasterBlockNumber - blockNumber) < blockConfirm.longValue()) {
+                || (lasterBlockNumber - blockNumber) < blockConfirm
+                    .longValue()) {
             // System.out.println("*********同步循环结束,区块号" + (blockNumber - 1)
             // + "为最后一个可信任区块*******");
             return;
@@ -82,16 +83,16 @@ public class BTCTxAOImpl implements IBTCTxAO {
 
             BTCTXs btctXs = null;
             try {
-                btctXs = this.blockDataService
-                    .getBlockTxs(blockNumber, pageNum);
+                btctXs = this.blockDataService.getBlockTxs(blockNumber,
+                    pageNum);
             } catch (Exception e) {
-                logger.info("******扫描区块：" + blockNumber + " 第" + pageNum + "页："
+                logger.error("******扫描区块：" + blockNumber + " 第" + pageNum + "页："
                         + "发送异常，原因：" + e.getMessage() + "，重新扫描******");
                 continue;
             }
 
             if (btctXs == null) {
-                logger.info("******扫描区块：" + blockNumber + " 第" + pageNum + "页："
+                logger.error("******扫描区块：" + blockNumber + " 第" + pageNum + "页："
                         + "发送异常，重新扫描******");
                 continue;
             }
@@ -207,9 +208,8 @@ public class BTCTxAOImpl implements IBTCTxAO {
         if (utxoList == null || utxoList.size() <= 0) {
             throw new BizException(
                 EBizErrorCode.PUSH_STATUS_UPDATE_FAILURE.getErrorCode(),
-                "请传入正确的json数组"
-                        + EBizErrorCode.PUSH_STATUS_UPDATE_FAILURE
-                            .getErrorCode());
+                "请传入正确的json数组" + EBizErrorCode.PUSH_STATUS_UPDATE_FAILURE
+                    .getErrorCode());
         }
 
         for (BtcUtxo btcutxo : utxoList) {
@@ -223,9 +223,9 @@ public class BTCTxAOImpl implements IBTCTxAO {
 
             if (nextStatus == null) {
 
-                logger.error("utxo 状态异常，无法对应，原因：" + "txid:"
-                        + ourBtcUtxo.getTxid() + "  " + "vout:"
-                        + ourBtcUtxo.getVout());
+                logger
+                    .error("utxo 状态异常，无法对应，原因：" + "txid:" + ourBtcUtxo.getTxid()
+                            + "  " + "vout:" + ourBtcUtxo.getVout());
 
             } else {
 
