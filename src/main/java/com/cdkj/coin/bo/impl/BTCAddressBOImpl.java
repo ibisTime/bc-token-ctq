@@ -12,8 +12,8 @@ import com.cdkj.coin.core.OrderNoGenerater;
 import com.cdkj.coin.dao.IBTCAddressDAO;
 
 @Component
-public class BTCAddressBOImpl extends PaginableBOImpl<BTCAddress> implements
-        IBTCAddressBO {
+public class BTCAddressBOImpl extends PaginableBOImpl<BTCAddress>
+        implements IBTCAddressBO {
 
     @Autowired
     private IBTCAddressDAO btcAddressDAO;

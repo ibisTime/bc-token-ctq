@@ -51,7 +51,7 @@ public class UsdtTxAOImpl implements IUsdtTxAO {
         // omni协议的propertyId，usdt为31，TOMNI为2，测试环境使用TOMNI
         BigInteger propertyID = PropertiesUtil.Config.USDT_ENV
             .equals(EUsdtEnv.PROD.getCode()) ? new BigInteger("31")
-                : new BigInteger("2");
+                    : new BigInteger("2");
         while (true) {
             Long blockNumber = sysConfigBO
                 .getLongValue(SysConstants.CUR_USDT_BLOCK_NUMBER);
@@ -83,9 +83,8 @@ public class UsdtTxAOImpl implements IUsdtTxAO {
                     .getOmniTransInfoByTxid(hash);
                 // 判断是否是usdt交易
                 // PropertyId可能为Null,0代表BTC
-                if (omniTransaction.getPropertyId() == null
-                        || propertyID
-                            .compareTo(omniTransaction.getPropertyId()) != 0) {
+                if (omniTransaction.getPropertyId() == null || propertyID
+                    .compareTo(omniTransaction.getPropertyId()) != 0) {
                     continue;
                 }
                 // 交易无效跳过
@@ -96,7 +95,7 @@ public class UsdtTxAOImpl implements IUsdtTxAO {
                 long toAddressCount = btcAddressBO
                     .queryAddressCount(omniTransaction.getReferenceAddress());
                 // 不是关注的则跳过
-                if (toAddressCount == 0) {
+                if (toAddressCount <= 0) {
                     continue;
                 }
                 // 查询数据库是否落地,已经落地就跳过
@@ -131,8 +130,8 @@ public class UsdtTxAOImpl implements IUsdtTxAO {
     public void pushTx() {
         UsdtTransaction condition = new UsdtTransaction();
         condition.setStatus(EPushStatus.UN_PUSH.getCode());
-        List<UsdtTransaction> txList = this.usdtTransactionBO.getPaginable(0,
-            30, condition).getList();
+        List<UsdtTransaction> txList = this.usdtTransactionBO
+            .getPaginable(0, 30, condition).getList();
         if (txList.size() > 0) {
             // 推送出去
             try {
@@ -154,9 +153,8 @@ public class UsdtTxAOImpl implements IUsdtTxAO {
         if (idList == null || idList.size() <= 0) {
             throw new BizException(
                 EBizErrorCode.PUSH_STATUS_UPDATE_FAILURE.getErrorCode(),
-                "请传入正确的json数组"
-                        + EBizErrorCode.PUSH_STATUS_UPDATE_FAILURE
-                            .getErrorCode());
+                "请传入正确的json数组" + EBizErrorCode.PUSH_STATUS_UPDATE_FAILURE
+                    .getErrorCode());
         }
 
         for (Long id : idList) {

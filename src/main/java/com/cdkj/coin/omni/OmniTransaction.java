@@ -35,7 +35,7 @@ public class OmniTransaction {
     // 属性id
     private BigInteger propertyId;
 
-    // 是否是最小单位
+    // 是否是最小单位 true表示已经除了10000000
     private boolean divisible;
 
     // 数量

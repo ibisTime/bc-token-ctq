@@ -88,12 +88,22 @@ public class BTCTxAOImpl implements IBTCTxAO {
             } catch (Exception e) {
                 logger.error("******扫描区块：" + blockNumber + " 第" + pageNum + "页："
                         + "发送异常，原因：" + e.getMessage() + "，重新扫描******");
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e1) {
+                    e1.printStackTrace();
+                }
                 continue;
             }
 
             if (btctXs == null) {
                 logger.error("******扫描区块：" + blockNumber + " 第" + pageNum + "页："
                         + "发送异常，重新扫描******");
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e1) {
+                    e1.printStackTrace();
+                }
                 continue;
             }
 
@@ -105,7 +115,7 @@ public class BTCTxAOImpl implements IBTCTxAO {
 
             // 遍历交易
             for (BTCOriginalTx originalTx : btctXs.getTxs()) {
-                // todo 暂不处理coinbase
+                // todo 暂不处理coinbase 挖矿充值可能会被忽略
                 if (originalTx.getCoinBase() != null
                         && originalTx.getCoinBase()) {
                     continue;
@@ -126,16 +136,6 @@ public class BTCTxAOImpl implements IBTCTxAO {
 
                     String outToAddress = addressList.get(0);
                     long count = this.btcAddressBO.addressCount(outToAddress);
-
-                    // if
-                    // (outToAddress.equals("n22qbkmhfip9Ks5ehxZqCT8CHR23FDw4ka")
-                    // ||
-                    // outToAddress.equals("mktt7K5TH6aieW2xUV6fBjJyEbxPs6QjgG")
-                    // ||
-                    // outToAddress.equals("myc1x6qKivfuxqcGovfMXhbmZWbBrx5TKz"))
-                    // {
-                    //
-                    // }
 
                     if (count <= 0) {
                         continue;
