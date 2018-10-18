@@ -20,20 +20,20 @@
         <property name="triggers">
             <list>
                 <!-- 以太坊 -->
-                <!-- <ref bean="ethTransactionSyncTrigger"/>
-                <ref bean="ethPushSyncTrigger"/> -->
+                <ref bean="ethTransactionSyncTrigger"/>
+                <ref bean="ethPushSyncTrigger"/>
                 <!-- 比特币 -->
                 <ref bean="btcPushSyncTrigger"/>
            		<ref bean="btcTransactionSyncTrigger"/>
            		<!-- 万维链 -->
-           		<!-- <ref bean="wanTransactionSyncTrigger"/>
-           		<ref bean="wanPushSyncTrigger"/> -->
+           		<ref bean="wanTransactionSyncTrigger"/>
+           		<ref bean="wanPushSyncTrigger"/>
            		<!-- 以太坊token -->
-           		<!-- <ref bean="tokenTransactionSyncTrigger"/>
-           		<ref bean="tokenPushSyncTrigger"/> -->
+           		<ref bean="tokenTransactionSyncTrigger"/>
+           		<ref bean="tokenPushSyncTrigger"/>
            		<!-- 万维链token -->
-           		<!-- <ref bean="wtokenTransactionSyncTrigger"/>
-           		<ref bean="wtokenPushSyncTrigger"/> -->
+           		<ref bean="wtokenTransactionSyncTrigger"/>
+           		<ref bean="wtokenPushSyncTrigger"/>
            		<!-- usdt交易扫描 -->
            		<ref bean="usdtTransactionSyncTrigger" />
            		<ref bean="usdtPushSyncTrigger"/>
@@ -199,6 +199,7 @@
         <property name="concurrent" value="false"/>
     </bean>
 
+    <!-- ########   USDT交易扫描  #############-->
 	<bean id="usdtTransactionSyncTrigger"
           class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail" ref="doUTransactionSync"/>
@@ -213,6 +214,7 @@
         <property name="concurrent" value="false"/>
     </bean>
 
+    <!-- ########   usdt充值推送  #############-->
 	<bean id="usdtPushSyncTrigger"
           class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail" ref="confirmPushTx"/>

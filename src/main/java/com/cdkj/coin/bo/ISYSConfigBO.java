@@ -8,6 +8,7 @@
  */
 package com.cdkj.coin.bo;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import com.cdkj.coin.bo.base.IPaginableBO;
@@ -40,4 +41,5 @@ public interface ISYSConfigBO extends IPaginableBO<SYSConfig> {
 
     public BigInteger getBigIntegerValue(String key);
 
+    public BigDecimal getBigDecimalValue(String key);
 }
