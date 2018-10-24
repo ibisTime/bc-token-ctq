@@ -285,7 +285,7 @@ public class EthTxAOImpl implements IEthTxAO {
         EthTransaction con = new EthTransaction();
         con.setStatus(EPushStatus.UN_PUSH.getCode());
         List<EthTransaction> txList = this.ethTransactionBO.queryEthTxPage(con,
-            1, 30);
+            0, 30);
         // 带出事件event
         for (EthTransaction ethTransaction : txList) {
             List<TokenEvent> tokenEventList = tokenEventBO
@@ -300,6 +300,7 @@ public class EthTxAOImpl implements IEthTxAO {
             try {
 
                 String pushJsonStr = JsonUtil.Object2Json(txList);
+                System.out.println("***推送数据：****" + pushJsonStr);
                 String url = PropertiesUtil.Config.ETH_PUSH_ADDRESS_URL;
                 Properties formProperties = new Properties();
                 formProperties.put("ethTxlist", pushJsonStr);

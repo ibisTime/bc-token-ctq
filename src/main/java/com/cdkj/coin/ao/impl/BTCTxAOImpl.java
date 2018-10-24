@@ -179,14 +179,16 @@ public class BTCTxAOImpl implements IBTCTxAO {
     // 时间调度任务,定期扫描——未推送的——交易
     public void pushTx() {
 
-        // logger.info("******BTC推送UTXO开始******");
+        logger.info("******BTC推送UTXO开始******");
 
         List<BtcUtxo> btcutxoList = this.btcUtxoBO.selectUnPush();
+        logger.info("******BTC推送UTXO个数：" + btcutxoList.size() + "******");
         if (btcutxoList != null && btcutxoList.size() > 0) {
             // 推送出去
             try {
 
                 String pushJsonStr = JsonUtil.Object2Json(btcutxoList);
+                logger.info("******BTC推送数据：" + pushJsonStr);
                 String url = PropertiesUtil.Config.BTC_PUSH_ADDRESS_URL;
                 Properties formProperties = new Properties();
                 formProperties.put("btcUtxolist", pushJsonStr);
@@ -196,6 +198,8 @@ public class BTCTxAOImpl implements IBTCTxAO {
                 logger.error("回调业务biz异常，原因：" + e.getMessage());
             }
         }
+
+        logger.info("******BTC推送UTXO结束******");
 
     }
 
