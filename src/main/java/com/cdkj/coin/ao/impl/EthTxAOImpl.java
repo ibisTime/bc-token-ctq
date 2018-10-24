@@ -221,9 +221,8 @@ public class EthTxAOImpl implements IEthTxAO {
                         List<TransferEventResponse> transferEventList = Web3JClient
                             .loadTransferEvents(transactionReceipt);
                         for (TransferEventResponse transferEventResponse : transferEventList) {
-                            long toTokenCount = tokenAddressBO.addressCount(
-                                transferEventResponse.to,
-                                tokenContract.getSymbol());
+                            long toTokenCount = ethAddressBO
+                                .addressCount(transferEventResponse.to);
                             // token地址不存在跳出
                             if (toTokenCount == 0) {
                                 continue;
