@@ -280,6 +280,8 @@ public class EthTxAOImpl implements IEthTxAO {
     // 时间调度任务,定期扫描——未推送的——交易
     public void pushTx() {
 
+        System.out.println("***开始推送扫描****");
+
         EthTransaction con = new EthTransaction();
         con.setStatus(EPushStatus.UN_PUSH.getCode());
         List<EthTransaction> txList = this.ethTransactionBO.queryEthTxPage(con,
@@ -292,7 +294,7 @@ public class EthTxAOImpl implements IEthTxAO {
                 ethTransaction.setTokenEventList(tokenEventList);
             }
         }
-
+        System.out.println("***推送条数：****" + txList.size());
         if (txList.size() > 0) {
             // 推送出去
             try {
@@ -306,6 +308,7 @@ public class EthTxAOImpl implements IEthTxAO {
                 logger.error("回调业务biz异常，原因：" + e.getMessage());
             }
         }
+        System.out.println("***结束推送扫描****");
 
     }
 
