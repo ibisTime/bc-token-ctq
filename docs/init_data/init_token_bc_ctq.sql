@@ -9,3 +9,4 @@ INSERT INTO `tsys_config`(type, ckey, cvalue, updater, update_datetime, remark) 
 INSERT INTO `tsys_config`(type, ckey, cvalue, updater, update_datetime, remark) VALUES ('0','blockConfirmWan','0','admin',now(),'WAN需要多少个区块确认');
 INSERT INTO `tsys_config`(type, ckey, cvalue, updater, update_datetime, remark) VALUES ('0','blockConfirmWToken','0','admin',now(),'WAN Token需要多少个区块确认');
 
+INSERT INTO `tctq_token_contract` (`symbol`,`contract_address`,`create_datetime`) VALUES ('FMVP','0x68aaefbdd5cb18ff577966cb2679df42e2eba548',now());
