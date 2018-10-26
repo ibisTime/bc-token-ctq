@@ -52,10 +52,6 @@
 		<property name="paginableDAO" ref="tokenContractDAOImpl"/>
 	</bean>
 	
-	<bean id="tokenTransactionBO" class="com.cdkj.coin.bo.impl.TokenTransactionBOImpl">
-		<property name="paginableDAO" ref="tokenTransactionDAOImpl"/>
-	</bean>
-	
 	<bean id="wtokenAddressBO" class="com.cdkj.coin.bo.impl.WTokenAddressBOImpl">
 		<property name="paginableDAO" ref="wtokenAddressDAOImpl"/>
 	</bean>
@@ -72,4 +68,7 @@
 		<property name="paginableDAO" ref="usdtTransactionDAOImpl"/>
 	</bean>
 	
+	<bean id="tokenEventBO" class="com.cdkj.coin.bo.impl.TokenEventBOImpl">
+		<property name="paginableDAO" ref="tokenEventDAOImpl"/>
+	</bean>
 </beans>

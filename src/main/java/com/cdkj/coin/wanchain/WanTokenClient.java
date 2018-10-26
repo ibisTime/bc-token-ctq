@@ -22,11 +22,11 @@ import org.web3j.protocol.http.HttpService;
 import org.web3j.tx.ClientTransactionManager;
 
 import com.cdkj.coin.common.PropertiesUtil;
+import com.cdkj.coin.ethereum.OrangeCoinToken;
+import com.cdkj.coin.ethereum.OrangeCoinToken.TransferEventResponse;
 import com.cdkj.coin.ethereum.Web3JClient;
 import com.cdkj.coin.exception.BizException;
 import com.cdkj.coin.exception.EBizErrorCode;
-import com.cdkj.coin.token.OrangeCoinToken;
-import com.cdkj.coin.token.OrangeCoinToken.TransferEventResponse;
 
 /** 
  * @author: xieyj 
@@ -68,8 +68,8 @@ public class WanTokenClient {
             currentBlock = ethBlockResp.getResult();
 
         } catch (Exception e) {
-            throw new BizException("xn000000",
-                "获取区块" + blockNumber + "发生异常，原因：" + e.getMessage());
+            throw new BizException("xn000000", "获取区块" + blockNumber
+                    + "发生异常，原因：" + e.getMessage());
         }
         return currentBlock;
     }
@@ -82,8 +82,8 @@ public class WanTokenClient {
                 .getBlockNumber();
 
         } catch (Exception e) {
-            throw new BizException("xn000000",
-                "查询当前最大区块发生异常，原因：" + e.getMessage());
+            throw new BizException("xn000000", "查询当前最大区块发生异常，原因："
+                    + e.getMessage());
         }
         return currentBlockNumber;
     }
@@ -120,10 +120,9 @@ public class WanTokenClient {
                 .ethGetTransactionReceipt(
                     "0x0aac1866de7fbcf53896d4613b0cc1536a9c705a311b1a2fe7a7ec1c47492445")
                 .send().getResult();
-            List<TransferEventResponse> res = loadTransferEvents(
-                transactionReceipt);
-            System.out.println(
-                "0x0aac1866de7fbcf53896d4613b0cc1536a9c705a311b1a2fe7a7ec1c47492445");
+            List<TransferEventResponse> res = loadTransferEvents(transactionReceipt);
+            System.out
+                .println("0x0aac1866de7fbcf53896d4613b0cc1536a9c705a311b1a2fe7a7ec1c47492445");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -135,8 +134,8 @@ public class WanTokenClient {
 
         List<OrangeCoinToken.TransferEventResponse> transferEventList = null;
 
-        OrangeCoinToken contract = loadHolderContract(
-            transactionReceipt.getTo());
+        OrangeCoinToken contract = loadHolderContract(transactionReceipt
+            .getTo());
         try {
             transferEventList = contract.getTransferEvents(transactionReceipt);
         } catch (Exception e) {

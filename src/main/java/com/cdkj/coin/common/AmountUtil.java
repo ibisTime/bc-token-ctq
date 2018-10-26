@@ -1,6 +1,7 @@
 package com.cdkj.coin.common;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 import com.cdkj.coin.core.CalculationUtil;
 
@@ -83,5 +84,18 @@ public class AmountUtil {
     public static void main(String[] args) {
         System.out.println(mulRmbJinFen(1234L, 1.0));
         System.out.println(mulXnbJin1(1234L, 1.0));
+    }
+
+    // BigInteget转BigDecimal
+    public static BigDecimal BigInteger2BigDecimal(BigInteger amount) {
+        return new BigDecimal(amount.toString());
+    }
+
+    public static BigDecimal toBtc(BigDecimal orgNum) {
+        return orgNum.multiply(BigDecimal.TEN.pow(8)).setScale(0);
+    }
+
+    public static BigDecimal toUsdt(BigDecimal orgNum) {
+        return orgNum.multiply(BigDecimal.TEN.pow(8)).setScale(0);
     }
 }

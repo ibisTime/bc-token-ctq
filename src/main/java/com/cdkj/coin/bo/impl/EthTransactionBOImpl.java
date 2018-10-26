@@ -1,5 +1,6 @@
 package com.cdkj.coin.bo.impl;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
@@ -12,11 +13,12 @@ import org.web3j.protocol.core.methods.response.EthBlock;
 
 import com.cdkj.coin.bo.IEthTransactionBO;
 import com.cdkj.coin.bo.base.PaginableBOImpl;
+import com.cdkj.coin.common.AmountUtil;
 import com.cdkj.coin.dao.IEthTransactionDAO;
 import com.cdkj.coin.domain.EthTransaction;
 import com.cdkj.coin.enums.EPushStatus;
-import com.cdkj.coin.exception.EBizErrorCode;
 import com.cdkj.coin.exception.BizException;
+import com.cdkj.coin.exception.EBizErrorCode;
 
 @Component
 public class EthTransactionBOImpl extends PaginableBOImpl<EthTransaction>
@@ -35,25 +37,35 @@ public class EthTransactionBOImpl extends PaginableBOImpl<EthTransaction>
         EthTransaction transaction = new EthTransaction();
         transaction.setHash(tx.getHash());
         transaction.setNonce(tx.getNonce());
-
         transaction.setBlockHash(tx.getBlockHash());
-        transaction.setBlockNumber(tx.getBlockNumber().toString());
-        transaction.setTransactionIndex(tx.getTransactionIndex());
-
-        transaction.setFrom(tx.getFrom());
-        transaction.setTo(tx.getTo());
-
-        transaction.setValue(tx.getValue().toString());
-        transaction.setGasPrice(tx.getGasPrice().toString());
-        transaction.setGas(tx.getGas());
-
-        //
-        transaction.setStatus(EPushStatus.UN_PUSH.getCode());
+        transaction.setBlockNumber(tx.getBlockNumber());
         transaction.setBlockCreateDatetime(new Date(
             timestamp.longValue() * 1000));
-        //
+
+        transaction.setTransactionIndex(tx.getTransactionIndex());
+        transaction.setFrom(tx.getFrom());
+        transaction.setTo(tx.getTo());
+        transaction.setStatus(EPushStatus.UN_PUSH.getCode());
+
+        BigDecimal ethValue = AmountUtil.BigInteger2BigDecimal(tx.getValue());
+        transaction.setValue(ethValue);
+        transaction.setSyncDatetime(new Date());
+
+        BigDecimal gasPrice = AmountUtil
+            .BigInteger2BigDecimal(tx.getGasPrice());
+        transaction.setGasPrice(gasPrice);
+        transaction.setGasLimit(tx.getGas());
         transaction.setGasUsed(gasUsed);
 
+        BigDecimal gasFee = AmountUtil.BigInteger2BigDecimal(gasUsed).multiply(
+            gasPrice);
+        transaction.setGasFee(gasFee);
+        transaction.setInput(tx.getInput());
+        transaction.setPublicKey(tx.getPublicKey());
+        transaction.setRaw(tx.getRaw());
+        transaction.setR(tx.getR());
+
+        transaction.setS(tx.getS());
         return transaction;
     }
 
@@ -105,8 +117,7 @@ public class EthTransactionBOImpl extends PaginableBOImpl<EthTransaction>
             condition.setHash(hash);
             data = ethTransactionDAO.select(condition);
             if (data == null) {
-                throw new BizException(
-                    EBizErrorCode.DEFAULT.getErrorCode(),
+                throw new BizException(EBizErrorCode.DEFAULT.getErrorCode(),
                     "以太坊交易记录不存在");
             }
         }

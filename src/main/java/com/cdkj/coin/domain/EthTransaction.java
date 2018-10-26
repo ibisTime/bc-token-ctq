@@ -1,9 +1,11 @@
 package com.cdkj.coin.domain;
 
-import com.cdkj.coin.dao.base.ABaseDO;
-
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
+import java.util.List;
+
+import com.cdkj.coin.dao.base.ABaseDO;
 
 /**
 * 以太坊交易
@@ -13,203 +15,269 @@ import java.util.Date;
 */
 public class EthTransaction extends ABaseDO {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	// 交易hash
-	private String hash;
+    private Long id;
 
-	// 第几个交易
-	private BigInteger nonce;
+    // 交易hash
+    private String hash;
 
-	// 区块hash
-	private String blockHash;
+    // 第几个交易
+    private BigInteger nonce;
 
-	// 区块编号
-	private String blockNumber;
+    // 区块hash
+    private String blockHash;
 
-	// transactionIndex
-	private BigInteger transactionIndex;
+    // transactionIndex
+    private BigInteger transactionIndex;
 
-	// 发送地址
-	private String from;
+    // 发送地址
+    private String from;
 
-	// 接受地址
-	private String to;
+    // 接受地址
+    private String to;
 
-	// 数量
-	private String value;
+    // 数量
+    private BigDecimal value;
 
-	// gas价格
-	private String gasPrice;
+    // gas价格
+    private BigDecimal gasPrice;
 
-	// gasLimit
-	private BigInteger gas;
+    // 区块生成时间
+    private Date blockCreateDatetime;
 
-	//消耗gas
-	private BigInteger gasUsed;
+    // 区块生成时间
+    private Date syncDatetime;
 
-	public BigInteger getGasUsed() {
-		return gasUsed;
-	}
+    private String status;
 
-	public void setGasUsed(BigInteger gasUsed) {
-		this.gasUsed = gasUsed;
-	}
+    // 区块编号
+    private BigInteger blockNumber;
 
-	//区块生成时间
-	private Date blockCreateDatetime;
+    // gasLimit
+    private BigInteger gasLimit;
 
-	//区块生成时间
-	private Date syncDatetime;
+    // 消耗gas
+    private BigInteger gasUsed;
 
-	private String status;
+    // gas手续费
+    private BigDecimal gasFee;
 
-	// ################# 一下属性为查询而添加 ##############
-	private Date blockCreateDatetimeStart;
-	private Date blockCreateDatetimeEnd;
+    // 输出input
+    private String input;
 
+    // public key
+    private String publicKey;
 
-	public Date getBlockCreateDatetimeStart() {
-		return blockCreateDatetimeStart;
-	}
+    // raw
+    private String raw;
 
-	public void setBlockCreateDatetimeStart(Date blockCreateDatetimeStart) {
-		this.blockCreateDatetimeStart = blockCreateDatetimeStart;
-	}
+    // r
+    private String r;
 
-	public Date getBlockCreateDatetimeEnd() {
-		return blockCreateDatetimeEnd;
-	}
+    // s
+    private String s;
 
-	public void setBlockCreateDatetimeEnd(Date blockCreateDatetimeEnd) {
-		this.blockCreateDatetimeEnd = blockCreateDatetimeEnd;
-	}
+    public BigInteger getGasUsed() {
+        return gasUsed;
+    }
 
-	public static long getSerialVersionUID() {
-		return serialVersionUID;
-	}
+    public void setGasUsed(BigInteger gasUsed) {
+        this.gasUsed = gasUsed;
+    }
 
-	public Date getBlockCreateDatetime() {
-		return blockCreateDatetime;
-	}
+    // ################# 一下属性为查询而添加 ##############
+    private List<TokenEvent> tokenEventList;
 
-	public void setBlockCreateDatetime(Date blockCreateDatetime) {
-		this.blockCreateDatetime = blockCreateDatetime;
-	}
+    private Date blockCreateDatetimeStart;
 
+    private Date blockCreateDatetimeEnd;
 
-	public Date getSyncDatetime() {
-		return syncDatetime;
-	}
+    public Date getBlockCreateDatetimeStart() {
+        return blockCreateDatetimeStart;
+    }
 
-	public void setSyncDatetime(Date syncDatetime) {
-		this.syncDatetime = syncDatetime;
-	}
+    public void setBlockCreateDatetimeStart(Date blockCreateDatetimeStart) {
+        this.blockCreateDatetimeStart = blockCreateDatetimeStart;
+    }
 
-	public String getStatus() {
-		return status;
-	}
+    public Date getBlockCreateDatetimeEnd() {
+        return blockCreateDatetimeEnd;
+    }
 
-	public void setStatus(String status) {
-		this.status = status;
-	}
-	//	// input
-//	private String input;
-//
-//	// 创建时间
-//	private String creates;
-//
-//	// publicKey
-//	private String publicKey;
-//
-//	// raw
-//	private String raw;
-//
-//	// r
-//	private String r;
-//
-//	// s
-//	private String s;
+    public void setBlockCreateDatetimeEnd(Date blockCreateDatetimeEnd) {
+        this.blockCreateDatetimeEnd = blockCreateDatetimeEnd;
+    }
 
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
 
+    public Date getBlockCreateDatetime() {
+        return blockCreateDatetime;
+    }
 
-	public void setHash(String hash) {
-		this.hash = hash;
-	}
+    public void setBlockCreateDatetime(Date blockCreateDatetime) {
+        this.blockCreateDatetime = blockCreateDatetime;
+    }
 
-	public String getHash() {
-		return hash;
-	}
+    public Date getSyncDatetime() {
+        return syncDatetime;
+    }
 
-	public BigInteger getNonce() {
-		return nonce;
-	}
+    public void setSyncDatetime(Date syncDatetime) {
+        this.syncDatetime = syncDatetime;
+    }
 
-	public void setNonce(BigInteger nonce) {
-		this.nonce = nonce;
-	}
+    public String getStatus() {
+        return status;
+    }
 
-	public void setBlockHash(String blockHash) {
-		this.blockHash = blockHash;
-	}
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
-	public String getBlockHash() {
-		return blockHash;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public void setBlockNumber(String blockNumber) {
-		this.blockNumber = blockNumber;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public String getBlockNumber() {
-		return blockNumber;
-	}
+    public BigInteger getGasLimit() {
+        return gasLimit;
+    }
 
-	public BigInteger getTransactionIndex() {
-		return transactionIndex;
-	}
+    public void setGasLimit(BigInteger gasLimit) {
+        this.gasLimit = gasLimit;
+    }
 
-	public void setTransactionIndex(BigInteger transactionIndex) {
-		this.transactionIndex = transactionIndex;
-	}
+    public BigDecimal getGasFee() {
+        return gasFee;
+    }
 
-	public void setFrom(String from) {
-		this.from = from;
-	}
+    public void setGasFee(BigDecimal gasFee) {
+        this.gasFee = gasFee;
+    }
 
-	public String getFrom() {
-		return from;
-	}
+    public String getInput() {
+        return input;
+    }
 
-	public void setTo(String to) {
-		this.to = to;
-	}
+    public void setInput(String input) {
+        this.input = input;
+    }
 
-	public String getTo() {
-		return to;
-	}
+    public String getPublicKey() {
+        return publicKey;
+    }
 
-	public void setValue(String value) {
-		this.value = value;
-	}
+    public void setPublicKey(String publicKey) {
+        this.publicKey = publicKey;
+    }
 
-	public String getValue() {
-		return value;
-	}
+    public String getRaw() {
+        return raw;
+    }
 
-	public void setGasPrice(String gasPrice) {
-		this.gasPrice = gasPrice;
-	}
+    public void setRaw(String raw) {
+        this.raw = raw;
+    }
 
-	public String getGasPrice() {
-		return gasPrice;
-	}
+    public String getR() {
+        return r;
+    }
 
-	public BigInteger getGas() {
-		return gas;
-	}
+    public void setR(String r) {
+        this.r = r;
+    }
 
-	public void setGas(BigInteger gas) {
-		this.gas = gas;
-	}
+    public String getS() {
+        return s;
+    }
+
+    public void setS(String s) {
+        this.s = s;
+    }
+
+    public void setHash(String hash) {
+        this.hash = hash;
+    }
+
+    public String getHash() {
+        return hash;
+    }
+
+    public BigInteger getNonce() {
+        return nonce;
+    }
+
+    public void setNonce(BigInteger nonce) {
+        this.nonce = nonce;
+    }
+
+    public void setBlockHash(String blockHash) {
+        this.blockHash = blockHash;
+    }
+
+    public String getBlockHash() {
+        return blockHash;
+    }
+
+    public void setBlockNumber(BigInteger blockNumber) {
+        this.blockNumber = blockNumber;
+    }
+
+    public BigInteger getBlockNumber() {
+        return blockNumber;
+    }
+
+    public BigInteger getTransactionIndex() {
+        return transactionIndex;
+    }
+
+    public void setTransactionIndex(BigInteger transactionIndex) {
+        this.transactionIndex = transactionIndex;
+    }
+
+    public void setFrom(String from) {
+        this.from = from;
+    }
+
+    public String getFrom() {
+        return from;
+    }
+
+    public void setTo(String to) {
+        this.to = to;
+    }
+
+    public String getTo() {
+        return to;
+    }
+
+    public void setValue(BigDecimal value) {
+        this.value = value;
+    }
+
+    public BigDecimal getValue() {
+        return value;
+    }
+
+    public void setGasPrice(BigDecimal gasPrice) {
+        this.gasPrice = gasPrice;
+    }
+
+    public BigDecimal getGasPrice() {
+        return gasPrice;
+    }
+
+    public List<TokenEvent> getTokenEventList() {
+        return tokenEventList;
+    }
+
+    public void setTokenEventList(List<TokenEvent> tokenEventList) {
+        this.tokenEventList = tokenEventList;
+    }
 }
