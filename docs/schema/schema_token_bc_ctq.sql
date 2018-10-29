@@ -37,7 +37,7 @@ CREATE TABLE `tctq_eth_transaction` (
   KEY `from_index` (`from`),
   KEY `to_index` (`to`),
   KEY `status_index` (`status`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `tctq_btc_address`;
 CREATE TABLE `tctq_btc_address` (
@@ -58,7 +58,7 @@ CREATE TABLE `tctq_btc_utxo` (
   `address` varchar(40) NOT NULL,
   `sync_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `block_height` int(11) NOT NULL,
-  `status` varchar(4) NOT NULL COMMENT '0-out未推送，1-out已推送，2-in未推送，3-in已推送',
+  `status` varchar(4) NOT NULL COMMENT '0-未推送，1-已推送',
   PRIMARY KEY (`id`),
   UNIQUE KEY `txid_vout_unique_key` (`txid`,`vout`),
   KEY `address` (`address`),
@@ -97,44 +97,6 @@ CREATE TABLE `tctq_token_contract` (
   `create_datetime` datetime NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`symbol`),
   KEY `address_index` (`contract_address`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-DROP TABLE IF EXISTS `tctq_token_address`;
-CREATE TABLE `tctq_token_address` (
-  `code` varchar(32) NOT NULL COMMENT '编号',
-  `address` varchar(64) NOT NULL COMMENT '地址',
-  `symbol` varchar(64) NOT NULL COMMENT '所属币种',
-  `create_datetime` datetime NOT NULL COMMENT '创建时间',
-  PRIMARY KEY (`code`),
-  KEY `address_index` (`address`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-DROP TABLE IF EXISTS `tctq_token_transaction`;
-CREATE TABLE `tctq_token_transaction` (
-  `id` bigint(32) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `hash` varchar(255) NOT NULL COMMENT '交易哈希',
-  `nonce` bigint(32) NOT NULL COMMENT '交易次数',
-  `block_hash` varchar(255) NOT NULL COMMENT '区块哈希',
-  `transaction_index` bigint(32) NOT NULL COMMENT '交易index',
-  `from` varchar(255) NOT NULL COMMENT '转出地址',
-  `to` varchar(255)  NOT NULL COMMENT '转入地址',
-  `value` decimal(64,0) NOT NULL COMMENT '交易额',
-  `input` text COMMENT 'input 输入',
-  `token_from` varchar(255) DEFAULT NULL COMMENT 'token币发起地址',
-  `token_to` varchar(255) DEFAULT NULL COMMENT 'token币接收地址',
-  `token_value` decimal(64,0) DEFAULT NULL COMMENT 'token币数量',
-  `token_log_index` bigint(32) DEFAULT NULL COMMENT 'event_log_index',
-  `block_create_datetime` datetime NOT NULL COMMENT '区块形成时间',
-  `sync_datetime` datetime NOT NULL COMMENT '同步时间',
-  `block_number` bigint(32) NOT NULL COMMENT '区块号',
-  `gas_price` decimal(64,0) NOT NULL COMMENT 'gas价格',
-  `gas_limit` bigint(20) NOT NULL COMMENT 'gas最大使用限制',
-  `gas_used` bigint(20) NOT NULL COMMENT 'gas实际使用量',
-  `status` varchar(4) NOT NULL COMMENT '状态 0-未推送 1-已推送',
-  `symbol` varchar(32) NOT NULL COMMENT '币种符号',
-  PRIMARY KEY (`id`),
-  KEY `to_index` (`hash`,`token_log_index`),
-  KEY `status_index` (`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `tctq_wan_address`;

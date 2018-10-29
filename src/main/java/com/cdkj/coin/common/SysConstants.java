@@ -26,11 +26,11 @@ public class SysConstants {
 
     public static final String BLOCK_CONFIRM_USDT = "blockConfirmUsdt"; // USDT需要多少个区块确认
 
-    public static final String MIN_ETH_RECHARGE_MONEY = "minEthRechargeMoney"; // usdt最小充值金额
+    public static final String MIN_ETH_RECHARGE_MONEY = "minEthRechargeMoney"; // eth最小充值金额
 
-    public static final String MIN_WAN_ARGE_MONEY = "minWanRechargeMoney"; // usdt最小充值金额
+    public static final String MIN_WAN_ARGE_MONEY = "minWanRechargeMoney"; // wan最小充值金额
 
-    public static final String MIN_BTC_RECHARGE_MONEY = "minBtcRechargeMoney"; // usdt最小充值金额
+    public static final String MIN_BTC_RECHARGE_MONEY = "minBtcRechargeMoney"; // btc最小充值金额
 
     public static final String MIN_USDT_RECHARGE_MONEY = "minUsdtRechargeMoney"; // usdt最小充值金额
 
