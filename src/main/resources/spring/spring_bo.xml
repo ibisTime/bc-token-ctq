@@ -44,24 +44,12 @@
 		<property name="paginableDAO" ref="wanAddressDAOImpl"/>
 	</bean>
 	
-	<bean id="tokenAddressBO" class="com.cdkj.coin.bo.impl.TokenAddressBOImpl">
-		<property name="paginableDAO" ref="tokenAddressDAOImpl"/>
-	</bean>
-	
 	<bean id="tokenContractBO" class="com.cdkj.coin.bo.impl.TokenContractBOImpl">
 		<property name="paginableDAO" ref="tokenContractDAOImpl"/>
 	</bean>
 	
-	<bean id="wtokenAddressBO" class="com.cdkj.coin.bo.impl.WTokenAddressBOImpl">
-		<property name="paginableDAO" ref="wtokenAddressDAOImpl"/>
-	</bean>
-	
 	<bean id="wtokenContractBO" class="com.cdkj.coin.bo.impl.WTokenContractBOImpl">
 		<property name="paginableDAO" ref="wtokenContractDAOImpl"/>
-	</bean>
-	
-	<bean id="wtokenTransactionBO" class="com.cdkj.coin.bo.impl.WTokenTransactionBOImpl">
-		<property name="paginableDAO" ref="wtokenTransactionDAOImpl"/>
 	</bean>
 	
 	<bean id="usdtTransactionBO" class="com.cdkj.coin.bo.impl.UsdtTransactionBOImpl">
