@@ -54,7 +54,7 @@ public class UsdtTxAOImpl implements IUsdtTxAO {
         // omni协议的propertyId，usdt为31，TOMNI为2，测试环境使用TOMNI代替USDT
         // 往"moneyqMan7uh8FqdCA2BV5yZ8qVrc9ikLP"地址转BTC可以获得TOMNI币，比例1BTC:100TOMNI
         BigInteger propertyID = PropertiesUtil.Config.USDT_ENV
-            .equals(EUsdtEnv.PROD.getCode()) ? new BigInteger("31")
+            .equals(EUsdtEnv.MAINNET.getCode()) ? new BigInteger("31")
                 : new BigInteger("2");
         while (true) {
             Long blockNumber = sysConfigBO
