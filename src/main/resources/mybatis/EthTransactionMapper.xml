@@ -85,9 +85,16 @@
 
 	<insert id="insertEthTransaction" parameterType="com.cdkj.coin.domain.EthTransaction">
 		INSERT INTO
-		`tctq_eth_transaction`(`tctq_eth_transaction`(`hash`,`nonce`,`block_hash`,`transaction_index`,`from`,`to`,`value`,
+		`tctq_eth_transaction`(
+		`hash`,`nonce`,
+		`block_hash`,
+		`transaction_index`,
+		`from`,
+		`to`,
+		
+		`value`,
 		`gas_price`,`block_create_datetime`,`sync_datetime`,`status`,`gas_limit`,`block_number`,
-		`gas_used`,`gas_fee`,`input`,`public_key`,`raw`,`r`,`s`))
+		`gas_used`,`gas_fee`,`input`,`public_key`,`raw`,`r`,`s`)
 		VALUES(
 			#{hash} ,#{nonce} ,#{blockHash} ,#{transactionIndex} ,#{from}
 			,#{to},#{value},#{gasPrice},#{blockCreateDatetime},now(),#{status},
@@ -97,17 +104,57 @@
 
 	<insert id="insertTxList" parameterType="List">
 
-		INSERT INTO
-			`tctq_eth_transaction`(`hash`,`nonce`,`block_hash`,`transaction_index`,`from`,`to`,`value`,
-		`gas_price`,`block_create_datetime`,`sync_datetime`,`status`,`gas_limit`,`block_number`,
-		`gas_used`,`gas_fee`,`input`,`public_key`,`raw`,`r`,`s`))
-		VALUES
+		INSERT INTO `tctq_eth_transaction` (
+			`hash`,
+			`nonce`,
+			`block_hash`,
+			`transaction_index`,
+			`from`,
+			
+			`to`,
+			`value`,
+			`gas_price`,
+			`block_create_datetime`,
+			`sync_datetime`,
+			
+			`status`,
+			`gas_limit`,
+			`block_number`,
+			`gas_used`,
+			`gas_fee`,
+			`input`,
+			
+			`public_key`,
+			`raw`,
+			`r`,
+			`s`
+			)VALUES
 
 		  <foreach collection="list" item="tx" separator=",">
 			  (
-			  #{hash} ,#{nonce} ,#{blockHash} ,#{transactionIndex} ,#{from}
-			,#{to},#{value},#{gasPrice},#{blockCreateDatetime},now(),#{status},
-			#{gas_limit},#{blockNumber},#{gasUsed},#{gasFee},#{input},#{publicKey},#{raw},#{r},#{s}
+			  #{tx.hash} ,
+			  #{tx.nonce} ,
+			  #{tx.blockHash} ,
+			  #{tx.transactionIndex} ,
+			  #{tx.from},
+			  
+			  #{tx.to},
+			  #{tx.value},
+			  #{tx.gasPrice},
+			  #{tx.blockCreateDatetime},
+			  now(),
+			  
+			  #{tx.status},
+			  #{tx.gasLimit},
+			  #{tx.blockNumber},
+			  #{tx.gasUsed},
+			  #{tx.gasFee},
+			  #{tx.input},
+			  
+			  #{tx.publicKey},
+			  #{tx.raw},
+			  #{tx.r},
+			  #{tx.s}
 			  )
 		  </foreach>
 

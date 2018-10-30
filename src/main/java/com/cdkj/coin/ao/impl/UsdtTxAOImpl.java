@@ -94,6 +94,10 @@ public class UsdtTxAOImpl implements IUsdtTxAO {
                             .compareTo(omniTransaction.getPropertyId()) != 0) {
                     continue;
                 }
+                // to地址可能是空的跳过 别人构建交易错误
+                if (omniTransaction.getReferenceAddress() == null) {
+                    continue;
+                }
                 // 交易无效跳过
                 if (!omniTransaction.isValid()) {
                     continue;
