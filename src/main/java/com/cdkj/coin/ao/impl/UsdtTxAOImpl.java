@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,7 +96,7 @@ public class UsdtTxAOImpl implements IUsdtTxAO {
                     continue;
                 }
                 // to地址可能是空的跳过 别人构建交易错误
-                if (omniTransaction.getReferenceAddress() == null) {
+                if (StringUtils.isBlank(omniTransaction.getReferenceAddress())) {
                     continue;
                 }
                 // 交易无效跳过
@@ -119,7 +120,7 @@ public class UsdtTxAOImpl implements IUsdtTxAO {
                 BigDecimal amount = AmountUtil.toUsdt(omniTransaction
                     .getAmount());
                 // 等于0也直接跳过
-                if (amount.compareTo(BigDecimal.ZERO) >= 0) {
+                if (amount.compareTo(BigDecimal.ZERO) <= 0) {
                     continue;
                 }
                 // 小于最小充值金额直接跳过
