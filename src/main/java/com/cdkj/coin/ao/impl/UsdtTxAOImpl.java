@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.cdkj.coin.ao.IUsdtTxAO;
-import com.cdkj.coin.ao.impl.BTCBlockDataService;
 import com.cdkj.coin.bo.IBTCAddressBO;
 import com.cdkj.coin.bo.ISYSConfigBO;
 import com.cdkj.coin.bo.IUsdtTransactionBO;
@@ -113,11 +112,13 @@ public class UsdtTxAOImpl implements IUsdtTxAO {
                     continue;
                 }
 
-                // if () {}
-
-                // 小于最小充值金额直接跳过
                 BigDecimal amount = AmountUtil.toUsdt(omniTransaction
                     .getAmount());
+                // 等于0也直接跳过
+                if (amount.compareTo(BigDecimal.ZERO) >= 0) {
+                    continue;
+                }
+                // 小于最小充值金额直接跳过
                 if (minChangeMoney.compareTo(amount) > 0) {
                     continue;
                 }
