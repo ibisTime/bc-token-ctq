@@ -4,51 +4,51 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
-import com.cdkj.coin.dao.ITokenEventDAO;
+import com.cdkj.coin.dao.IEthTokenEventDAO;
 import com.cdkj.coin.dao.base.support.AMybatisTemplate;
-import com.cdkj.coin.domain.TokenEvent;
+import com.cdkj.coin.domain.EthTokenEvent;
 
-@Repository("tokenEventDAOImpl")
-public class TokenEventDAOImpl extends AMybatisTemplate implements
-        ITokenEventDAO {
+@Repository("ethTokenEventDAOImpl")
+public class EthTokenEventDAOImpl extends AMybatisTemplate implements
+        IEthTokenEventDAO {
 
     @Override
-    public int insert(TokenEvent data) {
+    public int insert(EthTokenEvent data) {
         return super.insert(NAMESPACE.concat("insert_tokenEvent"), data);
     }
 
     @Override
-    public int delete(TokenEvent data) {
+    public int delete(EthTokenEvent data) {
         return super.delete(NAMESPACE.concat("delete_tokenEvent"), data);
     }
 
     @Override
-    public TokenEvent select(TokenEvent condition) {
+    public EthTokenEvent select(EthTokenEvent condition) {
         return super.select(NAMESPACE.concat("select_tokenEvent"), condition,
-            TokenEvent.class);
+            EthTokenEvent.class);
     }
 
     @Override
-    public Long selectTotalCount(TokenEvent condition) {
+    public Long selectTotalCount(EthTokenEvent condition) {
         return super.selectTotalCount(
             NAMESPACE.concat("select_tokenEvent_count"), condition);
     }
 
     @Override
-    public List<TokenEvent> selectList(TokenEvent condition) {
+    public List<EthTokenEvent> selectList(EthTokenEvent condition) {
         return super.selectList(NAMESPACE.concat("select_tokenEvent"),
-            condition, TokenEvent.class);
+            condition, EthTokenEvent.class);
     }
 
     @Override
-    public List<TokenEvent> selectList(TokenEvent condition, int start,
+    public List<EthTokenEvent> selectList(EthTokenEvent condition, int start,
             int count) {
         return super.selectList(NAMESPACE.concat("select_tokenEvent"), start,
-            count, condition, TokenEvent.class);
+            count, condition, EthTokenEvent.class);
     }
 
     @Override
-    public void insertEventList(List<TokenEvent> tokenEventList) {
+    public void insertEventList(List<EthTokenEvent> tokenEventList) {
         super.insertBatch(NAMESPACE.concat("insert_eventList"),
             (List) tokenEventList);
     }

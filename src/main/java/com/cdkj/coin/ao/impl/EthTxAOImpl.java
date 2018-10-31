@@ -23,7 +23,7 @@ import com.cdkj.coin.bo.IEthAddressBO;
 import com.cdkj.coin.bo.IEthTransactionBO;
 import com.cdkj.coin.bo.ISYSConfigBO;
 import com.cdkj.coin.bo.ITokenContractBO;
-import com.cdkj.coin.bo.ITokenEventBO;
+import com.cdkj.coin.bo.IEthTokenEventBO;
 import com.cdkj.coin.bo.base.Paginable;
 import com.cdkj.coin.common.DateUtil;
 import com.cdkj.coin.common.JsonUtil;
@@ -32,7 +32,7 @@ import com.cdkj.coin.common.SysConstants;
 import com.cdkj.coin.domain.EthTransaction;
 import com.cdkj.coin.domain.SYSConfig;
 import com.cdkj.coin.domain.TokenContract;
-import com.cdkj.coin.domain.TokenEvent;
+import com.cdkj.coin.domain.EthTokenEvent;
 import com.cdkj.coin.dto.req.EthTxPageReq;
 import com.cdkj.coin.enums.EPushStatus;
 import com.cdkj.coin.enums.ETransactionRecetptStatus;
@@ -66,7 +66,7 @@ public class EthTxAOImpl implements IEthTxAO {
     private ITokenContractBO tokenContractBO;
 
     @Autowired
-    private ITokenEventBO tokenEventBO;
+    private IEthTokenEventBO ethTokenEventBO;
 
     @Override
     public Paginable<EthTransaction> queryTxPage(EthTxPageReq req) {
@@ -169,7 +169,7 @@ public class EthTxAOImpl implements IEthTxAO {
 
                 // 如果取到区块信息
                 List<EthTransaction> ethTransactionList = new ArrayList<>();
-                List<TokenEvent> tokenEventList = new ArrayList<>();
+                List<EthTokenEvent> tokenEventList = new ArrayList<>();
 
                 for (EthBlock.TransactionResult txObj : currentBlock
                     .getTransactions()) {
@@ -223,7 +223,7 @@ public class EthTxAOImpl implements IEthTxAO {
                                 continue;
                             }
                             isTokenRelate = true;
-                            TokenEvent tokenEvent = tokenEventBO
+                            EthTokenEvent tokenEvent = ethTokenEventBO
                                 .convertTokenEvent(transferEventResponse,
                                     tx.getHash(), tokenContract.getSymbol());
                             tokenEventList.add(tokenEvent);
@@ -256,14 +256,14 @@ public class EthTxAOImpl implements IEthTxAO {
 
     @Transactional
     public void saveToDB(List<EthTransaction> transactionList,
-            List<TokenEvent> tokenEventList, Long blockNumber) {
+            List<EthTokenEvent> tokenEventList, Long blockNumber) {
         //
         if (transactionList.isEmpty() == false) {
             this.ethTransactionBO.insertTxList(transactionList);
         }
 
         if (tokenEventList.isEmpty() == false) {
-            tokenEventBO.insertEventsList(tokenEventList);
+            ethTokenEventBO.insertEventsList(tokenEventList);
         }
 
         // 修改_区块遍历信息
@@ -286,7 +286,7 @@ public class EthTxAOImpl implements IEthTxAO {
             0, 30);
         // 带出事件event
         for (EthTransaction ethTransaction : txList) {
-            List<TokenEvent> tokenEventList = tokenEventBO
+            List<EthTokenEvent> tokenEventList = ethTokenEventBO
                 .queryListByHash(ethTransaction.getHash());
             if (CollectionUtils.isNotEmpty(tokenEventList)) {
                 ethTransaction.setTokenEventList(tokenEventList);

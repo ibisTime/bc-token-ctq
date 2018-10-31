@@ -87,7 +87,7 @@ public class EthTransaction extends ABaseDO {
     }
 
     // ################# 一下属性为查询而添加 ##############
-    private List<TokenEvent> tokenEventList;
+    private List<EthTokenEvent> tokenEventList;
 
     private Date blockCreateDatetimeStart;
 
@@ -273,11 +273,11 @@ public class EthTransaction extends ABaseDO {
         return gasPrice;
     }
 
-    public List<TokenEvent> getTokenEventList() {
+    public List<EthTokenEvent> getTokenEventList() {
         return tokenEventList;
     }
 
-    public void setTokenEventList(List<TokenEvent> tokenEventList) {
+    public void setTokenEventList(List<EthTokenEvent> tokenEventList) {
         this.tokenEventList = tokenEventList;
     }
 }

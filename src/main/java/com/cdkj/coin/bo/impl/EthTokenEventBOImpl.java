@@ -6,24 +6,24 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.cdkj.coin.bo.ITokenEventBO;
+import com.cdkj.coin.bo.IEthTokenEventBO;
 import com.cdkj.coin.bo.base.PaginableBOImpl;
-import com.cdkj.coin.dao.ITokenEventDAO;
-import com.cdkj.coin.domain.TokenEvent;
+import com.cdkj.coin.dao.IEthTokenEventDAO;
+import com.cdkj.coin.domain.EthTokenEvent;
 import com.cdkj.coin.ethereum.OrangeCoinToken.TransferEventResponse;
 
 @Component
-public class TokenEventBOImpl extends PaginableBOImpl<TokenEvent> implements
-        ITokenEventBO {
+public class EthTokenEventBOImpl extends PaginableBOImpl<EthTokenEvent> implements
+        IEthTokenEventBO {
 
     @Autowired
-    private ITokenEventDAO tokenEventDAO;
+    private IEthTokenEventDAO tokenEventDAO;
 
     @Override
-    public TokenEvent convertTokenEvent(
+    public EthTokenEvent convertTokenEvent(
             TransferEventResponse transferEventResponse, String hash,
             String symbol) {
-        TokenEvent tokenEvent = new TokenEvent();
+        EthTokenEvent tokenEvent = new EthTokenEvent();
         tokenEvent.setHash(hash);
         tokenEvent.setTokenFrom(transferEventResponse.from);
         tokenEvent.setTokenTo(transferEventResponse.to);
@@ -36,13 +36,13 @@ public class TokenEventBOImpl extends PaginableBOImpl<TokenEvent> implements
     }
 
     @Override
-    public void insertEventsList(List<TokenEvent> tokenEventList) {
+    public void insertEventsList(List<EthTokenEvent> tokenEventList) {
         tokenEventDAO.insertEventList(tokenEventList);
     }
 
     @Override
-    public List<TokenEvent> queryListByHash(String hash) {
-        TokenEvent condition = new TokenEvent();
+    public List<EthTokenEvent> queryListByHash(String hash) {
+        EthTokenEvent condition = new EthTokenEvent();
         condition.setHash(hash);
         return tokenEventDAO.selectList(condition);
     }

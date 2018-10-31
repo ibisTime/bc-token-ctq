@@ -56,7 +56,7 @@
 		<property name="paginableDAO" ref="usdtTransactionDAOImpl"/>
 	</bean>
 	
-	<bean id="tokenEventBO" class="com.cdkj.coin.bo.impl.TokenEventBOImpl">
-		<property name="paginableDAO" ref="tokenEventDAOImpl"/>
+	<bean id="ethTokenEventBO" class="com.cdkj.coin.bo.impl.EthTokenEventBOImpl">
+		<property name="paginableDAO" ref="ethTokenEventDAOImpl"/>
 	</bean>
 </beans>

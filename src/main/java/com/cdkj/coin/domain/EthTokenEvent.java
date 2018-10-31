@@ -5,7 +5,7 @@ import java.math.BigInteger;
 
 import com.cdkj.coin.dao.base.ABaseDO;
 
-public class TokenEvent extends ABaseDO {
+public class EthTokenEvent extends ABaseDO {
 
     /** 
      * @Fields serialVersionUID : TODO(用一句话描述这个变量表示什么) 
