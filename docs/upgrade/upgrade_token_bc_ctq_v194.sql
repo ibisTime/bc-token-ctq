@@ -38,8 +38,8 @@ ALTER TABLE `tctq_eth_transaction`
 	CHANGE `gas` `gas_limit` bigint(20) NOT NULL COMMENT 'gas最大使用限制';
 	
 	
-DROP TABLE IF EXISTS `tcoin_eth_token_event`;
-CREATE TABLE `tcoin_eth_token_event` (
+DROP TABLE IF EXISTS `tctq_eth_token_event`;
+CREATE TABLE `tctq_eth_token_event` (
   `id` bigint(32) NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `hash` varchar(255) NOT NULL COMMENT '交易哈希',
   `token_from` varchar(255) DEFAULT NULL COMMENT 'token币发起地址',

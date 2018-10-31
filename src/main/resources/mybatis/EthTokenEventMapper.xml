@@ -37,7 +37,7 @@
 		,t.token_log_index
 		,t.symbol
 		FROM
-		tcoin_token_event t
+		tctq_eth_token_event t
 		<include refid="where_condition" />
 		<trim prefix="ORDER BY ">
 			<if test="order != null and order != '' ">
@@ -48,13 +48,13 @@
 
 	<select id="select_tokenEvent_count" parameterType="tokenEvent"
 		resultType="java.lang.Long">
-		SELECT count(1) FROM tcoin_token_event t
+		SELECT count(1) FROM tctq_eth_token_event t
 		<include refid="where_condition" />
 	</select>
 
 	<insert id="insert_tokenEvent" parameterType="tokenEvent">
 		INSERT INTO
-		tcoin_token_event(
+		tctq_eth_token_event(
 		id
 		,hash
 		,token_from
@@ -76,7 +76,7 @@
 	
 	<insert id="insert_eventList" parameterType="java.util.List">
 	
-		INSERT INTO `tcoin_token_event`(
+		INSERT INTO `tctq_eth_token_event`(
 			`hash`
 			,`token_from`
 			,`token_to`
@@ -101,7 +101,7 @@
 	</insert>
 
 	<update id="update_tokenEvent" parameterType="tokenEvent">
-		UPDATE tcoin_token_event
+		UPDATE tctq_eth_token_event
 		SET
 		hash = #{hash}
 		,token_from = #{tokenFrom}

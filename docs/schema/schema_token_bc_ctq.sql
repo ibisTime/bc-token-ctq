@@ -161,7 +161,7 @@ CREATE TABLE `tctq_usdt_transaction` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `tcoin_eth_token_event`;
+DROP TABLE IF EXISTS `tctq_eth_token_event`;
 CREATE TABLE `tcoin_eth_token_event` (
   `id` bigint(32) NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `hash` varchar(255) NOT NULL COMMENT '交易哈希',
