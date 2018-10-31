@@ -37,7 +37,7 @@ public class WanTokenClient {
 
     static final Logger logger = LoggerFactory.getLogger(WanTokenClient.class);
 
-    private static String WAN_TOKEN_URL = PropertiesUtil.Config.WAN_TOKEN_URL;
+    private static String WAN_TOKEN_URL = PropertiesUtil.Config.WAN_URL;
 
     private WanTokenClient() {
     }
@@ -68,8 +68,8 @@ public class WanTokenClient {
             currentBlock = ethBlockResp.getResult();
 
         } catch (Exception e) {
-            throw new BizException("xn000000", "获取区块" + blockNumber
-                    + "发生异常，原因：" + e.getMessage());
+            throw new BizException("xn000000",
+                "获取区块" + blockNumber + "发生异常，原因：" + e.getMessage());
         }
         return currentBlock;
     }
@@ -82,8 +82,8 @@ public class WanTokenClient {
                 .getBlockNumber();
 
         } catch (Exception e) {
-            throw new BizException("xn000000", "查询当前最大区块发生异常，原因："
-                    + e.getMessage());
+            throw new BizException("xn000000",
+                "查询当前最大区块发生异常，原因：" + e.getMessage());
         }
         return currentBlockNumber;
     }
@@ -120,9 +120,10 @@ public class WanTokenClient {
                 .ethGetTransactionReceipt(
                     "0x0aac1866de7fbcf53896d4613b0cc1536a9c705a311b1a2fe7a7ec1c47492445")
                 .send().getResult();
-            List<TransferEventResponse> res = loadTransferEvents(transactionReceipt);
-            System.out
-                .println("0x0aac1866de7fbcf53896d4613b0cc1536a9c705a311b1a2fe7a7ec1c47492445");
+            List<TransferEventResponse> res = loadTransferEvents(
+                transactionReceipt);
+            System.out.println(
+                "0x0aac1866de7fbcf53896d4613b0cc1536a9c705a311b1a2fe7a7ec1c47492445");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -134,8 +135,8 @@ public class WanTokenClient {
 
         List<OrangeCoinToken.TransferEventResponse> transferEventList = null;
 
-        OrangeCoinToken contract = loadHolderContract(transactionReceipt
-            .getTo());
+        OrangeCoinToken contract = loadHolderContract(
+            transactionReceipt.getTo());
         try {
             transferEventList = contract.getTransferEvents(transactionReceipt);
         } catch (Exception e) {

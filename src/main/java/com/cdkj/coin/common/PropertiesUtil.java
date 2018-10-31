@@ -50,17 +50,7 @@ public class PropertiesUtil {
 
         public static String WAN_URL = props.getProperty("WAN_URL");
 
-        /* 以太坊token */
-        public static String TOKEN_URL = props.getProperty("TOKEN_URL");
-
-        public static String TOKEN_PUSH_ADDRESS_URL = props
-            .getProperty("TOKEN_PUSH_ADDRESS_URL");
-
-        /* 万维token */
-        public static String WAN_TOKEN_URL = props.getProperty("WAN_TOKEN_URL");
-
-        public static String WAN_TOKEN_PUSH_ADDRESS_URL = props
-            .getProperty("WAN_TOKEN_PUSH_ADDRESS_URL");
+        /* USDT */
 
         public static String OMNI_URL = props.getProperty("OMNI_URL");
 
