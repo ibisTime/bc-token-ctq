@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.cdkj.coin.dao.IEthTokenEventDAO">
-	<resultMap id="ethTokenEvent_DB_Result" type="ethTokenEvent">
+<mapper namespace="com.cdkj.coin.dao.IWanTokenEventDAO">
+	<resultMap id="wanTokenEvent_DB_Result" type="wanTokenEvent">
 		<result column="id" property="id" />
 		<result column="hash" property="hash" />
 		<result column="token_from" property="tokenFrom" />
@@ -27,7 +27,7 @@
 			</if>
 		</trim>
 	</sql>
-	<select id="select_ethTokenEvent" parameterType="ethTokenEvent" resultMap="ethTokenEvent_DB_Result">
+	<select id="select_wanTokenEvent" parameterType="wanTokenEvent" resultMap="wanTokenEvent_DB_Result">
 		SELECT
 		t.id
 		,t.hash
@@ -46,13 +46,13 @@
 		</trim>
 	</select>
 
-	<select id="select_ethTokenEvent_count" parameterType="ethTokenEvent"
+	<select id="select_wanTokenEvent_count" parameterType="wanTokenEvent"
 		resultType="java.lang.Long">
 		SELECT count(1) FROM tctq_eth_token_event t
 		<include refid="where_condition" />
 	</select>
 
-	<insert id="insert_ethTokenEvent" parameterType="ethTokenEvent">
+	<insert id="insert_wanTokenEvent" parameterType="wanTokenEvent">
 		INSERT INTO
 		tctq_eth_token_event(
 		id
@@ -100,7 +100,7 @@
 		  </foreach>
 	</insert>
 
-	<update id="update_ethTokenEvent" parameterType="ethTokenEvent">
+	<update id="update_wanTokenEvent" parameterType="wanTokenEvent">
 		UPDATE tctq_eth_token_event
 		SET
 		hash = #{hash}

@@ -59,4 +59,9 @@
 	<bean id="ethTokenEventBO" class="com.cdkj.coin.bo.impl.EthTokenEventBOImpl">
 		<property name="paginableDAO" ref="ethTokenEventDAOImpl"/>
 	</bean>
+	
+	<bean id="wanTokenEventBO" class="com.cdkj.coin.bo.impl.WanTokenEventBOImpl">
+		<property name="paginableDAO" ref="wanTokenEventDAOImpl"/>
+	</bean>
+	
 </beans>

@@ -111,6 +111,7 @@ CREATE TABLE `tctq_wan_address` (
 
 DROP TABLE IF EXISTS `tctq_wan_transaction`;
 CREATE TABLE `tctq_wan_transaction` (
+  `id` bigint(32) NOT NULL AUTO_INCREMENT,
   `hash` char(66) NOT NULL COMMENT '交易哈希',
   `nonce` bigint(20) NOT NULL COMMENT '交易次数',
   `block_hash` varchar(66) NOT NULL COMMENT '区块哈希',
@@ -122,10 +123,17 @@ CREATE TABLE `tctq_wan_transaction` (
   `block_create_datetime` datetime NOT NULL COMMENT '区块形成时间',
   `sync_datetime` datetime NOT NULL COMMENT '同步时间',
   `status` varchar(4) NOT NULL COMMENT '状态 0-未推送 1-已推送',
-  `gas` bigint(20) NOT NULL COMMENT 'gas使用量',
+  `gas_limit` bigint(20) NOT NULL COMMENT 'gas最大使用限制',
   `block_number` varchar(20) NOT NULL,
   `gas_used` bigint(10) NOT NULL COMMENT 'gas消耗',
-  PRIMARY KEY (`hash`),
+  `gas_fee` bigint(20) NOT NULL COMMENT 'gas费率',
+  `input` text COMMENT 'input输入',
+  `public_key` text COMMENT 'publicKey',
+  `raw` text COMMENT 'raw',
+  `r` text COMMENT 'r',
+  `s` text COMMENT 's',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `hash_UNIQUE` (`hash`),
   KEY `from_index` (`from`),
   KEY `to_index` (`to`),
   KEY `status_index` (`status`)
@@ -172,3 +180,15 @@ CREATE TABLE `tcoin_eth_token_event` (
   `symbol` varchar(32) NOT NULL COMMENT '币种符号',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='ETHtoken交易event';
+
+DROP TABLE IF EXISTS `tctq_wan_token_event`;
+CREATE TABLE `tcoin_wan_token_event` (
+  `id` bigint(32) NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `hash` varchar(255) NOT NULL COMMENT '交易哈希',
+  `token_from` varchar(255) DEFAULT NULL COMMENT 'token币发起地址',
+  `token_to` varchar(255) DEFAULT NULL COMMENT 'token币接收地址',
+  `token_value` decimal(64,0) DEFAULT NULL COMMENT 'token币数量',
+  `token_log_index` bigint(32) DEFAULT NULL COMMENT 'event_log_index',
+  `symbol` varchar(32) NOT NULL COMMENT '币种符号',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='WANtoken交易event';

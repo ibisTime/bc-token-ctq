@@ -6,24 +6,24 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.cdkj.coin.bo.IEthTokenEventBO;
+import com.cdkj.coin.bo.IWanTokenEventBO;
 import com.cdkj.coin.bo.base.PaginableBOImpl;
-import com.cdkj.coin.dao.IEthTokenEventDAO;
-import com.cdkj.coin.domain.EthTokenEvent;
+import com.cdkj.coin.dao.IWanTokenEventDAO;
+import com.cdkj.coin.domain.WanTokenEvent;
 import com.cdkj.coin.ethereum.OrangeCoinToken.TransferEventResponse;
 
 @Component
-public class EthTokenEventBOImpl extends PaginableBOImpl<EthTokenEvent>
-        implements IEthTokenEventBO {
+public class WanTokenEventBOImpl extends PaginableBOImpl<WanTokenEvent>
+        implements IWanTokenEventBO {
 
     @Autowired
-    private IEthTokenEventDAO ethTokenEventDAO;
+    private IWanTokenEventDAO wanTokenEventDAO;
 
     @Override
-    public EthTokenEvent convertTokenEvent(
+    public WanTokenEvent convertTokenEvent(
             TransferEventResponse transferEventResponse, String hash,
             String symbol) {
-        EthTokenEvent tokenEvent = new EthTokenEvent();
+        WanTokenEvent tokenEvent = new WanTokenEvent();
         tokenEvent.setHash(hash);
         tokenEvent.setTokenFrom(transferEventResponse.from);
         tokenEvent.setTokenTo(transferEventResponse.to);
@@ -36,14 +36,14 @@ public class EthTokenEventBOImpl extends PaginableBOImpl<EthTokenEvent>
     }
 
     @Override
-    public void insertEventsList(List<EthTokenEvent> tokenEventList) {
-        ethTokenEventDAO.insertEventList(tokenEventList);
+    public void insertEventsList(List<WanTokenEvent> tokenEventList) {
+        wanTokenEventDAO.insertEventList(tokenEventList);
     }
 
     @Override
-    public List<EthTokenEvent> queryListByHash(String hash) {
-        EthTokenEvent condition = new EthTokenEvent();
+    public List<WanTokenEvent> queryListByHash(String hash) {
+        WanTokenEvent condition = new WanTokenEvent();
         condition.setHash(hash);
-        return ethTokenEventDAO.selectList(condition);
+        return wanTokenEventDAO.selectList(condition);
     }
 }

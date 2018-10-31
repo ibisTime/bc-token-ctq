@@ -2,12 +2,9 @@ package com.cdkj.coin.bo;
 
 import java.util.List;
 
-import org.springframework.stereotype.Component;
-
 import com.cdkj.coin.domain.EthTokenEvent;
 import com.cdkj.coin.ethereum.OrangeCoinToken.TransferEventResponse;
 
-@Component
 public interface IEthTokenEventBO {
 
     public EthTokenEvent convertTokenEvent(

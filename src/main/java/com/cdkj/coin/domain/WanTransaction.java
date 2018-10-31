@@ -1,7 +1,9 @@
 package com.cdkj.coin.domain;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
+import java.util.List;
 
 import com.cdkj.coin.dao.base.ABaseDO;
 
@@ -15,6 +17,8 @@ public class WanTransaction extends ABaseDO {
 
     private static final long serialVersionUID = 1L;
 
+    private Long id;
+
     // 交易hash
     private String hash;
 
@@ -23,9 +27,6 @@ public class WanTransaction extends ABaseDO {
 
     // 区块hash
     private String blockHash;
-
-    // 区块编号
-    private String blockNumber;
 
     // transactionIndex
     private BigInteger transactionIndex;
@@ -37,24 +38,10 @@ public class WanTransaction extends ABaseDO {
     private String to;
 
     // 数量
-    private String value;
+    private BigDecimal value;
 
     // gas价格
-    private String gasPrice;
-
-    // gasLimit
-    private BigInteger gas;
-
-    // 消耗gas
-    private BigInteger gasUsed;
-
-    public BigInteger getGasUsed() {
-        return gasUsed;
-    }
-
-    public void setGasUsed(BigInteger gasUsed) {
-        this.gasUsed = gasUsed;
-    }
+    private BigDecimal gasPrice;
 
     // 区块生成时间
     private Date blockCreateDatetime;
@@ -64,7 +51,44 @@ public class WanTransaction extends ABaseDO {
 
     private String status;
 
+    // 区块编号
+    private BigInteger blockNumber;
+
+    // gasLimit
+    private BigInteger gasLimit;
+
+    // 消耗gas
+    private BigInteger gasUsed;
+
+    // gas手续费
+    private BigDecimal gasFee;
+
+    // 输出input
+    private String input;
+
+    // public key
+    private String publicKey;
+
+    // raw
+    private String raw;
+
+    // r
+    private String r;
+
+    // s
+    private String s;
+
+    public BigInteger getGasUsed() {
+        return gasUsed;
+    }
+
+    public void setGasUsed(BigInteger gasUsed) {
+        this.gasUsed = gasUsed;
+    }
+
     // ################# 一下属性为查询而添加 ##############
+    private List<WanTokenEvent> tokenEventList;
+
     private Date blockCreateDatetimeStart;
 
     private Date blockCreateDatetimeEnd;
@@ -112,23 +136,70 @@ public class WanTransaction extends ABaseDO {
     public void setStatus(String status) {
         this.status = status;
     }
-    // // input
-    // private String input;
-    //
-    // // 创建时间
-    // private String creates;
-    //
-    // // publicKey
-    // private String publicKey;
-    //
-    // // raw
-    // private String raw;
-    //
-    // // r
-    // private String r;
-    //
-    // // s
-    // private String s;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public BigInteger getGasLimit() {
+        return gasLimit;
+    }
+
+    public void setGasLimit(BigInteger gasLimit) {
+        this.gasLimit = gasLimit;
+    }
+
+    public BigDecimal getGasFee() {
+        return gasFee;
+    }
+
+    public void setGasFee(BigDecimal gasFee) {
+        this.gasFee = gasFee;
+    }
+
+    public String getInput() {
+        return input;
+    }
+
+    public void setInput(String input) {
+        this.input = input;
+    }
+
+    public String getPublicKey() {
+        return publicKey;
+    }
+
+    public void setPublicKey(String publicKey) {
+        this.publicKey = publicKey;
+    }
+
+    public String getRaw() {
+        return raw;
+    }
+
+    public void setRaw(String raw) {
+        this.raw = raw;
+    }
+
+    public String getR() {
+        return r;
+    }
+
+    public void setR(String r) {
+        this.r = r;
+    }
+
+    public String getS() {
+        return s;
+    }
+
+    public void setS(String s) {
+        this.s = s;
+    }
 
     public void setHash(String hash) {
         this.hash = hash;
@@ -154,11 +225,11 @@ public class WanTransaction extends ABaseDO {
         return blockHash;
     }
 
-    public void setBlockNumber(String blockNumber) {
+    public void setBlockNumber(BigInteger blockNumber) {
         this.blockNumber = blockNumber;
     }
 
-    public String getBlockNumber() {
+    public BigInteger getBlockNumber() {
         return blockNumber;
     }
 
@@ -186,27 +257,27 @@ public class WanTransaction extends ABaseDO {
         return to;
     }
 
-    public void setValue(String value) {
+    public void setValue(BigDecimal value) {
         this.value = value;
     }
 
-    public String getValue() {
+    public BigDecimal getValue() {
         return value;
     }
 
-    public void setGasPrice(String gasPrice) {
+    public void setGasPrice(BigDecimal gasPrice) {
         this.gasPrice = gasPrice;
     }
 
-    public String getGasPrice() {
+    public BigDecimal getGasPrice() {
         return gasPrice;
     }
 
-    public BigInteger getGas() {
-        return gas;
+    public List<WanTokenEvent> getTokenEventList() {
+        return tokenEventList;
     }
 
-    public void setGas(BigInteger gas) {
-        this.gas = gas;
+    public void setTokenEventList(List<WanTokenEvent> tokenEventList) {
+        this.tokenEventList = tokenEventList;
     }
 }
