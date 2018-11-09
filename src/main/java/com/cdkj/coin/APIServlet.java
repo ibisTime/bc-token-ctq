@@ -33,8 +33,8 @@ public class APIServlet extends HttpServlet {
             HttpServletResponse response) throws ServletException, IOException {
         logger.info("Successful Deployment");
         PrintWriter writer = response.getWriter();
-        writer.append("Version:1.4.0 \n");
-        writer.append("Description:bc-ctq HMONEY 4thonline_test \n");
+        writer.append("Version:1.1.1 \n");
+        writer.append("Description:bc-ctq HMONEY \n");
         writer.flush();
     }
 

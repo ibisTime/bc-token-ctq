@@ -2,6 +2,11 @@ package com.cdkj.coin.ao.impl;
 
 import java.util.Map;
 
+import okhttp3.Call;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
@@ -11,11 +16,6 @@ import com.cdkj.coin.bitcoin.BTCOriginalTx;
 import com.cdkj.coin.bitcoin.BTCTXs;
 import com.cdkj.coin.common.PropertiesUtil;
 import com.cdkj.coin.exception.BizException;
-
-import okhttp3.Call;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 @Service
 public class BTCBlockDataService {
@@ -119,7 +119,7 @@ public class BTCBlockDataService {
                 return null;
             }
             return com.alibaba.fastjson.JSON.parseObject(jsonStr)
-                .getLong("blockcount");
+                .getJSONObject("info").getLongValue("blocks");
 
         } catch (Exception e) {
 
