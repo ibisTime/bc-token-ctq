@@ -1,11 +1,7 @@
 package com.cdkj.coin.ao.impl;
 
+import java.math.BigInteger;
 import java.util.Map;
-
-import okhttp3.Call;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 import org.springframework.stereotype.Service;
 
@@ -13,8 +9,16 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.cdkj.coin.bitcoin.BTCOriginalTx;
 import com.cdkj.coin.bitcoin.BTCTXs;
+import com.cdkj.coin.bitcoin.BlockchainBlock;
+import com.cdkj.coin.common.JsonUtil;
 import com.cdkj.coin.common.PropertiesUtil;
 import com.cdkj.coin.exception.BizException;
+import com.cdkj.coin.exception.EBizErrorCode;
+
+import okhttp3.Call;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 @Service
 public class BTCBlockDataService {
@@ -104,17 +108,43 @@ public class BTCBlockDataService {
     public Long getBlockCount() {
         try {
 
-            String txURL = this.baseApiURL() + "/status?q=getBlockCount";
+            String txURL = PropertiesUtil.Config.BLOCKCHAIN_URL
+                    + "/latestblock";
             String jsonStr = this.get(txURL);
-            if (jsonStr == null) {
-                return null;
-            }
             return com.alibaba.fastjson.JSON.parseObject(jsonStr)
-                .getJSONObject("info").getLongValue("blocks");
+                .getLongValue("height");
 
         } catch (Exception e) {
 
-            throw new BizException("xn000", "拉取数据失败");
+            throw new BizException(EBizErrorCode.DEFAULT.getErrorCode(),
+                "获取BTC最新区块信息失败，原因：" + e.getMessage());
+
+        }
+    }
+
+    public BlockchainBlock getBlockWithTx(BigInteger height) {
+
+        try {
+
+            String txURL = PropertiesUtil.Config.BLOCKCHAIN_URL
+                    + "/block-height/" + height + "?format=json";
+            String jsonStr = this.get(txURL);
+            JSONObject jsonObject = JSONObject.parseObject(jsonStr);
+
+            BlockchainBlock blockchainBlock = JsonUtil.json2Bean(
+                jsonObject.getJSONArray("blocks").get(0).toString(),
+                BlockchainBlock.class);
+            if (blockchainBlock == null) {
+                throw new BizException(EBizErrorCode.DEFAULT.getErrorCode(),
+                    "获取BTC最新区块信息失败");
+            }
+
+            return blockchainBlock;
+
+        } catch (Exception e) {
+
+            throw new BizException(EBizErrorCode.DEFAULT.getErrorCode(),
+                "获取BTC最新区块信息发送异常，原因：" + e.getMessage());
 
         }
     }
@@ -123,6 +153,10 @@ public class BTCBlockDataService {
 
         return PropertiesUtil.Config.BTC_URL;
 
+    }
+
+    public static void main(String[] args) {
+        new BTCBlockDataService().getBlockWithTx(new BigInteger("550028"));
     }
 
 }

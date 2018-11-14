@@ -38,11 +38,14 @@ public class PropertiesUtil {
         public static String BTC_PUSH_ADDRESS_URL = props
             .getProperty("BTC_PUSH_ADDRESS_URL");
 
+        public static String BTC_URL = props.getProperty("BTC_URL");
+
+        public static String BLOCKCHAIN_URL = props
+            .getProperty("BLOCKCHAIN_URL");
+
         /* USDT */
         public static String USDT_PUSH_ADDRESS_URL = props
             .getProperty("USDT_PUSH_ADDRESS_URL");
-
-        public static String BTC_URL = props.getProperty("BTC_URL");
 
         /* 万维币 */
         public static String WAN_PUSH_ADDRESS_URL = props

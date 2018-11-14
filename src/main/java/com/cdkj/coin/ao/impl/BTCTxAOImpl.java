@@ -1,5 +1,6 @@
 package com.cdkj.coin.ao.impl;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
@@ -13,10 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.cdkj.coin.ao.IBTCTxAO;
-import com.cdkj.coin.bitcoin.BTCOriginalTx;
-import com.cdkj.coin.bitcoin.BTCScriptPubKey;
-import com.cdkj.coin.bitcoin.BTCTXs;
-import com.cdkj.coin.bitcoin.BTCVoutUTXO;
+import com.cdkj.coin.bitcoin.BlockchainBlock;
+import com.cdkj.coin.bitcoin.BlockchainOutput;
+import com.cdkj.coin.bitcoin.BlockchainTx;
 import com.cdkj.coin.bitcoin.BtcUtxo;
 import com.cdkj.coin.bo.IBTCAddressBO;
 import com.cdkj.coin.bo.IBtcUtxoBO;
@@ -49,114 +49,82 @@ public class BTCTxAOImpl implements IBTCTxAO {
 
     public void doBtcTransactionSync() {
 
-        // logger.info("******BTC扫描区块开始******");
-
-        Long blockNumber = sysConfigBO
-            .getLongValue(SysConstants.CUR_BTC_BLOCK_NUMBER);
-
-        // 如果区块高度为达到带扫描的区块
-        Long lasterBlockNumber = blockDataService.getBlockCount();
-        if (lasterBlockNumber < blockNumber) {
-            return;
+        boolean isDebug = true;
+        if (isDebug) {
+            logger.info("******BTC扫描区块开始******");
         }
 
-        // 判断是否有足够的区块确认 推荐1
-        BigInteger blockConfirm = sysConfigBO
-            .getBigIntegerValue(SysConstants.BLOCK_CONFIRM_BTC);
-        if (blockNumber == null
-                || (lasterBlockNumber - blockNumber) < blockConfirm
-                    .longValue()) {
-            // System.out.println("*********同步循环结束,区块号" + (blockNumber - 1)
-            // + "为最后一个可信任区块*******");
-            return;
-        }
-
-        // 该区块有测试数据
-        // Long blockNumber = Long.valueOf(1284522);
-        List<BtcUtxo> ourOutUTXOList = new ArrayList<>();
-
-        // 查询的分页
-        Integer pageNum = 0;
         while (true) {
-            // logger.info(
-            // "******扫描区块：" + blockNumber + " 第" + pageNum + "页：" + "******");
 
-            BTCTXs btctXs = null;
-            try {
-                btctXs = this.blockDataService.getBlockTxs(blockNumber,
-                    pageNum);
-            } catch (Exception e) {
-                logger.error("******扫描区块：" + blockNumber + " 第" + pageNum + "页："
-                        + "发送异常，原因：" + e.getMessage() + "，重新扫描******");
-                try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException e1) {
-                    e1.printStackTrace();
-                }
-                continue;
-            }
+            Long blockNumber = sysConfigBO
+                .getLongValue(SysConstants.CUR_BTC_BLOCK_NUMBER);
 
-            if (btctXs == null) {
-                logger.error("******扫描区块：" + blockNumber + " 第" + pageNum + "页："
-                        + "发送异常，重新扫描******");
-                try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException e1) {
-                    e1.printStackTrace();
-                }
-                continue;
-            }
-
-            // 说明该区块已经遍历完了
-            if (btctXs.getTxs().size() <= 0) {
-                // logger.info("******扫描区块完成：" + blockNumber + "******");
+            // 如果区块高度为达到带扫描的区块
+            Long lasterBlockNumber = blockDataService.getBlockCount();
+            if (lasterBlockNumber < blockNumber) {
                 break;
             }
 
-            // 遍历交易
-            for (BTCOriginalTx originalTx : btctXs.getTxs()) {
-                // todo 暂不处理coinbase 挖矿充值可能会被忽略
-                if (originalTx.getCoinBase() != null
-                        && originalTx.getCoinBase()) {
-                    continue;
+            // 判断是否有足够的区块确认 推荐1
+            BigInteger blockConfirm = sysConfigBO
+                .getBigIntegerValue(SysConstants.BLOCK_CONFIRM_BTC);
+            if (blockNumber == null
+                    || (lasterBlockNumber - blockNumber) < blockConfirm
+                        .longValue()) {
+
+                if (isDebug) {
+                    System.out.println("*********同步循环结束,区块号" + (blockNumber - 1)
+                            + "为最后一个可信任区块*******");
                 }
 
+                break;
+            }
+
+            List<BtcUtxo> ourOutUTXOList = new ArrayList<>();
+            
+            if (isDebug) {
+                System.out.println("*********开始扫描区块" + blockNumber
+                        + "*******");
+            }
+
+            // 获取区块详细信息，包含交易列表数据
+            BlockchainBlock blockchainBlock = blockDataService
+                .getBlockWithTx(BigInteger.valueOf(blockNumber));
+
+            // 遍历交易
+            for (BlockchainTx blockchainTx : blockchainBlock.getTx()) {
+
                 // 遍历输出
-                for (BTCVoutUTXO voutUTXO : originalTx.getVout()) {
-
-                    List<String> addressList = voutUTXO.getScriptPubKey()
-                        .getAddresses();
-                    if (addressList == null || addressList.size() == 0) {
+                for (BlockchainOutput output : blockchainTx.getOut()) {
+                    String outToAddress = output.getAddr();
+                    if (outToAddress == null) {
                         continue;
                     }
-                    if (btcUtxoBO.isBtcUtxoExist(originalTx.getTxid(),
-                        voutUTXO.getN())) {
+                    if (btcUtxoBO.isBtcUtxoExist(blockchainTx.getHash(),
+                        output.getN())) {
                         continue;
                     }
 
-                    String outToAddress = addressList.get(0);
                     long count = this.btcAddressBO.addressCount(outToAddress);
 
                     if (count <= 0) {
                         continue;
                     }
 
-                    BtcUtxo btcutxo = this.convertOut(voutUTXO,
-                        originalTx.getTxid(), originalTx.getBlockheight(),
-                        EBTCUtxoStatus.OUT_UN_PUSH.getCode());
+                    BtcUtxo btcutxo = this.convertOut(output, blockchainTx,
+                        blockNumber, EBTCUtxoStatus.OUT_UN_PUSH.getCode());
                     ourOutUTXOList.add(btcutxo);
-
                 }
 
             }
 
-            pageNum += 1;
+            this.saveToDB(ourOutUTXOList, blockNumber);
 
         }
 
-        this.saveToDB(ourOutUTXOList, blockNumber);
-
-        // logger.info("******BTC扫描区块结束******");
+        if (isDebug) {
+            logger.info("******BTC扫描区块结束******");
+        }
 
     }
 
@@ -237,17 +205,15 @@ public class BTCTxAOImpl implements IBTCTxAO {
 
     }
 
-    private BtcUtxo convertOut(BTCVoutUTXO btcOut, String txid,
+    private BtcUtxo convertOut(BlockchainOutput output, BlockchainTx tx,
             Long blockHeight, String status) {
 
-        BTCScriptPubKey scriptPubKey = btcOut.getScriptPubKey();
-
         BtcUtxo btcutxo = new BtcUtxo();
-        btcutxo.setAddress(scriptPubKey.getAddresses().get(0));
-        btcutxo.setCount(btcOut.getValue());
-        btcutxo.setScriptPubKey(scriptPubKey.getHex());
-        btcutxo.setTxid(txid);
-        btcutxo.setVout(btcOut.getN());
+        btcutxo.setAddress(output.getAddr());
+        btcutxo.setCount(new BigDecimal(output.getValue().toString()));
+        btcutxo.setScriptPubKey(output.getScript());
+        btcutxo.setTxid(tx.getHash());
+        btcutxo.setVout(output.getN());
         btcutxo.setSyncTime(new Date());
         btcutxo.setBlockHeight(blockHeight);
         btcutxo.setStatus(status);
