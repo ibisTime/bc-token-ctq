@@ -1,3 +1,12 @@
+DROP TABLE `tctq_token_address`;
+DROP TABLE `tctq_token_transaction`;
+DROP TABLE `tctq_wtoken_address`;
+DROP TABLE `tctq_wtoken_transaction`;
+
+TRUNCATE tctq_btc_address;
+TRUNCATE tctq_eth_address;
+TRUNCATE tctq_wan_address;
+
 DROP TABLE IF EXISTS `tctq_usdt_transaction`;
 CREATE TABLE `tctq_usdt_transaction` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
