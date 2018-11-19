@@ -28,7 +28,7 @@ public class SysConstants {
 
     public static final String MIN_ETH_RECHARGE_MONEY = "minEthRechargeMoney"; // eth最小充值金额
 
-    public static final String MIN_WAN_ARGE_MONEY = "minWanRechargeMoney"; // wan最小充值金额
+    public static final String MIN_WAN_RECHARGE_MONEY = "minWanRechargeMoney"; // wan最小充值金额
 
     public static final String MIN_BTC_RECHARGE_MONEY = "minBtcRechargeMoney"; // btc最小充值金额
 

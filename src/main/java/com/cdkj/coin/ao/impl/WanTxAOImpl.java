@@ -1,6 +1,7 @@
 package com.cdkj.coin.ao.impl;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,6 +26,7 @@ import com.cdkj.coin.bo.IWanAddressBO;
 import com.cdkj.coin.bo.IWanTokenEventBO;
 import com.cdkj.coin.bo.IWanTransactionBO;
 import com.cdkj.coin.bo.base.Paginable;
+import com.cdkj.coin.common.AmountUtil;
 import com.cdkj.coin.common.DateUtil;
 import com.cdkj.coin.common.JsonUtil;
 import com.cdkj.coin.common.PropertiesUtil;
@@ -127,20 +129,19 @@ public class WanTxAOImpl implements IWanTxAO {
                     .getLongValue(SysConstants.CUR_WAN_BLOCK_NUMBER);
                 if (isDebug == true) {
 
-                    System.out.println(
-                        "*********同步循环开始，扫描区块" + blockNumber + "*******");
+                    System.out.println("*********同步循环开始，扫描区块" + blockNumber
+                            + "*******");
 
                 }
 
                 // 获取当前区块
-                EthBlock wanBlockResp = web3j
-                    .ethGetBlockByNumber(
-                        new DefaultBlockParameterNumber(blockNumber), true)
-                    .send();
+                EthBlock wanBlockResp = web3j.ethGetBlockByNumber(
+                    new DefaultBlockParameterNumber(blockNumber), true).send();
                 if (wanBlockResp.getError() != null) {
-                    logger.error(
-                        "扫描万维区块同步流水发送异常，原因：获取区块-" + wanBlockResp.getError());
-                    throw new BizException(EBizErrorCode.DEFAULT.getErrorCode(),
+                    logger.error("扫描万维区块同步流水发送异常，原因：获取区块-"
+                            + wanBlockResp.getError());
+                    throw new BizException(
+                        EBizErrorCode.DEFAULT.getErrorCode(),
                         "扫描万维区块同步流水发送异常，原因：获取区块-" + wanBlockResp.getError());
                 }
 
@@ -151,16 +152,17 @@ public class WanTxAOImpl implements IWanTxAO {
                     .getBlockNumber();
                 if (isDebug == true) {
 
-                    System.out
-                        .println("*********最大区块号" + maxBlockNumber + "*******");
+                    System.out.println("*********最大区块号" + maxBlockNumber
+                            + "*******");
                 }
 
                 // 判断是否有足够的区块确认 暂定12
                 BigInteger blockConfirm = sysConfigBO
                     .getBigIntegerValue(SysConstants.BLOCK_CONFIRM_WAN);
-                if (currentBlock == null || maxBlockNumber
-                    .subtract(BigInteger.valueOf(blockNumber))
-                    .compareTo(blockConfirm) < 0) {
+                if (currentBlock == null
+                        || maxBlockNumber.subtract(
+                            BigInteger.valueOf(blockNumber)).compareTo(
+                            blockConfirm) < 0) {
 
                     if (isDebug == true) {
 
@@ -174,6 +176,11 @@ public class WanTxAOImpl implements IWanTxAO {
                 List<WanTransaction> wanTransactionList = new ArrayList<>();
                 List<WanTokenEvent> tokenEventList = new ArrayList<>();
 
+                // 最小充值金额
+                BigDecimal orangeMinChangeMoney = sysConfigBO
+                    .getBigDecimalValue(SysConstants.MIN_WAN_RECHARGE_MONEY);
+                BigDecimal minChangeMoney = AmountUtil
+                    .toWan(orangeMinChangeMoney);
                 for (EthBlock.TransactionResult txObj : currentBlock
                     .getTransactions()) {
 
@@ -243,6 +250,14 @@ public class WanTxAOImpl implements IWanTxAO {
                     WanTransaction wanTransaction = wanTransactionBO.convertTx(
                         tx, transactionReceipt.getGasUsed(),
                         currentBlock.getTimestamp());
+
+                    // 合约不存在，判断是否小于最小充值金额
+                    if (!isTokenContractExist) {
+                        if (minChangeMoney.compareTo(wanTransaction.getValue()) > 0) {
+                            continue;
+                        }
+                    }
+
                     wanTransactionList.add(wanTransaction);
 
                 }
@@ -322,8 +337,9 @@ public class WanTxAOImpl implements IWanTxAO {
         if (hashList == null || hashList.size() <= 0) {
             throw new BizException(
                 EBizErrorCode.PUSH_STATUS_UPDATE_FAILURE.getErrorCode(),
-                "请传入正确的json数组" + EBizErrorCode.PUSH_STATUS_UPDATE_FAILURE
-                    .getErrorCode());
+                "请传入正确的json数组"
+                        + EBizErrorCode.PUSH_STATUS_UPDATE_FAILURE
+                            .getErrorCode());
         }
 
         this.wanTransactionBO.changeTxStatusToPushed(hashList);

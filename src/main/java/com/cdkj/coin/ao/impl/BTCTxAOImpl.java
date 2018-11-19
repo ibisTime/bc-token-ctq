@@ -21,6 +21,7 @@ import com.cdkj.coin.bitcoin.BtcUtxo;
 import com.cdkj.coin.bo.IBTCAddressBO;
 import com.cdkj.coin.bo.IBtcUtxoBO;
 import com.cdkj.coin.bo.ISYSConfigBO;
+import com.cdkj.coin.common.AmountUtil;
 import com.cdkj.coin.common.JsonUtil;
 import com.cdkj.coin.common.PropertiesUtil;
 import com.cdkj.coin.common.SysConstants;
@@ -73,23 +74,27 @@ public class BTCTxAOImpl implements IBTCTxAO {
                         .longValue()) {
 
                 if (isDebug) {
-                    System.out.println("*********同步循环结束,区块号" + (blockNumber - 1)
-                            + "为最后一个可信任区块*******");
+                    System.out.println("*********同步循环结束,区块号"
+                            + (blockNumber - 1) + "为最后一个可信任区块*******");
                 }
 
                 break;
             }
 
             List<BtcUtxo> ourOutUTXOList = new ArrayList<>();
-            
+
             if (isDebug) {
-                System.out.println("*********开始扫描区块" + blockNumber
-                        + "*******");
+                System.out.println("*********开始扫描区块" + blockNumber + "*******");
             }
 
             // 获取区块详细信息，包含交易列表数据
             BlockchainBlock blockchainBlock = blockDataService
                 .getBlockWithTx(BigInteger.valueOf(blockNumber));
+
+            // 最小充值金额
+            BigDecimal orangeMinChangeMoney = sysConfigBO
+                .getBigDecimalValue(SysConstants.MIN_BTC_RECHARGE_MONEY);
+            BigDecimal minChangeMoney = AmountUtil.toBtc(orangeMinChangeMoney);
 
             // 遍历交易
             for (BlockchainTx blockchainTx : blockchainBlock.getTx()) {
@@ -113,6 +118,12 @@ public class BTCTxAOImpl implements IBTCTxAO {
 
                     BtcUtxo btcutxo = this.convertOut(output, blockchainTx,
                         blockNumber, EBTCUtxoStatus.OUT_UN_PUSH.getCode());
+
+                    // 小于最小充值金额跳过
+                    if (minChangeMoney.compareTo(btcutxo.getCount()) > 0) {
+                        continue;
+                    }
+
                     ourOutUTXOList.add(btcutxo);
                 }
 
@@ -176,8 +187,9 @@ public class BTCTxAOImpl implements IBTCTxAO {
         if (utxoList == null || utxoList.size() <= 0) {
             throw new BizException(
                 EBizErrorCode.PUSH_STATUS_UPDATE_FAILURE.getErrorCode(),
-                "请传入正确的json数组" + EBizErrorCode.PUSH_STATUS_UPDATE_FAILURE
-                    .getErrorCode());
+                "请传入正确的json数组"
+                        + EBizErrorCode.PUSH_STATUS_UPDATE_FAILURE
+                            .getErrorCode());
         }
 
         for (BtcUtxo btcutxo : utxoList) {
@@ -191,9 +203,9 @@ public class BTCTxAOImpl implements IBTCTxAO {
 
             if (nextStatus == null) {
 
-                logger
-                    .error("utxo 状态异常，无法对应，原因：" + "txid:" + ourBtcUtxo.getTxid()
-                            + "  " + "vout:" + ourBtcUtxo.getVout());
+                logger.error("utxo 状态异常，无法对应，原因：" + "txid:"
+                        + ourBtcUtxo.getTxid() + "  " + "vout:"
+                        + ourBtcUtxo.getVout());
 
             } else {
 

@@ -82,8 +82,9 @@ public class UsdtTxAOImpl implements IUsdtTxAO {
                 .getOmniHashListByBlock(blockNumber.intValue());
             List<UsdtTransaction> usdtTransactionList = new ArrayList<UsdtTransaction>();
             // 最小充值金额
-            BigDecimal minChangeMoney = sysConfigBO
+            BigDecimal orangeMinChangeMoney = sysConfigBO
                 .getBigDecimalValue(SysConstants.MIN_USDT_RECHARGE_MONEY);
+            BigDecimal minChangeMoney = AmountUtil.toUsdt(orangeMinChangeMoney);
             // 遍历查询交易记录
             for (String hash : hashList) {
                 OmniTransaction omniTransaction = UsdtClient

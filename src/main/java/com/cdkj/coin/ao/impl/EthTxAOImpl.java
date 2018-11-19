@@ -1,6 +1,7 @@
 package com.cdkj.coin.ao.impl;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,19 +21,20 @@ import org.web3j.protocol.core.methods.response.TransactionReceipt;
 
 import com.cdkj.coin.ao.IEthTxAO;
 import com.cdkj.coin.bo.IEthAddressBO;
+import com.cdkj.coin.bo.IEthTokenEventBO;
 import com.cdkj.coin.bo.IEthTransactionBO;
 import com.cdkj.coin.bo.ISYSConfigBO;
 import com.cdkj.coin.bo.ITokenContractBO;
-import com.cdkj.coin.bo.IEthTokenEventBO;
 import com.cdkj.coin.bo.base.Paginable;
+import com.cdkj.coin.common.AmountUtil;
 import com.cdkj.coin.common.DateUtil;
 import com.cdkj.coin.common.JsonUtil;
 import com.cdkj.coin.common.PropertiesUtil;
 import com.cdkj.coin.common.SysConstants;
+import com.cdkj.coin.domain.EthTokenEvent;
 import com.cdkj.coin.domain.EthTransaction;
 import com.cdkj.coin.domain.SYSConfig;
 import com.cdkj.coin.domain.TokenContract;
-import com.cdkj.coin.domain.EthTokenEvent;
 import com.cdkj.coin.dto.req.EthTxPageReq;
 import com.cdkj.coin.enums.EPushStatus;
 import com.cdkj.coin.enums.ETransactionRecetptStatus;
@@ -171,6 +173,11 @@ public class EthTxAOImpl implements IEthTxAO {
                 List<EthTransaction> ethTransactionList = new ArrayList<>();
                 List<EthTokenEvent> tokenEventList = new ArrayList<>();
 
+                // 最小充值金额
+                BigDecimal orangeMinChangeMoney = sysConfigBO
+                    .getBigDecimalValue(SysConstants.MIN_ETH_RECHARGE_MONEY);
+                BigDecimal minChangeMoney = AmountUtil
+                    .toEth(orangeMinChangeMoney);
                 for (EthBlock.TransactionResult txObj : currentBlock
                     .getTransactions()) {
 
@@ -239,6 +246,14 @@ public class EthTxAOImpl implements IEthTxAO {
                     EthTransaction ethTransaction = ethTransactionBO.convertTx(
                         tx, transactionReceipt.getGasUsed(),
                         currentBlock.getTimestamp());
+
+                    // 合约不存在，判断是否小于最小充值金额
+                    if (!isTokenContractExist) {
+                        if (minChangeMoney.compareTo(ethTransaction.getValue()) > 0) {
+                            continue;
+                        }
+                    }
+
                     ethTransactionList.add(ethTransaction);
 
                 }

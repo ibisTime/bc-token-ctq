@@ -98,4 +98,12 @@ public class AmountUtil {
     public static BigDecimal toUsdt(BigDecimal orgNum) {
         return orgNum.multiply(BigDecimal.TEN.pow(8)).setScale(0);
     }
+
+    public static BigDecimal toEth(BigDecimal orgNum) {
+        return orgNum.multiply(BigDecimal.TEN.pow(18)).setScale(0);
+    }
+
+    public static BigDecimal toWan(BigDecimal orgNum) {
+        return orgNum.multiply(BigDecimal.TEN.pow(18)).setScale(0);
+    }
 }
