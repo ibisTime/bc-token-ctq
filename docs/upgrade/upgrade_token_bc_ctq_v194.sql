@@ -31,7 +31,7 @@ INSERT INTO `tsys_config` (`type`, `ckey`, `cvalue`, `updater`, `update_datetime
 INSERT INTO `tsys_config` (`type`, `ckey`, `cvalue`, `updater`, `update_datetime`, `remark`) VALUES ('0', 'blockConfirmUsdt', '0', 'admin', now(), 'USDT需要多少个区块确认');
 INSERT INTO `tsys_config` (`type`, `ckey`, `cvalue`, `updater`, `update_datetime`, `remark`) VALUES ('0', 'minEthRechargeMoney', '0', 'admin', now(), 'ETH最小充值金额');
 INSERT INTO `tsys_config` (`type`, `ckey`, `cvalue`, `updater`, `update_datetime`, `remark`) VALUES ('0', 'minBtcRechargeMoney', '0', 'admin', now(), 'BTC最小充值金额');
-INSERT INTO `tsys_config` (`type`, `ckey`, `cvalue`, `updater`, `update_datetime`, `remark`) VALUES ('0', 'minWanRRechargeMoney', '0', 'admin', now(), 'WAN最小充值金额');
+INSERT INTO `tsys_config` (`type`, `ckey`, `cvalue`, `updater`, `update_datetime`, `remark`) VALUES ('0', 'minWanRechargeMoney', '0', 'admin', now(), 'WAN最小充值金额');
 INSERT INTO `tsys_config` (`type`, `ckey`, `cvalue`, `updater`, `update_datetime`, `remark`) VALUES ('0', 'minUsdtRechargeMoney', '0', 'admin', now(), 'USDT最小充值金额');
 
 ALTER TABLE `tctq_eth_transaction` DROP PRIMARY KEY;
