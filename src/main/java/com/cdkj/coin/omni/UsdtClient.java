@@ -29,7 +29,7 @@ public class UsdtClient {
 
     private final static String METHOD_GET_BALANCE = "omni_getbalance";
 
-    private final static String METHOD_GET_INFO = "omni_getinfo";
+    private final static String METHOD_GET_INFO = "getinfo";
 
     private final static int USDt_PROPERTYID = 31;
 
@@ -75,15 +75,16 @@ public class UsdtClient {
     public static BigDecimal getUstdBlanceByAddress(String address) {
         Object[] objParam = new Object[] { address, USDt_PROPERTYID };
         String result = doSend(METHOD_GET_BALANCE, objParam);
-        BigDecimal balance = JSONObject.parseObject(result).getBigDecimal(
-            "balance");
+        BigDecimal balance = JSONObject.parseObject(result)
+            .getBigDecimal("balance");
         return balance;
     }
 
     public static Long getBlockHeight() {
         Object[] objParam = new Object[] {};
         String result = doSend(METHOD_GET_INFO, objParam);
-        Long blockHeight = JSONObject.parseObject(result).getLongValue("block");
+        Long blockHeight = JSONObject.parseObject(result)
+            .getLongValue("blocks");
         return blockHeight;
     }
 
@@ -98,8 +99,8 @@ public class UsdtClient {
         try {
             JsonRpcHttpClient client = new JsonRpcHttpClient(new URL(OMNI_URL),
                 headers);
-            result = JSON.toJSONString(client.invoke(method, objParam,
-                Object.class));
+            result = JSON
+                .toJSONString(client.invoke(method, objParam, Object.class));
 
         } catch (Throwable e) {
             throw new BizException("调用usdt rpc接口异常,原因:" + e.getMessage());
