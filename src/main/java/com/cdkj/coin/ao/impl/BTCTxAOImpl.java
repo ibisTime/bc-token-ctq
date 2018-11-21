@@ -50,7 +50,7 @@ public class BTCTxAOImpl implements IBTCTxAO {
 
     public void doBtcTransactionSync() {
 
-        boolean isDebug = true;
+        boolean isDebug = false;
         if (isDebug) {
             logger.info("******BTC扫描区块开始******");
         }
@@ -74,8 +74,8 @@ public class BTCTxAOImpl implements IBTCTxAO {
                         .longValue()) {
 
                 if (isDebug) {
-                    System.out.println("*********同步循环结束,区块号"
-                            + (blockNumber - 1) + "为最后一个可信任区块*******");
+                    System.out.println("*********同步循环结束,区块号" + (blockNumber - 1)
+                            + "为最后一个可信任区块*******");
                 }
 
                 break;
@@ -187,9 +187,8 @@ public class BTCTxAOImpl implements IBTCTxAO {
         if (utxoList == null || utxoList.size() <= 0) {
             throw new BizException(
                 EBizErrorCode.PUSH_STATUS_UPDATE_FAILURE.getErrorCode(),
-                "请传入正确的json数组"
-                        + EBizErrorCode.PUSH_STATUS_UPDATE_FAILURE
-                            .getErrorCode());
+                "请传入正确的json数组" + EBizErrorCode.PUSH_STATUS_UPDATE_FAILURE
+                    .getErrorCode());
         }
 
         for (BtcUtxo btcutxo : utxoList) {
@@ -203,9 +202,9 @@ public class BTCTxAOImpl implements IBTCTxAO {
 
             if (nextStatus == null) {
 
-                logger.error("utxo 状态异常，无法对应，原因：" + "txid:"
-                        + ourBtcUtxo.getTxid() + "  " + "vout:"
-                        + ourBtcUtxo.getVout());
+                logger
+                    .error("utxo 状态异常，无法对应，原因：" + "txid:" + ourBtcUtxo.getTxid()
+                            + "  " + "vout:" + ourBtcUtxo.getVout());
 
             } else {
 

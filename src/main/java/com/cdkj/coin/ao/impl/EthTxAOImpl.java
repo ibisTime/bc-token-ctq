@@ -126,19 +126,20 @@ public class EthTxAOImpl implements IEthTxAO {
                     .getLongValue(SysConstants.CUR_ETH_BLOCK_NUMBER);
                 if (isDebug == true) {
 
-                    System.out.println("*********同步循环开始，扫描区块" + blockNumber
-                            + "*******");
+                    System.out.println(
+                        "*********同步循环开始，扫描区块" + blockNumber + "*******");
 
                 }
 
                 // 获取当前区块
-                EthBlock ethBlockResp = web3j.ethGetBlockByNumber(
-                    new DefaultBlockParameterNumber(blockNumber), true).send();
+                EthBlock ethBlockResp = web3j
+                    .ethGetBlockByNumber(
+                        new DefaultBlockParameterNumber(blockNumber), true)
+                    .send();
                 if (ethBlockResp.getError() != null) {
-                    logger.error("扫描以太坊区块同步流水发送异常，原因：获取区块-"
-                            + ethBlockResp.getError());
-                    throw new BizException(
-                        EBizErrorCode.DEFAULT.getErrorCode(),
+                    logger.error(
+                        "扫描以太坊区块同步流水发送异常，原因：获取区块-" + ethBlockResp.getError());
+                    throw new BizException(EBizErrorCode.DEFAULT.getErrorCode(),
                         "扫描以太坊区块同步流水发送异常，原因：获取区块-" + ethBlockResp.getError());
                 }
 
@@ -149,17 +150,16 @@ public class EthTxAOImpl implements IEthTxAO {
                     .getBlockNumber();
                 if (isDebug == true) {
 
-                    System.out.println("*********最大区块号" + maxBlockNumber
-                            + "*******");
+                    System.out
+                        .println("*********最大区块号" + maxBlockNumber + "*******");
                 }
 
                 // 判断是否有足够的区块确认 暂定12
                 BigInteger blockConfirm = sysConfigBO
                     .getBigIntegerValue(SysConstants.BLOCK_CONFIRM_ETH);
-                if (currentBlock == null
-                        || maxBlockNumber.subtract(
-                            BigInteger.valueOf(blockNumber)).compareTo(
-                            blockConfirm) < 0) {
+                if (currentBlock == null || maxBlockNumber
+                    .subtract(BigInteger.valueOf(blockNumber))
+                    .compareTo(blockConfirm) < 0) {
 
                     if (isDebug == true) {
 
@@ -209,8 +209,8 @@ public class EthTxAOImpl implements IEthTxAO {
                         .getClient().ethGetTransactionReceipt(tx.getHash())
                         .send().getResult();
                     // 判断交易是否成功
-                    if (!ETransactionRecetptStatus.SUCCESS.getCode().equals(
-                        transactionReceipt.getStatus())) {
+                    if (!ETransactionRecetptStatus.SUCCESS.getCode()
+                        .equals(transactionReceipt.getStatus())) {
                         continue;
                     }
 
@@ -249,7 +249,8 @@ public class EthTxAOImpl implements IEthTxAO {
 
                     // 合约不存在，判断是否小于最小充值金额
                     if (!isTokenContractExist) {
-                        if (minChangeMoney.compareTo(ethTransaction.getValue()) > 0) {
+                        if (minChangeMoney
+                            .compareTo(ethTransaction.getValue()) > 0) {
                             continue;
                         }
                     }
@@ -293,7 +294,7 @@ public class EthTxAOImpl implements IEthTxAO {
     // 时间调度任务,定期扫描——未推送的——交易
     public void pushTx() {
 
-        System.out.println("***开始推送扫描****");
+        // System.out.println("***开始推送扫描****");
 
         EthTransaction con = new EthTransaction();
         con.setStatus(EPushStatus.UN_PUSH.getCode());
@@ -307,7 +308,7 @@ public class EthTxAOImpl implements IEthTxAO {
                 ethTransaction.setTokenEventList(tokenEventList);
             }
         }
-        System.out.println("***推送条数：****" + txList.size());
+        // System.out.println("***推送条数：****" + txList.size());
         if (txList.size() > 0) {
             // 推送出去
             try {
@@ -322,7 +323,7 @@ public class EthTxAOImpl implements IEthTxAO {
                 logger.error("回调业务biz异常，原因：" + e.getMessage());
             }
         }
-        System.out.println("***结束推送扫描****");
+        // System.out.println("***结束推送扫描****");
 
     }
 
@@ -333,9 +334,8 @@ public class EthTxAOImpl implements IEthTxAO {
         if (hashList == null || hashList.size() <= 0) {
             throw new BizException(
                 EBizErrorCode.PUSH_STATUS_UPDATE_FAILURE.getErrorCode(),
-                "请传入正确的json数组"
-                        + EBizErrorCode.PUSH_STATUS_UPDATE_FAILURE
-                            .getErrorCode());
+                "请传入正确的json数组" + EBizErrorCode.PUSH_STATUS_UPDATE_FAILURE
+                    .getErrorCode());
         }
 
         this.ethTransactionBO.changeTxStatusToPushed(hashList);

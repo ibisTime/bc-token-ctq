@@ -50,12 +50,12 @@ public class UsdtTxAOImpl implements IUsdtTxAO {
 
     @Override
     public void doUsdtTransactionSync() {
-        logger.info("******usdt扫描区块开始******");
+        // logger.info("******usdt扫描区块开始******");
         // omni协议的propertyId，usdt为31，TOMNI为2，测试环境使用TOMNI代替USDT
         // 往"moneyqMan7uh8FqdCA2BV5yZ8qVrc9ikLP"地址转BTC可以获得TOMNI币，比例1BTC:100TOMNI
         BigInteger propertyID = PropertiesUtil.Config.USDT_ENV
             .equals(EUsdtEnv.MAINNET.getCode()) ? new BigInteger("31")
-                : new BigInteger("2");
+                    : new BigInteger("2");
         while (true) {
             Long blockNumber = sysConfigBO
                 .getLongValue(SysConstants.CUR_USDT_BLOCK_NUMBER);
@@ -91,13 +91,13 @@ public class UsdtTxAOImpl implements IUsdtTxAO {
                     .getOmniTransInfoByTxid(hash);
                 // 判断是否是usdt交易
                 // PropertyId可能为Null,0代表BTC
-                if (omniTransaction.getPropertyId() == null
-                        || propertyID
-                            .compareTo(omniTransaction.getPropertyId()) != 0) {
+                if (omniTransaction.getPropertyId() == null || propertyID
+                    .compareTo(omniTransaction.getPropertyId()) != 0) {
                     continue;
                 }
                 // to地址可能是空的跳过 别人构建交易错误
-                if (StringUtils.isBlank(omniTransaction.getReferenceAddress())) {
+                if (StringUtils
+                    .isBlank(omniTransaction.getReferenceAddress())) {
                     continue;
                 }
                 // 交易无效跳过
@@ -118,8 +118,8 @@ public class UsdtTxAOImpl implements IUsdtTxAO {
                     continue;
                 }
 
-                BigDecimal amount = AmountUtil.toUsdt(omniTransaction
-                    .getAmount());
+                BigDecimal amount = AmountUtil
+                    .toUsdt(omniTransaction.getAmount());
                 // 等于0也直接跳过
                 if (amount.compareTo(BigDecimal.ZERO) <= 0) {
                     continue;
@@ -155,8 +155,8 @@ public class UsdtTxAOImpl implements IUsdtTxAO {
     public void pushTx() {
         UsdtTransaction condition = new UsdtTransaction();
         condition.setStatus(EPushStatus.UN_PUSH.getCode());
-        List<UsdtTransaction> txList = this.usdtTransactionBO.getPaginable(0,
-            30, condition).getList();
+        List<UsdtTransaction> txList = this.usdtTransactionBO
+            .getPaginable(0, 30, condition).getList();
         if (txList.size() > 0) {
             // 推送出去
             try {
@@ -178,9 +178,8 @@ public class UsdtTxAOImpl implements IUsdtTxAO {
         if (idList == null || idList.size() <= 0) {
             throw new BizException(
                 EBizErrorCode.PUSH_STATUS_UPDATE_FAILURE.getErrorCode(),
-                "请传入正确的json数组"
-                        + EBizErrorCode.PUSH_STATUS_UPDATE_FAILURE
-                            .getErrorCode());
+                "请传入正确的json数组" + EBizErrorCode.PUSH_STATUS_UPDATE_FAILURE
+                    .getErrorCode());
         }
 
         for (Long id : idList) {

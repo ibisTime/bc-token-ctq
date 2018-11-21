@@ -129,19 +129,20 @@ public class WanTxAOImpl implements IWanTxAO {
                     .getLongValue(SysConstants.CUR_WAN_BLOCK_NUMBER);
                 if (isDebug == true) {
 
-                    System.out.println("*********同步循环开始，扫描区块" + blockNumber
-                            + "*******");
+                    System.out.println(
+                        "*********同步循环开始，扫描区块" + blockNumber + "*******");
 
                 }
 
                 // 获取当前区块
-                EthBlock wanBlockResp = web3j.ethGetBlockByNumber(
-                    new DefaultBlockParameterNumber(blockNumber), true).send();
+                EthBlock wanBlockResp = web3j
+                    .ethGetBlockByNumber(
+                        new DefaultBlockParameterNumber(blockNumber), true)
+                    .send();
                 if (wanBlockResp.getError() != null) {
-                    logger.error("扫描万维区块同步流水发送异常，原因：获取区块-"
-                            + wanBlockResp.getError());
-                    throw new BizException(
-                        EBizErrorCode.DEFAULT.getErrorCode(),
+                    logger.error(
+                        "扫描万维区块同步流水发送异常，原因：获取区块-" + wanBlockResp.getError());
+                    throw new BizException(EBizErrorCode.DEFAULT.getErrorCode(),
                         "扫描万维区块同步流水发送异常，原因：获取区块-" + wanBlockResp.getError());
                 }
 
@@ -152,17 +153,16 @@ public class WanTxAOImpl implements IWanTxAO {
                     .getBlockNumber();
                 if (isDebug == true) {
 
-                    System.out.println("*********最大区块号" + maxBlockNumber
-                            + "*******");
+                    System.out
+                        .println("*********最大区块号" + maxBlockNumber + "*******");
                 }
 
                 // 判断是否有足够的区块确认 暂定12
                 BigInteger blockConfirm = sysConfigBO
                     .getBigIntegerValue(SysConstants.BLOCK_CONFIRM_WAN);
-                if (currentBlock == null
-                        || maxBlockNumber.subtract(
-                            BigInteger.valueOf(blockNumber)).compareTo(
-                            blockConfirm) < 0) {
+                if (currentBlock == null || maxBlockNumber
+                    .subtract(BigInteger.valueOf(blockNumber))
+                    .compareTo(blockConfirm) < 0) {
 
                     if (isDebug == true) {
 
@@ -253,7 +253,8 @@ public class WanTxAOImpl implements IWanTxAO {
 
                     // 合约不存在，判断是否小于最小充值金额
                     if (!isTokenContractExist) {
-                        if (minChangeMoney.compareTo(wanTransaction.getValue()) > 0) {
+                        if (minChangeMoney
+                            .compareTo(wanTransaction.getValue()) > 0) {
                             continue;
                         }
                     }
@@ -297,7 +298,7 @@ public class WanTxAOImpl implements IWanTxAO {
     // 时间调度任务,定期扫描——未推送的——交易
     public void pushTx() {
 
-        System.out.println("***开始推送扫描****");
+        // System.out.println("***开始推送扫描****");
 
         WanTransaction con = new WanTransaction();
         con.setStatus(EPushStatus.UN_PUSH.getCode());
@@ -311,7 +312,7 @@ public class WanTxAOImpl implements IWanTxAO {
                 wanTransaction.setTokenEventList(tokenEventList);
             }
         }
-        System.out.println("***推送条数：****" + txList.size());
+        // System.out.println("***推送条数：****" + txList.size());
         if (txList.size() > 0) {
             // 推送出去
             try {
@@ -326,7 +327,7 @@ public class WanTxAOImpl implements IWanTxAO {
                 logger.error("回调业务biz异常，原因：" + e.getMessage());
             }
         }
-        System.out.println("***结束推送扫描****");
+        // System.out.println("***结束推送扫描****");
 
     }
 
@@ -337,9 +338,8 @@ public class WanTxAOImpl implements IWanTxAO {
         if (hashList == null || hashList.size() <= 0) {
             throw new BizException(
                 EBizErrorCode.PUSH_STATUS_UPDATE_FAILURE.getErrorCode(),
-                "请传入正确的json数组"
-                        + EBizErrorCode.PUSH_STATUS_UPDATE_FAILURE
-                            .getErrorCode());
+                "请传入正确的json数组" + EBizErrorCode.PUSH_STATUS_UPDATE_FAILURE
+                    .getErrorCode());
         }
 
         this.wanTransactionBO.changeTxStatusToPushed(hashList);
