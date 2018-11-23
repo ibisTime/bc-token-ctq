@@ -209,8 +209,9 @@ public class EthTxAOImpl implements IEthTxAO {
                         .getClient().ethGetTransactionReceipt(tx.getHash())
                         .send().getResult();
                     // 判断交易是否成功
-                    if (!ETransactionRecetptStatus.SUCCESS.getCode()
-                        .equals(transactionReceipt.getStatus())) {
+                    if (transactionReceipt == null
+                            || !ETransactionRecetptStatus.SUCCESS.getCode()
+                                .equals(transactionReceipt.getStatus())) {
                         continue;
                     }
 
