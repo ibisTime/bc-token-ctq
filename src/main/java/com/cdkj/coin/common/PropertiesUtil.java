@@ -51,6 +51,10 @@ public class PropertiesUtil {
         public static String WAN_PUSH_ADDRESS_URL = props
             .getProperty("WAN_PUSH_ADDRESS_URL");
 
+        /* 波场 */
+        public static String TRX_PUSH_ADDRESS_URL = props
+                .getProperty("TRX_PUSH_ADDRESS_URL");
+
         public static String WAN_URL = props.getProperty("WAN_URL");
 
         /* USDT */
@@ -63,5 +67,6 @@ public class PropertiesUtil {
 
         public static String USDT_ENV = props.getProperty("USDT_ENV");
 
+        public static String TRX_URL = props.getProperty("TRX_URL");;
     }
 }

@@ -63,5 +63,13 @@
 	<bean id="wanTokenEventBO" class="com.cdkj.coin.bo.impl.WanTokenEventBOImpl">
 		<property name="paginableDAO" ref="wanTokenEventDAOImpl"/>
 	</bean>
-	
+
+	<bean id="trxAddressBO" class="com.cdkj.coin.bo.impl.TrxAddressBOImpl">
+		<property name="paginableDAO" ref="trxAddressDAOImpl"/>
+	</bean>
+
+	<bean id="trxTransactionBO" class="com.cdkj.coin.bo.impl.TrxTransactionBOImpl">
+		<property name="paginableDAO" ref="trxTransactionDAOImpl"/>
+	</bean>
+
 </beans>

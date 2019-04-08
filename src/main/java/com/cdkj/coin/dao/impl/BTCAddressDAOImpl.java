@@ -64,7 +64,7 @@ public class BTCAddressDAOImpl extends AMybatisTemplate implements
 
     @Override
     public List<BTCAddress> selectList(BTCAddress condition, int start,
-            int count) {
+                                       int count) {
         return super.selectList(NAMESPACE.concat("select_btcAddress"), start,
             count, condition, BTCAddress.class);
     }

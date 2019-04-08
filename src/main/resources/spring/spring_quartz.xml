@@ -31,6 +31,9 @@
            		<!-- usdt交易扫描 -->
            		<ref bean="usdtTransactionSyncTrigger" />
            		<ref bean="usdtPushSyncTrigger"/>
+                <!--trx交易扫描-->
+                <ref bean="trxTransactionSyncTrigger" />
+                <ref bean="trxPushSyncTrigger"/>
             </list>
         </property>
         <property name="autoStartup" value="true"/>
@@ -156,6 +159,36 @@
     <bean id="confirmPushTx"
           class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
         <property name="targetObject" ref="usdtTxAOImpl"/>
+        <property name="targetMethod" value="pushTx"/>
+        <!-- 是否允许任务并发执行。当值为false时，表示必须等到前一个线程处理完毕后才再启一个新的线程 -->
+        <property name="concurrent" value="false"/>
+    </bean>
+
+    <!-- ########   TRX交易扫描  #############-->
+    <bean id="trxTransactionSyncTrigger"
+          class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="doTrxTransactionSync"/>
+        <property name="cronExpression" value="0 */1 * * * ?"/>
+    </bean>
+
+    <bean id="doTrxTransactionSync"
+          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="trxTxAOImpl"/>
+        <property name="targetMethod" value="doTrxTransactionSync"/>
+        <!-- 是否允许任务并发执行。当值为false时，表示必须等到前一个线程处理完毕后才再启一个新的线程 -->
+        <property name="concurrent" value="false"/>
+    </bean>
+
+    <!-- ########   trx充值推送  #############-->
+    <bean id="trxPushSyncTrigger"
+          class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="pushTrxTx"/>
+        <property name="cronExpression" value="*/20 * * * * ?"/>
+    </bean>
+
+    <bean id="pushTrxTx"
+          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="trxTxAOImpl"/>
         <property name="targetMethod" value="pushTx"/>
         <!-- 是否允许任务并发执行。当值为false时，表示必须等到前一个线程处理完毕后才再启一个新的线程 -->
         <property name="concurrent" value="false"/>

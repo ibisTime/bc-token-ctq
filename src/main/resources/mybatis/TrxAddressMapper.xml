@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cdkj.coin.dao.ITrxAddressDAO">
+
+    <resultMap id="trxAddress_DB_Result" type="trxAddress">
+        <result column="code" property="code"/>
+        <result column="address" property="address"/>
+        <result column="create_datetime" property="createDateTime"/>
+    </resultMap>
+
+    <sql id="where_condition">
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+
+            <if test="code != null and code != '' ">
+                AND t.code = #{code}
+            </if>
+            <if test="address != null and address != '' ">
+                AND t.address = #{address}
+            </if>
+
+        </trim>
+    </sql>
+
+    <select id="select_trxAddress" parameterType="trxAddress" resultMap="trxAddress_DB_Result">
+        SELECT
+        t.code
+        ,t.address
+        ,t.create_datetime
+        FROM
+        tctq_trx_address t
+        <include refid="where_condition"/>
+        <trim prefix="ORDER BY ">
+            <if test="order != null and order != '' ">
+                t.${order}
+            </if>
+        </trim>
+    </select>
+
+    <select id="selectTotalCount" parameterType="trxAddress"
+            resultType="java.lang.Long">
+        SELECT count(1) FROM tctq_trx_address t
+        <include refid="where_condition"/>
+    </select>
+
+    <insert id="insert_trxAddress" parameterType="trxAddress">
+        INSERT INTO
+            tctq_trx_address (
+                code,
+                address,
+                create_datetime
+            )
+        VALUES (
+            #{code},
+            #{address},
+            now()
+        )
+    </insert>
+
+    <select id="getAddressCount" resultType="java.lang.Integer">
+        SELECT count(1)
+        FROM tctq_trx_address
+        WHERE address = #{address}
+    </select>
+
+    <select id="selectTotalCountByAddress" resultType="java.lang.Long">
+        SELECT count(1)
+        FROM `tctq_trx_address`
+        WHERE `address` = #{address}
+    </select>
+
+</mapper>

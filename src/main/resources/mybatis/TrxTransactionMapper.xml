@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cdkj.coin.dao.ITrxTransactionDAO">
+
+    <resultMap id="trxTransaction_DB_Result" type="trxTransaction">
+        <result column="id" property="id"/>
+        <result column="hash" property="hash"/>
+        <result column="from" property="from"/>
+        <result column="to" property="to"/>
+        <result column="amount" property="amount"/>
+        
+        <result column="fee" property="fee"/>        
+		<result column="type" property="type"/>
+        <result column="type_url" property="typeUrl"/>
+        <result column="block_height" property="blockHeight"/>
+        <result column="status" property="status"/>
+		
+        <result column="create_datetime" property="createDatetime"/>
+    </resultMap>
+
+    <sql id="where_condition">
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+        	<if test="id != null and id != '' ">
+				AND t.id = #{id}
+			</if>
+            <if test="hash != null and hash != '' ">
+                AND t.hash = #{hash}
+            </if>
+            <if test="status != null and status != '' ">
+                AND t.status = #{status}
+            </if>
+        </trim>
+    </sql>
+
+    <select id="select_trxTransaction" parameterType="trxTransaction" resultMap="trxTransaction_DB_Result">
+        SELECT
+        t.id
+        ,t.hash
+        ,t.from
+        ,t.to
+        ,t.amount
+        
+        ,t.fee
+        ,t.type
+        ,t.type_url
+        ,t.block_height
+        ,t.status
+
+        ,t.create_datetime
+        FROM
+        tctq_trx_transaction t
+        <include refid="where_condition"/>
+        <trim prefix="ORDER BY ">
+            <if test="order != null and order != '' ">
+                t.${order}
+            </if>
+        </trim>
+    </select>
+
+    <select id="select_trxTransaction_count" parameterType="trxTransaction"
+            resultType="java.lang.Long">
+        SELECT count(1) FROM tctq_trx_transaction t
+        <include refid="where_condition"/>
+    </select>
+
+    <insert id="insert_trxTransaction" parameterType="trxTransaction">
+        INSERT INTO
+		tctq_trx_transaction
+		(
+        hash
+        ,`from`
+        ,`to`
+        ,amount
+
+        ,fee
+        ,`type`
+        ,type_url
+        ,block_height
+        ,status
+
+        ,create_datetime
+        )
+        VALUES
+        (
+        #{hash}
+        ,#{from}
+        ,#{to}
+        ,#{amount}
+
+        ,#{fee}
+        ,#{type}
+        ,#{typeUrl}
+        ,#{blockHeight}
+		,#{status}
+
+        ,#{createDatetime}
+        )
+    </insert>
+
+	<insert id="insert_trxTransaction_list" parameterType="List">
+
+		INSERT INTO `tctq_trx_transaction`
+		(
+        hash
+        ,`from`
+        ,`to`
+        ,amount
+
+        ,fee
+        ,`type`
+        ,type_url
+        ,block_height
+        ,status
+
+        ,create_datetime
+		)
+		VALUES
+
+		  <foreach collection="list" item="tx" separator=",">
+			  (
+			  	#{tx.hash}
+		        ,#{tx.from}
+		        ,#{tx.to}
+		        ,#{tx.amount}
+
+              ,#{tx.fee}
+              ,#{tx.type}
+              ,#{tx.typeUrl}
+              ,#{tx.blockHeight}
+              ,#{tx.status}
+
+		        ,#{tx.createDatetime}
+			  )
+		  </foreach>
+
+	</insert>
+
+	<update id="update_trxTransaction_status" parameterType="trxTransaction">
+		UPDATE `tctq_trx_transaction` SET
+		`status` = #{status}
+		WHERE `id` = #{id}
+	</update>
+
+</mapper>

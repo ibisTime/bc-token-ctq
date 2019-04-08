@@ -26,6 +26,10 @@ public class SysConstants {
 
     public static final String BLOCK_CONFIRM_USDT = "blockConfirmUsdt"; // USDT需要多少个区块确认
 
+    public static final String CUR_TRX_BLOCK_NUMBER = "curTrxBlockNumber"; // TRX当前扫描至哪个区块
+
+    public static final String BLOCK_CONFIRM_TRX = "blockConfirmTrx"; // TRX需要多少个区块确认
+
     public static final String MIN_ETH_RECHARGE_MONEY = "minEthRechargeMoney"; // eth最小充值金额
 
     public static final String MIN_WAN_RECHARGE_MONEY = "minWanRechargeMoney"; // wan最小充值金额
@@ -34,4 +38,5 @@ public class SysConstants {
 
     public static final String MIN_USDT_RECHARGE_MONEY = "minUsdtRechargeMoney"; // usdt最小充值金额
 
+    public static final String MIN_TRX_RECHARGE_MONEY = "minTrxRechargeMoney"; // trx最小充值金额
 }

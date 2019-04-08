@@ -99,6 +99,10 @@ public class AmountUtil {
         return orgNum.multiply(BigDecimal.TEN.pow(8)).setScale(0);
     }
 
+    public static BigDecimal toTrx(BigDecimal orgNum) {
+        return orgNum.multiply(BigDecimal.TEN.pow(6)).setScale(0);
+    }
+
     public static BigDecimal toEth(BigDecimal orgNum) {
         return orgNum.multiply(BigDecimal.TEN.pow(18)).setScale(0);
     }

@@ -478,6 +478,18 @@
 			<artifactId>commons-codec</artifactId>
 			<version>1.8</version>
 		</dependency>
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>18.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+            <version>3.5.1</version>
+        </dependency>
     </dependencies>
 
     <!-- 解决每次更新maven自动更改jdk1.5办法 -->
@@ -496,7 +508,7 @@
     <!--</build>-->
 
     <build>
-        <finalName>bc-ctq</finalName>
+        <finalName>bc-token-ctq</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
